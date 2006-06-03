@@ -1,12 +1,12 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>classworlds</groupId>
-  <artifactId>classworlds</artifactId>
+  <groupId>org.codehaus.plexus</groupId>
+  <artifactId>plexus-classworlds</artifactId>
   <packaging>jar</packaging>
   <name>classworlds</name>
   <version>1.1-beta-1-SNAPSHOT</version>
   <description></description>
-  <url>http://cvs.classworlds.codehaus.org/</url>
+  <url>http://svn.codehaus.org/plexus/trunk/plexus-sandbox/classworlds</url>
   <inceptionYear>2002</inceptionYear>
   <mailingLists>
     <mailingList>
