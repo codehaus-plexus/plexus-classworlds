@@ -61,7 +61,7 @@ import java.util.Enumeration;
  * </p>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>
+ * @author Jason van Zyl
  * @version $Id$
  */
 public interface ClassRealm
@@ -70,7 +70,8 @@ public interface ClassRealm
 
     ClassWorld getWorld();
 
-    void importFrom( String realmId, String pkgName )
+    void importFrom( String realmId,
+                     String pkgName )
         throws NoSuchRealmException;
 
     void addConstituent( URL constituent );

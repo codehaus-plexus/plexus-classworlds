@@ -92,7 +92,8 @@ public class RealmClassLoader
      * @param realm       The realm for which this loads.
      * @param classLoader The parent ClassLoader.
      */
-    RealmClassLoader( DefaultClassRealm realm, ClassLoader classLoader )
+    RealmClassLoader( DefaultClassRealm realm,
+                      ClassLoader classLoader )
     {
         super( new URL[0], classLoader );
         this.realm = realm;
@@ -151,7 +152,8 @@ public class RealmClassLoader
      * @return The loaded class.
      * @throws ClassNotFoundException If the class could not be found.
      */
-    Class loadClassDirect( String name ) throws ClassNotFoundException
+    Class loadClassDirect( String name )
+        throws ClassNotFoundException
     {
         return super.loadClass( name, false );
     }
@@ -169,7 +171,8 @@ public class RealmClassLoader
      * @throws ClassNotFoundException If the class cannot be found.
      */
     protected Class loadClass( String name,
-                               boolean resolve ) throws ClassNotFoundException
+                               boolean resolve )
+        throws ClassNotFoundException
     {
         return getRealm().loadClass( name );
     }
@@ -210,7 +213,8 @@ public class RealmClassLoader
         return super.getResource( name );
     }
 
-    public Enumeration findResources( String name ) throws IOException
+    public Enumeration findResources( String name )
+        throws IOException
     {
         return getRealm().findResources( name );
     }

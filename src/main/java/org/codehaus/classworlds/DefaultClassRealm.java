@@ -69,7 +69,7 @@ import java.util.Vector;
  * </ol>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>
+ * @author Jason van Zyl
  * @version $Id$
  * @todo allow inheritance to be turn on/off at runtime.
  * @todo allow direction of search
@@ -89,12 +89,15 @@ public class DefaultClassRealm
 
     private ClassRealm parent;
 
-    public DefaultClassRealm( ClassWorld world, String id )
+    public DefaultClassRealm( ClassWorld world,
+                              String id )
     {
         this( world, id, null );
     }
 
-    public DefaultClassRealm( ClassWorld world, String id, ClassLoader foreignClassLoader )
+    public DefaultClassRealm( ClassWorld world,
+                              String id,
+                              ClassLoader foreignClassLoader )
     {
         this.world = world;
 
@@ -135,7 +138,8 @@ public class DefaultClassRealm
         return this.world;
     }
 
-    public void importFrom( String realmId, String packageName )
+    public void importFrom( String realmId,
+                            String packageName )
         throws NoSuchRealmException
     {
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
