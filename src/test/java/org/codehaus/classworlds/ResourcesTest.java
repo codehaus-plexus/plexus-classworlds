@@ -51,6 +51,9 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.FileInputStream;
 
+import org.codehaus.classworlds.cli.Configurator;
+import org.codehaus.classworlds.cli.Launcher;
+
 public class ResourcesTest
     extends TestCase
 {

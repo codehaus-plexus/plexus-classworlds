@@ -51,6 +51,8 @@ import junit.framework.TestCase;
 import java.io.File;
 import java.io.FileInputStream;
 
+import org.codehaus.classworlds.cli.Launcher;
+
 public class LauncherTest
     extends TestCase
 {
