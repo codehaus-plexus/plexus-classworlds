@@ -12,7 +12,7 @@ public class EntryTest extends TestCase
     /**
      * Constructor for EntryTest.
      *
-     * @param arg0
+     * @param name
      */
     public EntryTest( String name )
     {
