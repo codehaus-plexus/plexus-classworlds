@@ -20,6 +20,8 @@ package org.codehaus.classworlds;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * Classloader for <code>ClassRealm</code>s.
@@ -89,6 +91,21 @@ public class RealmClassLoader
         addURL( constituent );
     }
 
+    /** Load a class directly from this classloader without
+     *  defering through any other <code>ClassRealm</code>.
+     *
+     *  @param name The name of the class to load.
+     *
+     *  @return The loaded class.
+     *
+     *  @throws ClassNotFoundException If the class could not be found.
+     */
+    Class loadClassDirect(String name) throws ClassNotFoundException
+    {
+        return super.loadClass( name, false );
+    }
+
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     //     java.lang.ClassLoader
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,5 +148,30 @@ public class RealmClassLoader
     public URL getResource( String name )
     {
         return getRealm().getResource( name );
+    }
+
+    /** Get a resource from this ClassLoader, and don't search the realm.
+     *  Otherwise we'd recurse indefinitely.
+     *
+     *  @return The resource.
+     */
+    public URL getResourceDirect(String name)
+    {
+        return super.getResource( name );
+    }
+
+    public Enumeration findResources(String name) throws IOException {
+        return getRealm().findResources( name );
+    }
+
+    /** Find resources from this ClassLoader, and don't search the realm.
+     *  Otherwise we'd recurse indefinitely.
+     *
+     *  @return The resource.
+     */
+    public Enumeration findResourcesDirect(String name)
+        throws IOException
+    {
+        return super.findResources( name );
     }
 }
