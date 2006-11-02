@@ -17,13 +17,9 @@ package org.codehaus.classworlds;
  *
  */
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Enumeration;
 
 /**
  * Classloader for <code>ClassRealm</code>s.
