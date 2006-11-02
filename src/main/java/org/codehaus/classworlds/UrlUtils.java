@@ -1,6 +1,7 @@
 package org.codehaus.classworlds;
 
 import java.util.Set;
+import java.util.HashSet;
 import java.net.URLClassLoader;
 
 /*
@@ -53,11 +54,13 @@ public class UrlUtils
 
     public static Set getURLs( URLClassLoader loader )
     {
-        int l = loader.getURLs().length;
+        Set ret = new HashSet();
 
         for ( int i = 0; i < loader.getURLs().length; i++ )
         {
-
+            ret.add(loader.getURLs()[i]);
         }
+
+        return ret;
     }
 }
