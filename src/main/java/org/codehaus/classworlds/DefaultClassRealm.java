@@ -18,7 +18,6 @@ package org.codehaus.classworlds;
  */
 
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -210,7 +209,7 @@ public class DefaultClassRealm
 
     public URL getResource( String name )
     {
-        URL resource = null;
+        URL resource;
         name = UrlUtils.normalizeUrlPath( name );
 
         if ( foreignClassLoader != null )
