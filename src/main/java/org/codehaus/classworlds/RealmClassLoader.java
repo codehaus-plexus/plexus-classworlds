@@ -20,8 +20,10 @@ package org.codehaus.classworlds;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Classloader for <code>ClassRealm</code>s.
@@ -91,87 +93,152 @@ public class RealmClassLoader
         addURL( constituent );
     }
 
-    /** Load a class directly from this classloader without
-     *  defering through any other <code>ClassRealm</code>.
-     *
-     *  @param name The name of the class to load.
-     *
-     *  @return The loaded class.
-     *
-     *  @throws ClassNotFoundException If the class could not be found.
-     */
-    Class loadClassDirect(String name) throws ClassNotFoundException
-    {
-        return super.loadClass( name, false );
-    }
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    //     java.lang.ClassLoader
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    /**
-     * Load a class.
-     *
-     * @param name    The name of the class to load.
-     * @param resolve If <code>true</code> then resolve the class.
-     * @return The loaded class.
-     * @throws ClassNotFoundException If the class cannot be found.
-     */
-    protected Class loadClass( String name,
-                               boolean resolve )
+    public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        return getRealm().loadClass( name );
+        if ( name.startsWith( "org.codehaus.classworlds." ) )
+        {
+            return getRealm().getWorld().loadClass( name );
+        }
+
+        try
+        {
+            if ( getRealm().getForeignClassLoader() != null )
+            {
+                try
+                {
+                    return getRealm().getForeignClassLoader().loadClass( name );
+                }
+                catch ( ClassNotFoundException e )
+                {
+                    // Do nothing as we will now look in the realm.
+                }
+            }
+
+            ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
+
+            if ( sourceRealm != getRealm() )
+            {
+                try
+                {
+                    return sourceRealm.loadClass( name );
+                }
+                catch ( ClassNotFoundException cnfe )
+                {
+                    // Do nothing as we will load directly
+                }
+            }
+            return super.loadClass( name );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            if ( getRealm().getParent() != null )
+            {
+                return getRealm().getParent().loadClass( name );
+            }
+
+            throw e;
+        }
     }
 
-    /**
-     * Retrieve the <code>URL</code>s used by this <code>ClassLoader</code>.
-     *
-     * @return The urls.
-     */
-    public URL[] getURLs()
+    public InputStream getResourceAsStream( String name )
     {
-        return super.getURLs();
-    }
+        URL url = getResource( name );
 
-    /**
-     * Find a resource within this ClassLoader only (don't delegate to the parent).
-     *
-     * @return The resource.
-     */
-    public URL findResource( String name )
-    {
-        return super.findResource( name );
+        InputStream is = null;
+
+        if ( url != null )
+        {
+            try
+            {
+                is = url.openStream();
+            }
+            catch ( IOException e )
+            {
+                // do nothing
+            }
+        }
+
+        return is;
     }
 
     public URL getResource( String name )
     {
-        return getRealm().getResource( name );
+        URL resource = null;
+        name = UrlUtils.normalizeUrlPath( name );
+
+        if ( getRealm().getForeignClassLoader() != null )
+        {
+            resource = getRealm().getForeignClassLoader().getResource( name );
+
+            if ( resource != null )
+            {
+                return resource;
+            }
+        }
+
+        ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
+
+        if ( sourceRealm != getRealm() )
+        {
+            resource = sourceRealm.getResource( name );
+        }
+        if ( resource == null )
+        {
+            resource = super.getResource( name );
+        }
+
+        if ( resource == null && getRealm().getParent() != null )
+        {
+            resource = getRealm().getParent().getResource( name );
+        }
+
+        return resource;
     }
 
-    /** Get a resource from this ClassLoader, and don't search the realm.
-     *  Otherwise we'd recurse indefinitely.
-     *
-     *  @return The resource.
-     */
-    public URL getResourceDirect(String name)
-    {
-        return super.getResource( name );
-    }
-
-    public Enumeration findResources(String name) throws IOException {
-        return getRealm().findResources( name );
-    }
-
-    /** Find resources from this ClassLoader, and don't search the realm.
-     *  Otherwise we'd recurse indefinitely.
-     *
-     *  @return The resource.
-     */
-    public Enumeration findResourcesDirect(String name)
+    public Enumeration findResources( String name )
         throws IOException
     {
-        return super.findResources( name );
+        name = UrlUtils.normalizeUrlPath( name );
+
+        Vector resources = new Vector();
+
+        // Find resources from the parent class loader
+        if ( getRealm().getForeignClassLoader() != null )
+        {
+            for ( Enumeration res = getRealm().getForeignClassLoader().getResources( name ); res.hasMoreElements(); )
+            {
+                resources.addElement( res.nextElement() );
+            }
+        }
+
+        // Load imports
+        ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
+
+        if ( sourceRealm != getRealm() )
+        {
+            // Attempt to load directly first, then go to the imported packages.
+            for ( Enumeration res = sourceRealm.findResources( name ); res.hasMoreElements(); )
+            {
+                resources.addElement( res.nextElement() );
+            }
+        }
+
+        // Load from our classloader
+        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
+        {
+            resources.addElement( direct.nextElement() );
+        }
+
+        // Find resources from the parent realm.
+        if ( getRealm().getParent() != null )
+        {
+            for ( Enumeration parent = getRealm().getParent().findResources( name ); parent.hasMoreElements(); )
+            {
+                resources.addElement( parent.nextElement() );
+            }
+        }
+
+        return resources.elements();
     }
 }
