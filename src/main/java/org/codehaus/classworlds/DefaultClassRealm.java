@@ -179,11 +179,7 @@ public class DefaultClassRealm
 
             ClassRealm sourceRealm = locateSourceRealm( name );
 
-            if ( sourceRealm == this )
-            {
-                return classLoader.loadClassDirect( name );
-            }
-            else
+            if ( sourceRealm != this )
             {
                 try
                 {
@@ -191,10 +187,10 @@ public class DefaultClassRealm
                 }
                 catch ( ClassNotFoundException cnfe )
                 {
-                    // If we can't find it in an import, try loading directly.
-                    return classLoader.loadClassDirect( name );
+                    // Do nothing as we will load directly
                 }
             }
+            return classLoader.loadClassDirect( name );
         }
         catch ( ClassNotFoundException e )
         {
@@ -209,7 +205,7 @@ public class DefaultClassRealm
 
     public URL getResource( String name )
     {
-        URL resource;
+        URL resource = null;
         name = UrlUtils.normalizeUrlPath( name );
 
         if ( foreignClassLoader != null )
@@ -224,18 +220,13 @@ public class DefaultClassRealm
 
         ClassRealm sourceRealm = locateSourceRealm( name );
 
-        if ( sourceRealm == this )
-        {
-            resource = classLoader.getResourceDirect( name );
-        }
-        else
+        if ( sourceRealm != this )
         {
             resource = sourceRealm.getResource( name );
-
-            if ( resource == null )
-            {
-                resource = classLoader.getResourceDirect( name );
-            }
+        }
+        if ( resource == null )
+        {
+            resource = classLoader.getResourceDirect( name );
         }
 
         if ( resource == null && getParent() != null )
