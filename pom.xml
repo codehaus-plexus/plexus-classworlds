@@ -1,8 +1,8 @@
 <project>
   <parent>
-    <artifactId>plexus-logging</artifactId>
+    <artifactId>plexus<artifactId>
     <groupId>org.codehaus.plexus</groupId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.9-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.codehaus.plexus</groupId>
