@@ -256,7 +256,7 @@ public class ClassRealmImplTest
             // expected and correct
         }
 
-        mainRealm.addConstituent( getJarUrl( "a.jar" ) );
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
 
         Class classA = mainRealm.loadClass( "a.A" );
 
@@ -291,7 +291,7 @@ public class ClassRealmImplTest
             // expected and correct
         }
 
-        realmA.addConstituent( getJarUrl( "a.jar" ) );
+        realmA.addURL( getJarUrl( "a.jar" ) );
 
         try
         {
@@ -324,7 +324,7 @@ public class ClassRealmImplTest
     public void testLoadClass_Package() throws Exception
     {
         ClassRealm realmA = this.world.newRealm( "realmA" );
-        realmA.addConstituent( getJarUrl( "a.jar" ) );
+        realmA.addURL( getJarUrl( "a.jar" ) );
 
         Class clazz = realmA.loadClass( "a.A" );
         assertNotNull( clazz );
@@ -342,9 +342,9 @@ public class ClassRealmImplTest
         ClassRealm realmB = this.world.newRealm( "realmB" );
         ClassRealm realmC = this.world.newRealm( "realmC" );
 
-        realmA.addConstituent( getJarUrl( "a.jar" ) );
-        realmB.addConstituent( getJarUrl( "b.jar" ) );
-        realmC.addConstituent( getJarUrl( "c.jar" ) );
+        realmA.addURL( getJarUrl( "a.jar" ) );
+        realmB.addURL( getJarUrl( "b.jar" ) );
+        realmC.addURL( getJarUrl( "c.jar" ) );
 
         realmC.importFrom( "realmA",
                            "a" );

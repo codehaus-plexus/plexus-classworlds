@@ -433,7 +433,7 @@ public class Launcher
         {
             ClassRealm realm = launcher.getWorld().getRealm( launcher.getMainRealmName() );
 
-            URL[] constituents = realm.getConstituents();
+            URL[] constituents = realm.getURLs();
 
             System.out.println( "---------------------------------------------------" );
 

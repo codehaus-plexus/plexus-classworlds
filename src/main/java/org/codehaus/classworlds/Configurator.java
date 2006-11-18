@@ -331,13 +331,13 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        curRealm.addConstituent( file.toURL() );
+                        curRealm.addURL( file.toURL() );
                     }
                     else
                     {
                         try
                         {
-                            curRealm.addConstituent( new URL( constituent ) );
+                            curRealm.addURL( new URL( constituent ) );
                         }
                         catch ( MalformedURLException e )
                         {
@@ -362,13 +362,13 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        curRealm.addConstituent( file.toURL() );
+                        curRealm.addURL( file.toURL() );
                     }
                     else
                     {
                         try
                         {
-                            curRealm.addConstituent( new URL( constituent ) );
+                            curRealm.addURL( new URL( constituent ) );
                         }
                         catch (MalformedURLException e)
                         {
@@ -516,7 +516,7 @@ public class Configurator
 
         for ( int i = 0; i < matches.length; ++i )
         {
-            realm.addConstituent( matches[i].toURL() );
+            realm.addURL( matches[i].toURL() );
         }
     }
 

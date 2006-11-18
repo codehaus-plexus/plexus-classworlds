@@ -82,7 +82,7 @@ public class DefaultClassRealm
         classLoader = new RealmClassLoader( this );
     }
 
-    public URL[] getConstituents()
+    public URL[] getURLs()
     {
         return classLoader.getURLs();
     }
@@ -115,9 +115,9 @@ public class DefaultClassRealm
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
     }
 
-    public void addConstituent( URL constituent )
+    public void addURL( URL url)
     {
-        classLoader.addConstituent( constituent );
+        classLoader.addConstituent(url);
     }
 
     public ClassRealm locateSourceRealm( String classname )
@@ -183,7 +183,7 @@ public class DefaultClassRealm
     {
         System.out.println( "this realm = " + classRealm.getId() );
 
-        URL[] urls = classRealm.getConstituents();
+        URL[] urls = classRealm.getURLs();
 
         for ( int i = 0; i < urls.length; i++ )
         {

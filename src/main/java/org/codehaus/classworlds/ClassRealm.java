@@ -45,7 +45,7 @@ public interface ClassRealm
                      String pkgName )
         throws NoSuchRealmException;
 
-    void addConstituent( URL constituent );
+    void addURL( URL url );
 
     ClassRealm locateSourceRealm( String className );
 
@@ -58,7 +58,7 @@ public interface ClassRealm
 
     ClassRealm getParent();
 
-    URL[] getConstituents();
+    URL[] getURLs();
 
     // ----------------------------------------------------------------------
     // Classloading

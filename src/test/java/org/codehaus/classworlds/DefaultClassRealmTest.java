@@ -68,7 +68,7 @@ public class DefaultClassRealmTest
     {
         DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
 
-        mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         mainRealm.loadClass( "org.codehaus.plexus.Component0" );
     }
@@ -78,7 +78,7 @@ public class DefaultClassRealmTest
     {
         DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
 
-        mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         ClassRealm childRealm = mainRealm.createChildRealm( "child" );
 
@@ -90,7 +90,7 @@ public class DefaultClassRealmTest
     {
         DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
 
-        mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         ClassRealm childRealm = mainRealm.createChildRealm( "child" );
 
@@ -104,7 +104,7 @@ public class DefaultClassRealmTest
     {
         DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
 
-        mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         try
         {
@@ -126,7 +126,7 @@ public class DefaultClassRealmTest
 
         ClassRealm r1 = world.newRealm( "r1" );
 
-        r0.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        r0.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         r1.importFrom( "r0", "org.codehaus.plexus" );
 
@@ -142,7 +142,7 @@ public class DefaultClassRealmTest
     {
         DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
 
-        mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         URL resource = mainRealm.getResource( "META-INF/plexus/components.xml" );
 
