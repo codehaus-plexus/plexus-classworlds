@@ -1,4 +1,4 @@
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>plexus</artifactId>
     <groupId>org.codehaus.plexus</groupId>
@@ -9,8 +9,8 @@
   <artifactId>plexus-classworlds</artifactId>
   <packaging>jar</packaging>
   <name>classworlds</name>
-  <version>1.2-SNAPSHOT</version>
-  <description></description>
+  <version>1.2-alpha-1</version>
+  <description />
   <inceptionYear>2002</inceptionYear>
   <dependencies>
     <dependency>
@@ -31,4 +31,10 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:svn:https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</developerConnection>
+    <url>https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</url>
+  </scm>
 </project>
