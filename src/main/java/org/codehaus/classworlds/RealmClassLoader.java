@@ -70,7 +70,7 @@ public class RealmClassLoader
      * this is for consistentency and to allow access to the class
      * with getURLs()
      *
-     * @param url
+     * @param url URL to contituent jar or directory.
      */
     public void addURL( URL url)
     {
