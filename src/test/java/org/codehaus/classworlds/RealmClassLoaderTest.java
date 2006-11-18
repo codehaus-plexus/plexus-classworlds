@@ -28,7 +28,7 @@ public class RealmClassLoaderTest
 
         this.classLoader = (RealmClassLoader) this.realm.getClassLoader();
         
-        classLoader.addConstituent( getJarUrl( "component0-1.0.jar" ) );
+        classLoader.addURL( getJarUrl( "component0-1.0.jar" ) );
     }
 
     public void testLoadingOfApplicationClass()
@@ -101,7 +101,7 @@ public class RealmClassLoaderTest
     public void testGetResources()
         throws Exception
     {
-        classLoader.addConstituent( getJarUrl( "component1-1.0.jar" ) );
+        classLoader.addURL( getJarUrl( "component1-1.0.jar" ) );
 
         Enumeration e = classLoader.getResources( "META-INF/plexus/components.xml" );
 

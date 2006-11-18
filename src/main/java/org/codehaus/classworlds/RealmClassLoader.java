@@ -70,11 +70,11 @@ public class RealmClassLoader
      * this is for consistentency and to allow access to the class
      * with getURLs()
      *
-     * @param constituent URL to contituent jar or directory.
+     * @param url
      */
-    void addConstituent( URL constituent )
+    public void addURL( URL url)
     {
-        String urlStr = constituent.toExternalForm();
+        String urlStr = url.toExternalForm();
 
         if ( urlStr.startsWith( "jar:" ) && urlStr.endsWith( "!/" ) )
         {
@@ -82,7 +82,7 @@ public class RealmClassLoader
 
             try
             {
-                constituent = new URL( urlStr );
+                url = new URL( urlStr );
             }
             catch ( MalformedURLException e )
             {
@@ -90,7 +90,7 @@ public class RealmClassLoader
             }
         }
 
-        addURL( constituent );
+        super.addURL(url);
     }
 
     public Class loadClass( String name )

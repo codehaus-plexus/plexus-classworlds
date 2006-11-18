@@ -117,7 +117,7 @@ public class DefaultClassRealm
 
     public void addURL( URL url)
     {
-        classLoader.addConstituent(url);
+        classLoader.addURL(url);
     }
 
     public ClassRealm locateSourceRealm( String classname )
