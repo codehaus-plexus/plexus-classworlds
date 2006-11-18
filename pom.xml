@@ -9,7 +9,7 @@
   <artifactId>plexus-classworlds</artifactId>
   <packaging>jar</packaging>
   <name>classworlds</name>
-  <version>1.2-alpha-1</version>
+  <version>1.2-alpha-2-SNAPSHOT</version>
   <description />
   <inceptionYear>2002</inceptionYear>
   <dependencies>
@@ -31,10 +31,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <connection>scm:svn:https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</developerConnection>
-    <url>https://svn.codehaus.org/plexus/tags/plexus-classworlds-1.2-alpha-1</url>
-  </scm>
 </project>
