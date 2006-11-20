@@ -107,7 +107,7 @@ public class ClassWorld
         return realms.values();
     }
 
-    Class loadClass( String name )
+    public Class loadClass( String name )
         throws ClassNotFoundException
     {
         // Use the classloader that was used to load classworlds itself to

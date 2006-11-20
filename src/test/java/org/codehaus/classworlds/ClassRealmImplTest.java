@@ -310,13 +310,13 @@ public class ClassRealmImplTest
 
         assertNotNull( classA );
 
-        assertEquals( realmA.getClassLoader(), classA.getClassLoader() );
+        assertEquals( realmA.getStrategy(), classA.getClassLoader() );
 
         Class classMain = mainRealm.loadClass( "a.A" );
 
         assertNotNull( classMain );
 
-        assertEquals( realmA.getClassLoader(), classMain.getClassLoader() );
+        assertEquals( realmA.getStrategy(), classMain.getClassLoader() );
 
         assertSame( classA, classMain );
     }
@@ -363,13 +363,13 @@ public class ClassRealmImplTest
         assertNotNull( classB_B );
         assertNotNull( classC_C );
 
-        assertEquals( realmA.getClassLoader(),
+        assertEquals( realmA.getStrategy(),
                       classA_A.getClassLoader() );
 
-        assertEquals( realmB.getClassLoader(),
+        assertEquals( realmB.getStrategy(),
                       classB_B.getClassLoader() );
 
-        assertEquals( realmC.getClassLoader(),
+        assertEquals( realmC.getStrategy(),
                       classC_C.getClassLoader() );
 
         // load from C
@@ -381,7 +381,7 @@ public class ClassRealmImplTest
         assertSame( classA_A,
                     classA_C );
 
-        assertEquals( realmA.getClassLoader(),
+        assertEquals( realmA.getStrategy(),
                       classA_C.getClassLoader() );
 
         Class classB_C = realmC.loadClass( "b.B" );
@@ -391,7 +391,7 @@ public class ClassRealmImplTest
         assertSame( classB_B,
                     classB_C );
 
-        assertEquals( realmB.getClassLoader(),
+        assertEquals( realmB.getStrategy(),
                       classB_C.getClassLoader() );
 
         // load from A
@@ -403,7 +403,7 @@ public class ClassRealmImplTest
         assertSame( classC_C,
                     classC_A );
 
-        assertEquals( realmC.getClassLoader(),
+        assertEquals( realmC.getStrategy(),
                       classC_A.getClassLoader() );
 
         try

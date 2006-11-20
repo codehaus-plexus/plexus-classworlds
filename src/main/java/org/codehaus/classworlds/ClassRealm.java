@@ -17,6 +17,8 @@ package org.codehaus.classworlds;
  *
  */
 
+import org.codehaus.classworlds.strategy.Strategy;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -27,8 +29,7 @@ import java.util.Enumeration;
  * <p/>
  * <p/>
  * This class most closed maps to the <code>ClassLoader</code>
- * role from Java and in facts can provide a <code>ClassLoader</code>
- * view of itself using {@link #getClassLoader}.
+ * role from Java. It delegates all of it's work to a <code>Strategy</code>.
  * </p>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
@@ -54,7 +55,7 @@ public interface ClassRealm
     ClassRealm createChildRealm( String id )
         throws DuplicateRealmException;
 
-    ClassLoader getClassLoader();
+    Strategy getStrategy();
 
     ClassRealm getParent();
 

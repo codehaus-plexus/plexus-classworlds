@@ -18,6 +18,9 @@ package org.codehaus.classworlds;
  */
 
 
+import org.codehaus.classworlds.strategy.Strategy;
+import org.codehaus.classworlds.strategy.StrategyFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -54,7 +57,7 @@ public class DefaultClassRealm
 
     private ClassLoader foreignClassLoader;
 
-    private RealmClassLoader classLoader;
+    private Strategy strategy;
 
     private ClassRealm parent;
 
@@ -79,12 +82,12 @@ public class DefaultClassRealm
             this.foreignClassLoader = foreignClassLoader;
         }
 
-        classLoader = new RealmClassLoader( this );
+        strategy = StrategyFactory.getStrategy( this );
     }
 
     public URL[] getURLs()
     {
-        return classLoader.getURLs();
+        return strategy.getURLs();
     }
 
     public ClassRealm getParent()
@@ -117,7 +120,7 @@ public class DefaultClassRealm
 
     public void addURL( URL url)
     {
-        classLoader.addURL(url);
+        strategy.addURL(url);
     }
 
     public ClassRealm locateSourceRealm( String classname )
@@ -135,9 +138,9 @@ public class DefaultClassRealm
         return this;
     }
 
-    public ClassLoader getClassLoader()
+    public Strategy getStrategy()
     {
-        return classLoader;
+        return strategy;
     }
 
     public ClassRealm createChildRealm( String id )
@@ -205,22 +208,22 @@ public class DefaultClassRealm
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        return classLoader.loadClass( name );
+        return strategy.loadClass( name );
     }
 
     public URL getResource( String name )
     {
-        return classLoader.getResource( name );
+        return strategy.getResource( name );
     }
 
     public InputStream getResourceAsStream( String name )
     {
-        return classLoader.getResourceAsStream( name );
+        return strategy.getResourceAsStream( name );
     }
 
     public Enumeration findResources( String name )
         throws IOException
     {
-        return classLoader.findResources( name );
+        return strategy.findResources( name );
     }
 }

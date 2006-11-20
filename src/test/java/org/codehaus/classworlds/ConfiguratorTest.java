@@ -54,6 +54,8 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
 
+import org.codehaus.classworlds.strategy.Strategy;
+
 public class ConfiguratorTest extends TestCase
 {
     private Launcher launcher;
@@ -191,8 +193,8 @@ public class ConfiguratorTest extends TestCase
                     mavenRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
                     
         // Test the glob support
-        RealmClassLoader cl = (RealmClassLoader) globRealm.getClassLoader();
-        URL[] urls = cl.getURLs();
+        Strategy strat = globRealm.getStrategy();
+        URL[] urls = strat.getURLs();
         
         assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/nested.jar").toURL());
         assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/a.jar").toURL());
@@ -221,9 +223,9 @@ public class ConfiguratorTest extends TestCase
 
         ClassRealm optRealm = world.getRealm( "opt" );
 
-        RealmClassLoader cl = (RealmClassLoader) optRealm.getClassLoader();
+        Strategy strat = optRealm.getStrategy();
 
-        URL[] urls = cl.getURLs();
+        URL[] urls = strat.getURLs();
 
         assertEquals( "no urls",
                       0,
@@ -251,9 +253,9 @@ public class ConfiguratorTest extends TestCase
 
         ClassRealm optRealm = world.getRealm( "opt" );
 
-        RealmClassLoader cl = (RealmClassLoader) optRealm.getClassLoader();
+        Strategy strat = optRealm.getStrategy();
 
-        URL[] urls = cl.getURLs();
+        URL[] urls = strat.getURLs();
 
         assertEquals( "one url",
                       1,

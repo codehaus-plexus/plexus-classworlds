@@ -7,17 +7,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
+import org.codehaus.classworlds.strategy.Strategy;
+
 // jars within jars
 // hierarchy vs graph
 
-public class RealmClassLoaderTest
-    extends TestCase
+public class StrategyTest
+        extends TestCase
 {
     private ClassWorld world;
     
     private ClassRealm realm;
 
-    private RealmClassLoader classLoader;
+    private Strategy strategy;
 
     public void setUp()
         throws Exception
@@ -26,15 +28,15 @@ public class RealmClassLoaderTest
 
         this.realm = this.world.newRealm( "realm" );
 
-        this.classLoader = (RealmClassLoader) this.realm.getClassLoader();
+        this.strategy = this.realm.getStrategy();
         
-        classLoader.addURL( getJarUrl( "component0-1.0.jar" ) );
+        strategy.addURL( getJarUrl( "component0-1.0.jar" ) );
     }
 
     public void testLoadingOfApplicationClass()
         throws Exception
     {
-        Class c = classLoader.loadClass( "org.codehaus.plexus.Component0" );
+        Class c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
     }
@@ -44,11 +46,11 @@ public class RealmClassLoaderTest
     {
         Class c;
 
-        c = classLoader.loadClass( "org.codehaus.plexus.Component0" );
+        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
 
-        c = classLoader.loadClass( "org.codehaus.plexus.Component0" );
+        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
     }
@@ -57,7 +59,7 @@ public class RealmClassLoaderTest
     public void testLoadingOfSystemClass()
         throws Exception
     {
-        Class c = classLoader.loadClass( "java.lang.Object" );
+        Class c = strategy.loadClass( "java.lang.Object" );
 
         assertNotNull( c );
     }
@@ -67,7 +69,7 @@ public class RealmClassLoaderTest
     {
         try
         {
-            classLoader.loadClass( "org.codehaus.plexus.NonExistentComponent" );
+            strategy.loadClass( "org.codehaus.plexus.NonExistentComponent" );
 
             fail( "Should have thrown a ClassNotFoundException!" );
         }
@@ -80,7 +82,7 @@ public class RealmClassLoaderTest
     public void testGetApplicationResource()
         throws Exception
     {
-        URL resource = classLoader.getResource( "META-INF/plexus/components.xml" );
+        URL resource = strategy.getResource( "META-INF/plexus/components.xml" );
 
         assertNotNull( resource );
 
@@ -92,7 +94,7 @@ public class RealmClassLoaderTest
     public void testGetSystemResource()
         throws Exception
     {
-        URL resource = classLoader.getResource( "java/lang/Object.class" );
+        URL resource = strategy.getResource( "java/lang/Object.class" );
 
         assertNotNull( resource );
     }
@@ -101,9 +103,9 @@ public class RealmClassLoaderTest
     public void testGetResources()
         throws Exception
     {
-        classLoader.addURL( getJarUrl( "component1-1.0.jar" ) );
+        strategy.addURL( getJarUrl( "component1-1.0.jar" ) );
 
-        Enumeration e = classLoader.getResources( "META-INF/plexus/components.xml" );
+        Enumeration e = strategy.getResources( "META-INF/plexus/components.xml" );
 
         assertNotNull( e );
 
@@ -123,7 +125,7 @@ public class RealmClassLoaderTest
     public void testGetResourceAsStream()
         throws Exception
     {
-        InputStream is = classLoader.getResourceAsStream( "META-INF/plexus/components.xml" );
+        InputStream is = strategy.getResourceAsStream( "META-INF/plexus/components.xml" );
 
         assertNotNull( is );
 

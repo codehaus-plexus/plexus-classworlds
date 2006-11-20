@@ -293,7 +293,7 @@ public class Launcher
 
         Method mainMethod = getEnhancedMainMethod();
 
-        ClassLoader cl = mainRealm.getClassLoader();
+        ClassLoader cl = (ClassLoader) mainRealm.getStrategy();
 
         // ----------------------------------------------------------------------
         // This is what the classloader for the main realm looks like when we
@@ -307,7 +307,7 @@ public class Launcher
         //           ^
         //           |
         //           |
-        // [ RealmClassLoader ]
+        // [ Strategy ]
         // ----------------------------------------------------------------------
 
         Thread.currentThread().setContextClassLoader( cl );
@@ -348,7 +348,7 @@ public class Launcher
 
         Method mainMethod = getMainMethod();
 
-        Thread.currentThread().setContextClassLoader( mainRealm.getClassLoader() );
+        Thread.currentThread().setContextClassLoader( (ClassLoader) mainRealm.getStrategy() );
 
         Object ret = mainMethod.invoke( mainClass, new Object[]{args} );
         if ( ret instanceof Integer )
