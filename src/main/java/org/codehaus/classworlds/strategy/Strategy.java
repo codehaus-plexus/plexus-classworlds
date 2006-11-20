@@ -15,16 +15,20 @@ import java.io.InputStream;
  * @since: Nov 19, 2006
  * @version: $Id$
  */
-public interface Strategy {
-    Class loadClass( String name ) throws ClassNotFoundException;
+public interface Strategy
+{
+    Class loadClass( String name )
+        throws ClassNotFoundException;
 
     URL getResource( String name );
 
-    Enumeration getResources(java.lang.String string) throws IOException;
+    Enumeration getResources( java.lang.String string )
+        throws IOException;
 
     InputStream getResourceAsStream( String name );
 
-    Enumeration findResources( String name ) throws IOException;
+    Enumeration findResources( String name )
+        throws IOException;
 
     void addURL( URL url );
 

@@ -58,7 +58,7 @@ public class UrlUtils
 
         for ( int i = 0; i < loader.getURLs().length; i++ )
         {
-            ret.add(loader.getURLs()[i]);
+            ret.add( loader.getURLs()[i] );
         }
 
         return ret;

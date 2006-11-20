@@ -9,14 +9,16 @@ import org.codehaus.classworlds.ClassRealm;
  * @since: Nov 19, 2006
  * @version: $Id$
  */
-public class StrategyFactory {
+public class StrategyFactory
+{
 
     public static Strategy getStrategy( ClassRealm realm )
     {
         return getStrategy( realm, null );
     }
 
-    public static Strategy getStrategy( ClassRealm realm, String hint )
+    public static Strategy getStrategy( ClassRealm realm,
+                                        String hint )
     {
         // Here we shall check hint to load non-default strategies
 

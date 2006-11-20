@@ -18,7 +18,10 @@ import java.io.InputStream;
  * @since: Nov 19, 2006
  * @version: $Id$
  */
-public class DefaultStrategy extends URLClassLoader implements Strategy {
+public class DefaultStrategy
+    extends URLClassLoader
+    implements Strategy
+{
     private ClassRealm realm;
 
     public DefaultStrategy()
@@ -26,7 +29,8 @@ public class DefaultStrategy extends URLClassLoader implements Strategy {
         super( new URL[0] );
     }
 
-    public Class loadClass( String name ) throws ClassNotFoundException
+    public Class loadClass( String name )
+        throws ClassNotFoundException
     {
         if ( name.startsWith( "org.codehaus.classworlds." ) )
         {
@@ -106,7 +110,9 @@ public class DefaultStrategy extends URLClassLoader implements Strategy {
         return is;
     }
 
-    public Enumeration findResources( String name ) throws IOException {
+    public Enumeration findResources( String name )
+        throws IOException
+    {
         name = UrlUtils.normalizeUrlPath( name );
 
         Vector resources = new Vector();
@@ -138,7 +144,8 @@ public class DefaultStrategy extends URLClassLoader implements Strategy {
             }
         }
 
-        return resources.elements();    }
+        return resources.elements();
+    }
 
     public void addURL( URL url )
     {

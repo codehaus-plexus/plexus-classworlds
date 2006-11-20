@@ -82,20 +82,27 @@ public class Configurator
 
     public static final String LOAD_PREFIX = "load";
 
-    /** Optionally spec prefix. */
+    /**
+     * Optionally spec prefix.
+     */
     public static final String OPTIONALLY_PREFIX = "optionally";
 
-    /** The launcher to configure. */
+    /**
+     * The launcher to configure.
+     */
     private Launcher launcher;
 
     private ClassWorld world;
 
-    /** Processed Realms. */
+    /**
+     * Processed Realms.
+     */
     private Map configuredRealms;
 
-    /** Construct.
+    /**
+     * Construct.
      *
-     *  @param launcher The launcher to configure.
+     * @param launcher The launcher to configure.
      */
     public Configurator( Launcher launcher )
     {
@@ -104,19 +111,21 @@ public class Configurator
         configuredRealms = new HashMap();
     }
 
-    /** Construct.
+    /**
+     * Construct.
      *
-     *  @param world The classWorld to configure.
+     * @param world The classWorld to configure.
      */
     public Configurator( ClassWorld world )
     {
         setClassWorld( world );
     }
 
-    /** set world.
-     *  this setter is provided so you can use the same configurator to configure several "worlds"
+    /**
+     * set world.
+     * this setter is provided so you can use the same configurator to configure several "worlds"
      *
-     *  @param world The classWorld to configure.
+     * @param world The classWorld to configure.
      */
     public void setClassWorld( ClassWorld world )
     {
@@ -148,7 +157,10 @@ public class Configurator
 
         ClassLoader foreignClassLoader = null;
 
-        if ( this.launcher != null ) foreignClassLoader = this.launcher.getSystemClassLoader();
+        if ( this.launcher != null )
+        {
+            foreignClassLoader = this.launcher.getSystemClassLoader();
+        }
 
         ClassRealm curRealm = null;
 
@@ -238,7 +250,7 @@ public class Configurator
                 }
 
                 String value = System.getProperty( property );
-                
+
                 if ( value != null )
                 {
                     continue;
@@ -255,7 +267,7 @@ public class Configurator
                         try
                         {
                             properties.load( new FileInputStream( propertiesFileName ) );
-    
+
                             value = properties.getProperty( property );
                         }
                         catch ( Exception e )
@@ -370,7 +382,7 @@ public class Configurator
                         {
                             curRealm.addURL( new URL( constituent ) );
                         }
-                        catch (MalformedURLException e)
+                        catch ( MalformedURLException e )
                         {
                             // swallow
                         }
@@ -386,7 +398,10 @@ public class Configurator
         // Associate child realms to their parents.
         associateRealms();
 
-        if ( this.launcher != null ) this.launcher.setWorld( world );
+        if ( this.launcher != null )
+        {
+            this.launcher.setWorld( world );
+        }
 
         reader.close();
     }
@@ -401,7 +416,8 @@ public class Configurator
         // sort by name
         Comparator comparator = new Comparator()
         {
-            public int compare( Object o1, Object o2 )
+            public int compare( Object o1,
+                                Object o2 )
             {
                 String g1 = (String) o1;
                 String g2 = (String) o2;
@@ -453,7 +469,8 @@ public class Configurator
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
      */
-    protected void loadGlob( String line, ClassRealm realm )
+    protected void loadGlob( String line,
+                             ClassRealm realm )
         throws MalformedURLException, FileNotFoundException
     {
         loadGlob( line, realm, false );
@@ -462,21 +479,23 @@ public class Configurator
     /**
      * Load a glob into the specified classloader.
      *
-     * @param line  The path configuration line.
-     * @param realm The realm to populate
+     * @param line       The path configuration line.
+     * @param realm      The realm to populate
      * @param optionally Whether the path is optional or required
      * @throws MalformedURLException If the line does not represent
      *                               a valid path element.
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
      */
-    protected void loadGlob( String line, ClassRealm realm, boolean optionally )
+    protected void loadGlob( String line,
+                             ClassRealm realm,
+                             boolean optionally )
         throws MalformedURLException, FileNotFoundException
     {
         File globFile = new File( line );
 
         File dir = globFile.getParentFile();
-        if ( ! dir.exists() )
+        if ( !dir.exists() )
         {
             if ( optionally )
             {
@@ -498,7 +517,8 @@ public class Configurator
 
         File[] matches = dir.listFiles( new FilenameFilter()
         {
-            public boolean accept( File dir, String name )
+            public boolean accept( File dir,
+                                   String name )
             {
                 if ( !name.startsWith( prefix ) )
                 {
@@ -588,9 +608,7 @@ public class Configurator
      */
     private boolean canIgnore( String line )
     {
-        return ( line.length() == 0
-            ||
-            line.startsWith( "#" ) );
+        return ( line.length() == 0 || line.startsWith( "#" ) );
     }
 }
 

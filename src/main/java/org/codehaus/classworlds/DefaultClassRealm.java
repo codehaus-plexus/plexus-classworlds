@@ -118,9 +118,9 @@ public class DefaultClassRealm
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
     }
 
-    public void addURL( URL url)
+    public void addURL( URL url )
     {
-        strategy.addURL(url);
+        strategy.addURL( url );
     }
 
     public ClassRealm locateSourceRealm( String classname )
@@ -153,12 +153,14 @@ public class DefaultClassRealm
         return childRealm;
     }
 
-    public ClassLoader getForeignClassLoader() {
-      return foreignClassLoader;
+    public ClassLoader getForeignClassLoader()
+    {
+        return foreignClassLoader;
     }
 
-    public void setForeignClassLoader(ClassLoader foreignClassLoader) {
-      this.foreignClassLoader = foreignClassLoader;
+    public void setForeignClassLoader( ClassLoader foreignClassLoader )
+    {
+        this.foreignClassLoader = foreignClassLoader;
     }
 
     public void display()

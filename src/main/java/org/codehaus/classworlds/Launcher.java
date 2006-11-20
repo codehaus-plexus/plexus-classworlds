@@ -108,7 +108,8 @@ public class Launcher
         return exitCode;
     }
 
-    public void setAppMain( String mainClassName, String mainRealmName )
+    public void setAppMain( String mainClassName,
+                            String mainRealmName )
     {
         this.mainClassName = mainClassName;
 
@@ -148,8 +149,7 @@ public class Launcher
      *                                 point in a non-existent realm.
      */
     public void configure( InputStream is )
-        throws IOException, MalformedURLException, ConfigurationException,
-        DuplicateRealmException, NoSuchRealmException
+        throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
         Configurator configurator = new Configurator( this );
 
@@ -195,7 +195,7 @@ public class Launcher
         Method[] methods = getMainClass().getMethods();
         Class cwClass = getMainRealm().loadClass( ClassWorld.class.getName() );
 
-        Method m = getMainClass().getMethod( "main", new Class[] { String[].class, cwClass } );
+        Method m = getMainClass().getMethod( "main", new Class[]{String[].class, cwClass} );
 
         int modifiers = m.getModifiers();
 
@@ -221,7 +221,7 @@ public class Launcher
     protected Method getMainMethod()
         throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException
     {
-        Method m = getMainClass().getMethod( "main", new Class[] { String[].class } );
+        Method m = getMainClass().getMethod( "main", new Class[]{String[].class} );
 
         int modifiers = m.getModifiers();
 
@@ -247,8 +247,8 @@ public class Launcher
      * @throws NoSuchRealmException      If the main entry realm cannot be found.
      */
     public void launch( String[] args )
-        throws ClassNotFoundException, IllegalAccessException,
-        InvocationTargetException, NoSuchMethodException, NoSuchRealmException
+        throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+        NoSuchRealmException
     {
         try
         {
@@ -284,8 +284,8 @@ public class Launcher
      * @throws NoSuchRealmException      If the main entry realm cannot be found.
      */
     protected void launchEnhanced( String[] args )
-        throws ClassNotFoundException, IllegalAccessException,
-        InvocationTargetException, NoSuchMethodException, NoSuchRealmException
+        throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+        NoSuchRealmException
     {
         ClassRealm mainRealm = getMainRealm();
 
@@ -315,7 +315,7 @@ public class Launcher
         Object ret = mainMethod.invoke( mainClass, new Object[]{args, getWorld()} );
         if ( ret instanceof Integer )
         {
-            exitCode = ( ( Integer ) ret ).intValue();
+            exitCode = ( (Integer) ret ).intValue();
         }
     }
 
@@ -339,8 +339,8 @@ public class Launcher
      * @throws NoSuchRealmException      If the main entry realm cannot be found.
      */
     protected void launchStandard( String[] args )
-        throws ClassNotFoundException, IllegalAccessException,
-        InvocationTargetException, NoSuchMethodException, NoSuchRealmException
+        throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+        NoSuchRealmException
     {
         ClassRealm mainRealm = getMainRealm();
 
@@ -353,7 +353,7 @@ public class Launcher
         Object ret = mainMethod.invoke( mainClass, new Object[]{args} );
         if ( ret instanceof Integer )
         {
-            exitCode = ( ( Integer ) ret ).intValue();
+            exitCode = ( (Integer) ret ).intValue();
         }
     }
 
