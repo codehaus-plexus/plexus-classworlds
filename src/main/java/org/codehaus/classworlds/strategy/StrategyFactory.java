@@ -21,7 +21,7 @@ import org.codehaus.classworlds.ClassRealm;
 /**
  * StrategyFactory loads a strategy, either default or from a given hint.
  *
- * @uthor: <a href="mailto:andy@handyande.co.uk">Andrew Williams</a>
+ * @uthor: Andrew Williams
  * @since: Nov 19, 2006
  * @version: $Id$
  */

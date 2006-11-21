@@ -27,7 +27,7 @@ import java.io.InputStream;
  * A strategy is a class for defining how classes and resources are located
  * in classworlds.
  *
- * @uthor: <a href="mailto:andy@handyande.co.uk">Andrew Williams</a>
+ * @uthor: Andrew Williams
  * @since: Nov 19, 2006
  * @version: $Id$
  */

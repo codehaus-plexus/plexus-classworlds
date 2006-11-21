@@ -30,7 +30,7 @@ import java.util.Vector;
 /**
  * Created by IntelliJ IDEA.
  *
- * @uthor: <a href="mailto:andy@handyande.co.uk">Andrew Williams</a>
+ * @uthor: Andrew Williams
  * @since: Nov 19, 2006
  * @version: $Id$
  */
