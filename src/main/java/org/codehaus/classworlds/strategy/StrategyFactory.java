@@ -38,7 +38,7 @@ public class StrategyFactory
     {
         // Here we shall check hint to load non-default strategies
 
-        Strategy ret = new DefaultStrategy();
+        Strategy ret = new DefaultStrategy( realm );
         
         return ret;
     }
