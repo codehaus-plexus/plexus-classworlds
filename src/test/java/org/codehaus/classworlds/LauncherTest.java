@@ -121,13 +121,8 @@ public class LauncherTest
     private FileInputStream getConfigPath( String name )
         throws Exception
     {
-        String basedir = System.getProperty( "basedir" );
+        String basedir = TestUtil.getBasedir(); 
 
-        /* do our best if we are not running from surefire */
-        if ( basedir == null || basedir.equals( "" ) );
-        {
-            basedir = ( new File( "." ) ).getAbsolutePath();
-        }
-        return new FileInputStream( new File( new File( System.getProperty( "basedir" ), "src/test/resources/test-data" ), name ) );
+        return new FileInputStream( new File( new File( basedir, "src/test/resources/test-data" ), name ) );
     }
 }

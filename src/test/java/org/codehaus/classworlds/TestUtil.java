@@ -23,6 +23,7 @@ package org.codehaus.classworlds;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -35,7 +36,7 @@ public class TestUtil
     public static URL getTestResourceUrl( String resourceName )
         throws MalformedURLException
     {
-        File baseDir = new File( System.getProperty( "basedir" ) );
+        File baseDir = new File( getBasedir() );
 
         File testDir = new File( baseDir, "target/test-classes/test-data" );
 
@@ -44,4 +45,15 @@ public class TestUtil
         return resourceFile.toURL();
     }
 
+    public static String getBasedir()
+    {
+        String basedir = System.getProperty( "basedir" );
+
+        /* do our best if we are not running from surefire */
+        if ( basedir == null || basedir.equals( "" ) );
+        {
+            basedir = ( new File( "." ) ).getAbsolutePath();
+        }
+        return basedir;
+    }
 }

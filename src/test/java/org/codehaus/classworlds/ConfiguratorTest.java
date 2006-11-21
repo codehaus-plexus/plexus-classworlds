@@ -165,11 +165,12 @@ public class ConfiguratorTest extends TestCase
         // Test the glob support
         Strategy strat = globRealm.getStrategy();
         URL[] urls = strat.getURLs();
-        
-        assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/nested.jar").toURL());
-        assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/a.jar").toURL());
-        assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/b.jar").toURL());
-        assertArrayContains(urls, new File(System.getProperty("basedir") + "/target/test-classes/test-data/c.jar").toURL());
+
+        String basedir = TestUtil.getBasedir();
+        assertArrayContains(urls, new File(basedir + "/target/test-classes/test-data/nested.jar").toURL());
+        assertArrayContains(urls, new File(basedir + "/target/test-classes/test-data/a.jar").toURL());
+        assertArrayContains(urls, new File(basedir + "/target/test-classes/test-data/b.jar").toURL());
+        assertArrayContains(urls, new File(basedir + "/target/test-classes/test-data/c.jar").toURL());
     }
 
     public void testConfigure_Optionally_NonExistent() throws Exception
@@ -422,7 +423,7 @@ public class ConfiguratorTest extends TestCase
     private FileInputStream getConfigPath(String name)
         throws Exception
     {
-        return new FileInputStream( new File( new File( System.getProperty( "basedir" ), "src/test/resources/test-data" ), name ) ) ;
+        return new FileInputStream( new File( new File( TestUtil.getBasedir(), "src/test/resources/test-data" ), name ) ) ;
     }
 
     private void assertArrayContains(URL[] array, URL url) throws Exception {

@@ -153,7 +153,7 @@ public class StrategyTest
     protected URL getJarUrl( String jarName )
         throws Exception
     {
-        File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
+        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
 
         return jarFile.toURL();
     }
