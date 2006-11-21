@@ -192,7 +192,6 @@ public class Launcher
     protected Method getEnhancedMainMethod()
         throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException
     {
-        Method[] methods = getMainClass().getMethods();
         Class cwClass = getMainRealm().loadClass( ClassWorld.class.getName() );
 
         Method m = getMainClass().getMethod( "main", new Class[]{String[].class, cwClass} );
