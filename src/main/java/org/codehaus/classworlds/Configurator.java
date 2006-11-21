@@ -556,6 +556,12 @@ public class Configurator
 
             propValue = System.getProperty( propName );
 
+            /* do our best if we are not running from surefire */
+            if ( propName.equals( "basedir" ) && ( propValue == null || propValue.equals( "" ) ) )
+            {
+                propValue = ( new File( "." ) ).getAbsolutePath();
+            }
+
             if ( propValue == null )
             {
                 throw new ConfigurationException( "No such property: " + propName );
