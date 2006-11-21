@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.strategy;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -18,6 +18,9 @@ package org.codehaus.classworlds;
 
 import junit.framework.TestCase;
 import org.codehaus.classworlds.strategy.Strategy;
+import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.classworlds.TestUtil;
 
 import java.io.File;
 import java.io.InputStream;

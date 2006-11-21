@@ -16,8 +16,12 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
+import org.codehaus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.classworlds.realm.DefaultClassRealm;
+import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.classworlds.realm.NoSuchRealmException;
+
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 

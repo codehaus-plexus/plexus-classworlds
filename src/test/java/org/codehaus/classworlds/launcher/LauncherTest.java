@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,10 +16,12 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.FileInputStream;
+
+import org.codehaus.classworlds.launcher.Launcher;
+import org.codehaus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.classworlds.TestUtil;
 
 public class LauncherTest
     extends AbstractClassWorldsTestCase

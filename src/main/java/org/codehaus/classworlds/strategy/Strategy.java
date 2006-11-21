@@ -16,7 +16,7 @@ package org.codehaus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.ClassRealm;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 import java.net.URL;
 import java.util.Enumeration;

@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -17,6 +17,9 @@ package org.codehaus.classworlds;
  */
 
 import org.codehaus.classworlds.strategy.Strategy;
+import org.codehaus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.classworlds.realm.NoSuchRealmException;
 
 import java.io.IOException;
 import java.io.InputStream;

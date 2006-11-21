@@ -1,4 +1,7 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.realm;
+
+import org.codehaus.classworlds.ClassWorldException;
+import org.codehaus.classworlds.ClassWorld;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -17,13 +20,13 @@ package org.codehaus.classworlds;
  */
 
 /**
- * Indicates an attempt to add a <code>ClassRealm</code> to a
- * <code>ClassWorld</code> with a duplicate id.
+ * Indicates an attempt to retrieve a <code>ClassRealm</code> from a
+ * <code>ClassWorld</code> with an invalid id.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @version $Id$
  */
-public class DuplicateRealmException
+public class NoSuchRealmException
     extends ClassWorldException
 {
     // ------------------------------------------------------------
@@ -45,8 +48,8 @@ public class DuplicateRealmException
      * @param world The world.
      * @param id    The realm id.
      */
-    public DuplicateRealmException( ClassWorld world,
-                                    String id )
+    public NoSuchRealmException( ClassWorld world,
+                                 String id )
     {
         super( world, id );
         this.id = id;
@@ -57,7 +60,7 @@ public class DuplicateRealmException
     // ------------------------------------------------------------
 
     /**
-     * Retrieve the duplicate realm id.
+     * Retrieve the invalid realm id.
      *
      * @return The id.
      */

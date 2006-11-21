@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,11 +16,15 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.net.MalformedURLException;
 
 import java.net.URL;
+
+import org.codehaus.classworlds.realm.DefaultClassRealm;
+import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.classworlds.TestUtil;
 
 public class ClassRealmImplTest
     extends AbstractClassWorldsTestCase

@@ -16,7 +16,7 @@ package org.codehaus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.ClassRealm;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 /**
  * StrategyFactory loads a strategy, either default or from a given hint.

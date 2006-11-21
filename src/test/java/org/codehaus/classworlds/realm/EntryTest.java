@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,7 +16,10 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
+import org.codehaus.classworlds.realm.DefaultClassRealm;
+import org.codehaus.classworlds.realm.Entry;
+import org.codehaus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.classworlds.ClassWorld;
 
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>

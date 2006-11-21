@@ -16,7 +16,9 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
+import org.codehaus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.classworlds.realm.NoSuchRealmException;
 
 public class ClassWorldTest
     extends AbstractClassWorldsTestCase
