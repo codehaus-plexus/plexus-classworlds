@@ -22,8 +22,6 @@ public class DefaultStrategy
     extends URLClassLoader
     implements Strategy
 {
-    private ClassRealm realm;
-
     public DefaultStrategy()
     {
         super( new URL[0] );
