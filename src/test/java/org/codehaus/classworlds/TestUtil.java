@@ -38,7 +38,7 @@ public class TestUtil
     {
         File baseDir = new File( getBasedir() );
 
-        File testDir = new File( baseDir, "target/test-classes/test-data" );
+        File testDir = new File( baseDir, "src/test/test-data" );
 
         File resourceFile = new File( testDir, resourceName );
 
@@ -52,10 +52,7 @@ public class TestUtil
         /* do our best if we are not running from surefire */
         if ( basedir == null || basedir.equals( "" ) )
         {
-            ;
-        }
-        {
-            basedir = ( new File( "." ) ).getAbsolutePath();
+            basedir = ( new File( "" ) ).getAbsolutePath();
         }
         return basedir;
     }

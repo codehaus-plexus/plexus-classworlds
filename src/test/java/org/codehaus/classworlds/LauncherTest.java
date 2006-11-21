@@ -130,6 +130,6 @@ public class LauncherTest
     {
         String basedir = TestUtil.getBasedir();
 
-        return new FileInputStream( new File( new File( basedir, "src/test/resources/test-data" ), name ) );
+        return new FileInputStream( new File( new File( basedir, "src/test/test-data" ), name ) );
     }
 }

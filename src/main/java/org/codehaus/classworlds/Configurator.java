@@ -559,7 +559,8 @@ public class Configurator
             /* do our best if we are not running from surefire */
             if ( propName.equals( "basedir" ) && ( propValue == null || propValue.equals( "" ) ) )
             {
-                propValue = ( new File( "." ) ).getAbsolutePath();
+                propValue = ( new File( "" ) ).getAbsolutePath();
+
             }
 
             if ( propValue == null )
