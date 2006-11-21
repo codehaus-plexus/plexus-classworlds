@@ -149,7 +149,7 @@ public class Launcher
      *                                 point in a non-existent realm.
      */
     public void configure( InputStream is )
-        throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
+        throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
         Configurator configurator = new Configurator( this );
 

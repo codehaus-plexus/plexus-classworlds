@@ -17,22 +17,21 @@ import java.io.InputStream;
  */
 public interface Strategy
 {
-    Class loadClass( String name )
+    Class loadClass( ClassRealm classRealm, String name )
         throws ClassNotFoundException;
 
-    URL getResource( String name );
+    URL getResource( ClassRealm classRealm, String name );
 
-    Enumeration getResources( java.lang.String string )
+    // not sure we need both find/getResources
+    Enumeration getResources( ClassRealm classRealm, String string )
         throws IOException;
 
-    InputStream getResourceAsStream( String name );
+    InputStream getResourceAsStream( ClassRealm classRealm, String name );
 
-    Enumeration findResources( String name )
+    Enumeration findResources( ClassRealm classRealm, String name )
         throws IOException;
 
     void addURL( URL url );
 
     URL[] getURLs();
-
-    void setRealm( ClassRealm realm );
 }

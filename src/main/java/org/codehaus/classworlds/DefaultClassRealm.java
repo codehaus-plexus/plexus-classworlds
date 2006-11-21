@@ -210,22 +210,22 @@ public class DefaultClassRealm
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        return strategy.loadClass( name );
+        return strategy.loadClass( this, name );
     }
 
     public URL getResource( String name )
     {
-        return strategy.getResource( name );
+        return strategy.getResource( this, name );
     }
 
     public InputStream getResourceAsStream( String name )
     {
-        return strategy.getResourceAsStream( name );
+        return strategy.getResourceAsStream( this, name );
     }
 
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( name );
+        return strategy.findResources( this, name );
     }
 }
