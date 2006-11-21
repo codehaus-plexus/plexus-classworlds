@@ -32,7 +32,7 @@ public class DefaultStrategy
     {
         if ( name.startsWith( "org.codehaus.classworlds." ) )
         {
-            return realm.getWorld().loadClass( name );
+            return realm.getWorld().getClass().getClassLoader().loadClass( name );
         }
 
         try

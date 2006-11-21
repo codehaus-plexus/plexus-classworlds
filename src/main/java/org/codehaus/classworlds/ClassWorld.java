@@ -106,13 +106,4 @@ public class ClassWorld
     {
         return realms.values();
     }
-
-    public Class loadClass( String name )
-        throws ClassNotFoundException
-    {
-        // Use the classloader that was used to load classworlds itself to
-        // load anything classes within org.codehaus.classworlds.*
-
-        return getClass().getClassLoader().loadClass( name );
-    }
 }
