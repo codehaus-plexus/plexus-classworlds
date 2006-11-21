@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 /**
  * @author Jason van Zyl
  */
-public class AbstractClassWorldsTestCase
+public abstract class AbstractClassWorldsTestCase
     extends TestCase
 {
     public AbstractClassWorldsTestCase( String string )
