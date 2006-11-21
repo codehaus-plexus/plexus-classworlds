@@ -1,4 +1,9 @@
-package a;
+package org.codehaus.classworlds;
+
+import junit.framework.TestCase;
+
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,10 +21,20 @@ package a;
  * limitations under the License.
  */
 
-public class A
+/**
+ * @author Jason van Zyl
+ */
+public class AbstractClassWorldsTestCase
+    extends TestCase
 {
-    public static void main( String[] args )
+    public AbstractClassWorldsTestCase( String string )
     {
-        System.err.println( "A.a.main()" );
+        super( string );
+    }
+
+    public static URL getTestResourceUrl( String resourceName )
+        throws MalformedURLException
+    {
+        return TestUtil.getTestResourceUrl( resourceName );
     }
 }

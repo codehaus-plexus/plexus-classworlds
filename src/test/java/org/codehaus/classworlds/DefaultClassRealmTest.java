@@ -22,7 +22,7 @@ import java.io.File;
 import java.net.URL;
 
 public class DefaultClassRealmTest
-    extends TestCase
+    extends AbstractClassWorldsTestCase
 {
     public DefaultClassRealmTest( String name )
     {

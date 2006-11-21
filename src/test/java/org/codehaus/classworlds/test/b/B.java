@@ -25,7 +25,8 @@ public class B
     {
     }
 
-    public static void main(String args[], ClassWorld classworld)
+    public static void main( String args[],
+                             ClassWorld classworld )
     {
     }
 }

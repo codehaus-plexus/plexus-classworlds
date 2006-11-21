@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 public class LauncherTest
-    extends TestCase
+    extends AbstractClassWorldsTestCase
 {
     private Launcher launcher;
 
@@ -43,7 +43,8 @@ public class LauncherTest
         this.launcher = null;
     }
 
-    public void testConfigure_Valid() throws Exception
+    public void testConfigure_Valid()
+        throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
 
@@ -56,14 +57,16 @@ public class LauncherTest
         assertEquals( "app", launcher.getMainRealm().getId() );
     }
 
-    public void testLaunch_ValidStandard() throws Exception
+    public void testLaunch_ValidStandard()
+        throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
 
         launcher.launch( new String[]{} );
     }
 
-    public void testLaunch_ValidStandardExitCode() throws Exception
+    public void testLaunch_ValidStandardExitCode()
+        throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch-exitCode.conf" ) );
 
@@ -72,14 +75,16 @@ public class LauncherTest
         assertEquals( "check exit code", 15, launcher.getExitCode() );
     }
 
-    public void testLaunch_ValidEnhanced() throws Exception
+    public void testLaunch_ValidEnhanced()
+        throws Exception
     {
         launcher.configure( getConfigPath( "valid-enh-launch.conf" ) );
 
         launcher.launch( new String[]{} );
     }
 
-    public void testLaunch_ValidEnhancedExitCode() throws Exception
+    public void testLaunch_ValidEnhancedExitCode()
+        throws Exception
     {
         launcher.configure( getConfigPath( "valid-enh-launch-exitCode.conf" ) );
 
@@ -88,7 +93,8 @@ public class LauncherTest
         assertEquals( "check exit code", 45, launcher.getExitCode() );
     }
 
-    public void testLaunch_NoSuchMethod() throws Exception
+    public void testLaunch_NoSuchMethod()
+        throws Exception
     {
         launcher.configure( getConfigPath( "launch-nomethod.conf" ) );
 
@@ -103,7 +109,8 @@ public class LauncherTest
         }
     }
 
-    public void testLaunch_ClassNotFound() throws Exception
+    public void testLaunch_ClassNotFound()
+        throws Exception
     {
         launcher.configure( getConfigPath( "launch-noclass.conf" ) );
 
@@ -121,7 +128,7 @@ public class LauncherTest
     private FileInputStream getConfigPath( String name )
         throws Exception
     {
-        String basedir = TestUtil.getBasedir(); 
+        String basedir = TestUtil.getBasedir();
 
         return new FileInputStream( new File( new File( basedir, "src/test/resources/test-data" ), name ) );
     }

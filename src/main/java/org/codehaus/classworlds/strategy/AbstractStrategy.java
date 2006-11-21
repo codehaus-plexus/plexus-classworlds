@@ -1,4 +1,4 @@
-package a;
+package org.codehaus.classworlds.strategy;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,10 +16,10 @@ package a;
  * limitations under the License.
  */
 
-public class A
+/**
+ * @author Jason van Zyl
+ */
+public abstract class AbstractStrategy
+    implements Strategy    
 {
-    public static void main( String[] args )
-    {
-        System.err.println( "A.a.main()" );
-    }
 }

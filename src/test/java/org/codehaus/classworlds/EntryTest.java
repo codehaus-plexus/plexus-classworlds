@@ -22,7 +22,8 @@ import junit.framework.TestCase;
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
  * @version $Id$
  */
-public class EntryTest extends TestCase
+public class EntryTest
+    extends AbstractClassWorldsTestCase
 {
 
     /**
@@ -35,7 +36,8 @@ public class EntryTest extends TestCase
         super( name );
     }
 
-    public void testCompareTo() throws Exception
+    public void testCompareTo()
+        throws Exception
     {
         ClassWorld cw = new ClassWorld();
         DefaultClassRealm r = (DefaultClassRealm) cw.newRealm( "test1" );
@@ -51,7 +53,8 @@ public class EntryTest extends TestCase
      *
      * @throws Exception
      */
-    public void testEquals() throws Exception
+    public void testEquals()
+        throws Exception
     {
         ClassWorld cw = new ClassWorld();
         DefaultClassRealm r1 = (DefaultClassRealm) cw.newRealm( "test1" );

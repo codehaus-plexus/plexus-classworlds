@@ -25,7 +25,8 @@ public class Bb
     {
     }
 
-    public static int main(String args[], ClassWorld classworld)
+    public static int main( String args[],
+                            ClassWorld classworld )
     {
         return 45;
     }

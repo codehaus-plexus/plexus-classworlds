@@ -18,7 +18,8 @@ package org.codehaus.classworlds;
 
 import junit.framework.TestCase;
 
-public class ClassWorldTest extends TestCase
+public class ClassWorldTest
+    extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
 
@@ -42,22 +43,24 @@ public class ClassWorldTest extends TestCase
         assertTrue( this.world.getRealms().isEmpty() );
     }
 
-    public void testNewRealm() throws Exception
+    public void testNewRealm()
+        throws Exception
     {
         ClassRealm realm = this.world.newRealm( "foo" );
 
         assertNotNull( realm );
     }
 
-    public void testGetRealm() throws Exception
+    public void testGetRealm()
+        throws Exception
     {
         ClassRealm realm = this.world.newRealm( "foo" );
 
-        assertSame( realm,
-                    this.world.getRealm( "foo" ) );
+        assertSame( realm, this.world.getRealm( "foo" ) );
     }
 
-    public void testNewRealm_Duplicate() throws Exception
+    public void testNewRealm_Duplicate()
+        throws Exception
     {
         try
         {
@@ -70,15 +73,14 @@ public class ClassWorldTest extends TestCase
         {
             // expected and correct
 
-            assertSame( this.world,
-                        e.getWorld() );
+            assertSame( this.world, e.getWorld() );
 
-            assertEquals( "foo",
-                          e.getId() );
+            assertEquals( "foo", e.getId() );
         }
     }
 
-    public void testGetRealm_NoSuch() throws Exception
+    public void testGetRealm_NoSuch()
+        throws Exception
     {
         try
         {
@@ -89,29 +91,26 @@ public class ClassWorldTest extends TestCase
         {
             // expected and correct
 
-            assertSame( this.world,
-                        e.getWorld() );
+            assertSame( this.world, e.getWorld() );
 
-            assertEquals( "foo",
-                          e.getId() );
+            assertEquals( "foo", e.getId() );
         }
     }
 
-    public void testGetRealms() throws Exception
+    public void testGetRealms()
+        throws Exception
     {
         assertTrue( this.world.getRealms().isEmpty() );
 
         ClassRealm foo = this.world.newRealm( "foo" );
 
-        assertEquals( 1,
-                      this.world.getRealms().size() );
+        assertEquals( 1, this.world.getRealms().size() );
 
         assertTrue( this.world.getRealms().contains( foo ) );
 
         ClassRealm bar = this.world.newRealm( "bar" );
 
-        assertEquals( 2,
-                      this.world.getRealms().size() );
+        assertEquals( 2, this.world.getRealms().size() );
 
         assertTrue( this.world.getRealms().contains( bar ) );
     }

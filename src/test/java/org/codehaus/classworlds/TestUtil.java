@@ -50,7 +50,10 @@ public class TestUtil
         String basedir = System.getProperty( "basedir" );
 
         /* do our best if we are not running from surefire */
-        if ( basedir == null || basedir.equals( "" ) );
+        if ( basedir == null || basedir.equals( "" ) )
+        {
+            ;
+        }
         {
             basedir = ( new File( "." ) ).getAbsolutePath();
         }

@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class ClassRealmImplTest
-    extends TestCase
+    extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
 
@@ -108,7 +108,8 @@ public class ClassRealmImplTest
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
-    public void testLocateSourceRealm_Hierachy() throws Exception
+    public void testLocateSourceRealm_Hierachy()
+        throws Exception
     {
         DefaultClassRealm mainRealm = (DefaultClassRealm) this.world.newRealm( "main" );
 
@@ -134,15 +135,15 @@ public class ClassRealmImplTest
 
         assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.Goober" ) );
 
-        assertSame( fooBarBazRealm,
-                    mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
 
         assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
 
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
-    public void testLocateSourceRealm_Hierachy_Reverse() throws Exception
+    public void testLocateSourceRealm_Hierachy_Reverse()
+        throws Exception
     {
         ClassRealm fooBarBazRealm = this.world.newRealm( "fooBarBaz" );
 
@@ -175,7 +176,8 @@ public class ClassRealmImplTest
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
-    public void testLoadClass_SystemClass() throws Exception
+    public void testLoadClass_SystemClass()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
@@ -184,7 +186,8 @@ public class ClassRealmImplTest
         assertNotNull( cls );
     }
 
-    public void testLoadClass_NonSystemClass() throws Exception
+    public void testLoadClass_NonSystemClass()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
@@ -202,7 +205,8 @@ public class ClassRealmImplTest
         }
     }
 
-    public void testLoadClass_ClassWorldsClass() throws Exception
+    public void testLoadClass_ClassWorldsClass()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
@@ -213,7 +217,8 @@ public class ClassRealmImplTest
         assertSame( ClassWorld.class, cls );
     }
 
-    public void testLoadClass_Local() throws Exception
+    public void testLoadClass_Local()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
@@ -244,7 +249,8 @@ public class ClassRealmImplTest
         }
     }
 
-    public void testLoadClass_Imported() throws Exception
+    public void testLoadClass_Imported()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
@@ -291,7 +297,8 @@ public class ClassRealmImplTest
         assertSame( classA, classMain );
     }
 
-    public void testLoadClass_Package() throws Exception
+    public void testLoadClass_Package()
+        throws Exception
     {
         ClassRealm realmA = this.world.newRealm( "realmA" );
         realmA.addURL( getJarUrl( "a.jar" ) );
@@ -306,7 +313,8 @@ public class ClassRealmImplTest
     }
 
 
-    public void testLoadClass_Complex() throws Exception
+    public void testLoadClass_Complex()
+        throws Exception
     {
         ClassRealm realmA = this.world.newRealm( "realmA" );
         ClassRealm realmB = this.world.newRealm( "realmB" );
@@ -316,14 +324,11 @@ public class ClassRealmImplTest
         realmB.addURL( getJarUrl( "b.jar" ) );
         realmC.addURL( getJarUrl( "c.jar" ) );
 
-        realmC.importFrom( "realmA",
-                           "a" );
+        realmC.importFrom( "realmA", "a" );
 
-        realmC.importFrom( "realmB",
-                           "b" );
+        realmC.importFrom( "realmB", "b" );
 
-        realmA.importFrom( "realmC",
-                           "c" );
+        realmA.importFrom( "realmC", "c" );
 
         Class classA_A = realmA.loadClass( "a.A" );
         Class classB_B = realmB.loadClass( "b.B" );
@@ -333,14 +338,11 @@ public class ClassRealmImplTest
         assertNotNull( classB_B );
         assertNotNull( classC_C );
 
-        assertEquals( realmA.getStrategy(),
-                      classA_A.getClassLoader() );
+        assertEquals( realmA.getStrategy(), classA_A.getClassLoader() );
 
-        assertEquals( realmB.getStrategy(),
-                      classB_B.getClassLoader() );
+        assertEquals( realmB.getStrategy(), classB_B.getClassLoader() );
 
-        assertEquals( realmC.getStrategy(),
-                      classC_C.getClassLoader() );
+        assertEquals( realmC.getStrategy(), classC_C.getClassLoader() );
 
         // load from C
 
@@ -348,21 +350,17 @@ public class ClassRealmImplTest
 
         assertNotNull( classA_C );
 
-        assertSame( classA_A,
-                    classA_C );
+        assertSame( classA_A, classA_C );
 
-        assertEquals( realmA.getStrategy(),
-                      classA_C.getClassLoader() );
+        assertEquals( realmA.getStrategy(), classA_C.getClassLoader() );
 
         Class classB_C = realmC.loadClass( "b.B" );
 
         assertNotNull( classB_C );
 
-        assertSame( classB_B,
-                    classB_C );
+        assertSame( classB_B, classB_C );
 
-        assertEquals( realmB.getStrategy(),
-                      classB_C.getClassLoader() );
+        assertEquals( realmB.getStrategy(), classB_C.getClassLoader() );
 
         // load from A
 
@@ -370,11 +368,9 @@ public class ClassRealmImplTest
 
         assertNotNull( classC_A );
 
-        assertSame( classC_C,
-                    classC_A );
+        assertSame( classC_C, classC_A );
 
-        assertEquals( realmC.getStrategy(),
-                      classC_A.getClassLoader() );
+        assertEquals( realmC.getStrategy(), classC_A.getClassLoader() );
 
         try
         {
@@ -409,12 +405,14 @@ public class ClassRealmImplTest
         }
     }
 
-    protected URL getJarUrl( String jarName ) throws MalformedURLException
+    protected URL getJarUrl( String jarName )
+        throws MalformedURLException
     {
         return TestUtil.getTestResourceUrl( jarName );
     }
 
-    public void testLoadClass_ClassWorldsClassRepeatedly() throws Exception
+    public void testLoadClass_ClassWorldsClassRepeatedly()
+        throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 

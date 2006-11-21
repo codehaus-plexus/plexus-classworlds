@@ -18,9 +18,9 @@ package a;
 
 public class Aa
 {
-  public static int main(String[] args)
-  {
-     System.err.println( "a.Aa.main()" );
-     return 15;
-  }
+    public static int main( String[] args )
+    {
+        System.err.println( "a.Aa.main()" );
+        return 15;
+    }
 }
