@@ -48,12 +48,12 @@ package org.codehaus.classworlds;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -146,7 +146,7 @@ public class Configurator
      *                                 a non-existent realm.
      */
     public void configure( InputStream is )
-        throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
+        throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
         BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
 
@@ -221,7 +221,9 @@ public class Configurator
                 int usingLoc = conf.indexOf( " using" ) + 1;
 
                 String property = null;
+
                 String propertiesFileName = null;
+                
                 if ( usingLoc > 0 )
                 {
                     property = conf.substring( 0, usingLoc ).trim();
