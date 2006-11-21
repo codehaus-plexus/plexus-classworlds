@@ -312,6 +312,7 @@ public class Launcher
         Thread.currentThread().setContextClassLoader( cl );
 
         Object ret = mainMethod.invoke( mainClass, new Object[]{args, getWorld()} );
+
         if ( ret instanceof Integer )
         {
             exitCode = ( (Integer) ret ).intValue();
@@ -350,6 +351,7 @@ public class Launcher
         Thread.currentThread().setContextClassLoader( (ClassLoader) mainRealm.getStrategy() );
 
         Object ret = mainMethod.invoke( mainClass, new Object[]{args} );
+
         if ( ret instanceof Integer )
         {
             exitCode = ( (Integer) ret ).intValue();
@@ -372,11 +374,13 @@ public class Launcher
         try
         {
             int exitCode = mainWithExitCode( args );
+
             System.exit( exitCode );
         }
         catch ( Exception e )
         {
             e.printStackTrace();
+
             System.exit( 100 );
         }
     }
@@ -393,7 +397,7 @@ public class Launcher
     {
         String classworldsConf = System.getProperty( CLASSWORLDS_CONF );
 
-        InputStream is = null;
+        InputStream is;
 
         Launcher launcher = new Launcher();
 
