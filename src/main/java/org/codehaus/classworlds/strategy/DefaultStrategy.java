@@ -40,7 +40,7 @@ public class DefaultStrategy
 {
     public DefaultStrategy()
     {
-        super( new URL[0] );
+        super( new URL[0], null );
     }
 
     public Class loadClass( ClassRealm realm, String name )
