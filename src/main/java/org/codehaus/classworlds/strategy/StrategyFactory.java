@@ -30,18 +30,34 @@ public class StrategyFactory
 
     public static Strategy getStrategy( ClassRealm realm )
     {
-        return getStrategy( realm, null );
+        return getStrategy( realm, "default", null );
+    }
+
+    public static Strategy getStrategy( ClassRealm realm,
+                                        ClassLoader foreign )
+    {
+        return getStrategy( realm, "default", foreign );
     }
 
     public static Strategy getStrategy( ClassRealm realm,
                                         String hint )
     {
+        return getStrategy( realm, hint, null );
+    }
+
+    public static Strategy getStrategy( ClassRealm realm,
+                                        String hint,
+                                        ClassLoader foreign )
+    {
+        if ( foreign != null )
+        {
+            return new ForeignStrategy( realm, foreign );
+        }
+
         // Here we shall check hint to load non-default strategies
 
         Strategy ret = new DefaultStrategy( realm );
         
         return ret;
     }
-
-    // TODO might need to add variants that take a ClassLoader as a parameter?
 }

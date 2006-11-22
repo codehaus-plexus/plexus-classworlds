@@ -54,8 +54,6 @@ public class DefaultClassRealm
 
     private TreeSet imports;
 
-    private ClassLoader foreignClassLoader;
-
     private Strategy strategy;
 
     private ClassRealm parent;
@@ -76,12 +74,7 @@ public class DefaultClassRealm
 
         imports = new TreeSet();
 
-        if ( foreignClassLoader != null )
-        {
-            this.foreignClassLoader = foreignClassLoader;
-        }
-
-        strategy = StrategyFactory.getStrategy( this );
+        strategy = StrategyFactory.getStrategy( this, foreignClassLoader );
     }
 
     public URL[] getURLs()
@@ -150,16 +143,6 @@ public class DefaultClassRealm
         childRealm.setParent( this );
 
         return childRealm;
-    }
-
-    public ClassLoader getForeignClassLoader()
-    {
-        return foreignClassLoader;
-    }
-
-    public void setForeignClassLoader( ClassLoader foreignClassLoader )
-    {
-        this.foreignClassLoader = foreignClassLoader;
     }
 
     public void display()
