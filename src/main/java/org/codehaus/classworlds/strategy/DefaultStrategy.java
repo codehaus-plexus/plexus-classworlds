@@ -139,18 +139,6 @@ public class DefaultStrategy
         return is;
     }
 
-    public Enumeration getResources( String name )
-        throws IOException
-    {
-        return getResources( realm, name );
-    }
-
-    public Enumeration getResources( ClassRealm realm, String name )
-        throws IOException
-    {
-        return findResources( realm, name );
-    }
-
     public Enumeration findResources( String name )
         throws IOException
     {

@@ -38,10 +38,6 @@ public interface Strategy
 
     URL getResource( ClassRealm classRealm, String name );
 
-    // not sure we need both find/getResources
-    Enumeration getResources( ClassRealm classRealm, String string )
-        throws IOException;
-
     InputStream getResourceAsStream( ClassRealm classRealm, String name );
 
     Enumeration findResources( ClassRealm classRealm, String name )

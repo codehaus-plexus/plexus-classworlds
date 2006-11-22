@@ -118,12 +118,12 @@ public class StrategyTest
     }
 
 
-    public void testGetResources()
+    public void testFindResources()
         throws Exception
     {
         strategy.addURL( getJarUrl( "component1-1.0.jar" ) );
 
-        Enumeration e = strategy.getResources( realm, "META-INF/plexus/components.xml" );
+        Enumeration e = strategy.findResources( realm, "META-INF/plexus/components.xml" );
 
         assertNotNull( e );
 
