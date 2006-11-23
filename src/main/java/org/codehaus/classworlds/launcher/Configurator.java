@@ -18,8 +18,8 @@ package org.codehaus.classworlds.launcher;
 
 import org.codehaus.classworlds.ClassWorld;
 import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -430,7 +430,7 @@ public class Configurator
                 {
                     ClassRealm realm = (ClassRealm) configuredRealms.get( realmName );
 
-                    realm.setParent( parentRealm );
+                    realm.setParentRealm( parentRealm );
                 }
             }
         }

@@ -18,8 +18,8 @@ package org.codehaus.classworlds.launcher;
 
 import org.codehaus.classworlds.ClassWorld;
 import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -267,7 +267,7 @@ public class Launcher
 
         Method mainMethod = getEnhancedMainMethod();
 
-        ClassLoader cl = (ClassLoader) mainRealm.getStrategy();
+        ClassLoader cl = mainRealm;
 
         // ----------------------------------------------------------------------
         // This is what the classloader for the main realm looks like when we
@@ -323,7 +323,7 @@ public class Launcher
 
         Method mainMethod = getMainMethod();
 
-        Thread.currentThread().setContextClassLoader( (ClassLoader) mainRealm.getStrategy() );
+        Thread.currentThread().setContextClassLoader( mainRealm );
 
         Object ret = mainMethod.invoke( mainClass, new Object[]{args} );
 

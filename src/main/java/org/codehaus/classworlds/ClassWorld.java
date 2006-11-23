@@ -17,7 +17,6 @@ package org.codehaus.classworlds;
  */
 
 import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.DefaultClassRealm;
 import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.NoSuchRealmException;
 
@@ -74,13 +73,13 @@ public class ClassWorld
 
         if ( classLoader != null )
         {
-            realm = new DefaultClassRealm( this, id, classLoader );
+            realm = new ClassRealm( this, id, classLoader );
 
             realms.put( id, realm );
         }
         else
         {
-            realm = new DefaultClassRealm( this, id );
+            realm = new ClassRealm( this, id );
         }
 
         realms.put( id, realm );

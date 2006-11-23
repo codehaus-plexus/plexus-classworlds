@@ -33,17 +33,13 @@ import java.io.InputStream;
  */
 public interface Strategy
 {
-    Class loadClass( ClassRealm classRealm, String name )
+    Class loadClass( String name )
         throws ClassNotFoundException;
 
-    URL getResource( ClassRealm classRealm, String name );
+    URL getResource( String name );
 
-    InputStream getResourceAsStream( ClassRealm classRealm, String name );
+    InputStream getResourceAsStream( String name );
 
-    Enumeration findResources( ClassRealm classRealm, String name )
+    Enumeration findResources( String name )
         throws IOException;
-
-    void addURL( URL url );
-
-    URL[] getURLs();
 }

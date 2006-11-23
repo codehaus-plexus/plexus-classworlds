@@ -19,7 +19,6 @@ package org.codehaus.classworlds.realm;
 import java.io.File;
 import java.net.URL;
 
-import org.codehaus.classworlds.realm.DefaultClassRealm;
 import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.classworlds.ClassWorld;
@@ -39,7 +38,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromRealm()
         throws Exception
     {
-        DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -49,7 +48,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
         throws Exception
     {
-        DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -61,7 +60,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
         throws Exception
     {
-        DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -75,7 +74,7 @@ public class DefaultClassRealmTest
     public void testLoadNonExistentClass()
         throws Exception
     {
-        DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -113,7 +112,7 @@ public class DefaultClassRealmTest
     public void testResource()
         throws Exception
     {
-        DefaultClassRealm mainRealm = new DefaultClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 

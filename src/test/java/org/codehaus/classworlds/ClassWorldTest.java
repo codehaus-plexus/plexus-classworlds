@@ -17,8 +17,8 @@ package org.codehaus.classworlds;
  */
 
 import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 public class ClassWorldTest
     extends AbstractClassWorldsTestCase

@@ -16,43 +16,33 @@ package org.codehaus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.UrlUtils;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
+ * Load classes directly from the Realm first before attempting to get from the parent.
  *
  * @uthor: Andrew Williams
  * @since: Nov 19, 2006
  * @version: $Id$
  */
 public class DefaultStrategy
-    extends URLClassLoader
     implements Strategy
 {
     private ClassRealm realm;
 
     public DefaultStrategy( ClassRealm realm )
     {
-        super( new URL[0], null );
         this.realm = realm;
     }
 
     public Class loadClass( String name )
-        throws ClassNotFoundException
-    {
-        return loadClass( realm, name );
-    }
-
-    public Class loadClass( ClassRealm realm, String name )
         throws ClassNotFoundException
     {
         if ( name.startsWith( "org.codehaus.classworlds." ) )
@@ -68,20 +58,21 @@ public class DefaultStrategy
             {
                 try
                 {
-                    return sourceRealm.loadClass( name );
+                    return sourceRealm.loadRealmClass( name );
                 }
                 catch ( ClassNotFoundException cnfe )
                 {
                     // Do nothing as we will load directly
                 }
             }
-            return super.loadClass( name );
+
+            return realm.loadRealmClass( name );
         }
         catch ( ClassNotFoundException e )
         {
-            if ( realm.getParent() != null )
+            if ( realm.getParentRealm() != null )
             {
-                return realm.getParent().loadClass( name );
+                return realm.getParentRealm().loadClass( name );
             }
 
             throw e;
@@ -89,11 +80,6 @@ public class DefaultStrategy
     }
 
     public URL getResource( String name )
-    {
-        return getResource( realm, name );
-    }
-
-    public URL getResource( ClassRealm realm, String name )
     {
         URL resource = null;
 
@@ -107,18 +93,18 @@ public class DefaultStrategy
         }
         if ( resource == null )
         {
-            resource = super.getResource( name );
+            resource = realm.getRealmResource( name );
         }
 
         if ( resource == null && realm.getParent() != null )
         {
-            resource = realm.getParent().getResource( name );
+            resource = realm.getParentRealm().getRealmResource( name );
         }
 
         return resource;
     }
 
-    public InputStream getResourceAsStream( ClassRealm realm, String name )
+    public InputStream getResourceAsStream( String name )
     {
         URL url = getResource( name );
 
@@ -142,12 +128,6 @@ public class DefaultStrategy
     public Enumeration findResources( String name )
         throws IOException
     {
-        return findResources( realm, name );
-    }
-
-    public Enumeration findResources( ClassRealm realm, String name )
-        throws IOException
-    {
         name = UrlUtils.normalizeUrlPath( name );
 
         Vector resources = new Vector();
@@ -165,7 +145,7 @@ public class DefaultStrategy
         }
 
         // Load from our classloader
-        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = realm.findRealmResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }
@@ -173,33 +153,12 @@ public class DefaultStrategy
         // Find resources from the parent realm.
         if ( realm.getParent() != null )
         {
-            for ( Enumeration parent = realm.getParent().findResources( name ); parent.hasMoreElements(); )
+            for ( Enumeration parent = realm.getParentRealm().findRealmResources( name ); parent.hasMoreElements(); )
             {
                 resources.addElement( parent.nextElement() );
             }
         }
 
         return resources.elements();
-    }
-
-    public void addURL( URL url )
-    {
-        String urlStr = url.toExternalForm();
-
-        if ( urlStr.startsWith( "jar:" ) && urlStr.endsWith( "!/" ) )
-        {
-            urlStr = urlStr.substring( 4, urlStr.length() - 2 );
-
-            try
-            {
-                url = new URL( urlStr );
-            }
-            catch ( MalformedURLException e )
-            {
-                e.printStackTrace();
-            }
-        }
-
-        super.addURL( url );
     }
 }

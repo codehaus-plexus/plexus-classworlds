@@ -1,12 +1,12 @@
 package org.codehaus.classworlds.strategy;
 
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.UrlUtils;
+import org.codehaus.classworlds.realm.ClassRealm;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
-import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,7 +37,7 @@ public class ForeignStrategy
         }
         catch ( ClassNotFoundException e )
         {
-            return super.loadClass( realm, name );
+            return super.loadClass( name );
         }
     }
 
@@ -49,7 +49,7 @@ public class ForeignStrategy
 
         if ( resource == null )
         {
-            resource = super.getResource( realm, name );
+            resource = super.getResource( name );
         }
 
         return resource;
@@ -63,7 +63,7 @@ public class ForeignStrategy
         Vector resources = new Vector();
 
         // Load from DefaultStrategy
-        for ( Enumeration direct = super.findResources( realm, name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }

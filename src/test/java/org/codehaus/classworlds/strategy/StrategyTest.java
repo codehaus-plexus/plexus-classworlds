@@ -17,10 +17,9 @@ package org.codehaus.classworlds.strategy;
  */
 
 import junit.framework.TestCase;
-import org.codehaus.classworlds.strategy.Strategy;
-import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.ClassWorld;
 import org.codehaus.classworlds.TestUtil;
+import org.codehaus.classworlds.realm.ClassRealm;
 
 import java.io.File;
 import java.io.InputStream;
@@ -48,13 +47,13 @@ public class StrategyTest
 
         this.strategy = this.realm.getStrategy();
         
-        strategy.addURL( getJarUrl( "component0-1.0.jar" ) );
+        realm.addURL( getJarUrl( "component0-1.0.jar" ) );
     }
 
     public void testLoadingOfApplicationClass()
         throws Exception
     {
-        Class c = strategy.loadClass( realm, "org.codehaus.plexus.Component0" );
+        Class c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
     }
@@ -64,11 +63,11 @@ public class StrategyTest
     {
         Class c;
 
-        c = strategy.loadClass( realm, "org.codehaus.plexus.Component0" );
+        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
 
-        c = strategy.loadClass( realm, "org.codehaus.plexus.Component0" );
+        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
     }
@@ -77,7 +76,7 @@ public class StrategyTest
     public void testLoadingOfSystemClass()
         throws Exception
     {
-        Class c = strategy.loadClass( realm, "java.lang.Object" );
+        Class c = strategy.loadClass( "java.lang.Object" );
 
         assertNotNull( c );
     }
@@ -87,7 +86,7 @@ public class StrategyTest
     {
         try
         {
-            strategy.loadClass( realm, "org.codehaus.plexus.NonExistentComponent" );
+            strategy.loadClass( "org.codehaus.plexus.NonExistentComponent" );
 
             fail( "Should have thrown a ClassNotFoundException!" );
         }
@@ -100,7 +99,7 @@ public class StrategyTest
     public void testGetApplicationResource()
         throws Exception
     {
-        URL resource = strategy.getResource( realm, "META-INF/plexus/components.xml" );
+        URL resource = strategy.getResource( "META-INF/plexus/components.xml" );
 
         assertNotNull( resource );
 
@@ -112,7 +111,7 @@ public class StrategyTest
     public void testGetSystemResource()
         throws Exception
     {
-        URL resource = strategy.getResource( realm, "java/lang/Object.class" );
+        URL resource = strategy.getResource( "java/lang/Object.class" );
 
         assertNotNull( resource );
     }
@@ -121,9 +120,9 @@ public class StrategyTest
     public void testFindResources()
         throws Exception
     {
-        strategy.addURL( getJarUrl( "component1-1.0.jar" ) );
+        realm.addURL( getJarUrl( "component1-1.0.jar" ) );
 
-        Enumeration e = strategy.findResources( realm, "META-INF/plexus/components.xml" );
+        Enumeration e = strategy.findResources( "META-INF/plexus/components.xml" );
 
         assertNotNull( e );
 
@@ -143,7 +142,7 @@ public class StrategyTest
     public void testGetResourceAsStream()
         throws Exception
     {
-        InputStream is = strategy.getResourceAsStream( realm, "META-INF/plexus/components.xml" );
+        InputStream is = strategy.getResourceAsStream( "META-INF/plexus/components.xml" );
 
         assertNotNull( is );
 

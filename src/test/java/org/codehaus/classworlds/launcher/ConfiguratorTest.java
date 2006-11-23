@@ -169,7 +169,8 @@ public class ConfiguratorTest
 
         // Test the glob support
         Strategy strat = globRealm.getStrategy();
-        URL[] urls = strat.getURLs();
+
+        URL[] urls = globRealm.getURLs();
 
         String basedir = TestUtil.getBasedir();
         assertArrayContains( urls, new File( basedir, "src/test/test-data/nested.jar" ).toURL() );
@@ -199,7 +200,7 @@ public class ConfiguratorTest
 
         Strategy strat = optRealm.getStrategy();
 
-        URL[] urls = strat.getURLs();
+        URL[] urls = optRealm.getURLs();
 
         assertEquals( "no urls", 0, urls.length );
     }
@@ -225,7 +226,7 @@ public class ConfiguratorTest
 
         Strategy strat = optRealm.getStrategy();
 
-        URL[] urls = strat.getURLs();
+        URL[] urls = optRealm.getURLs();
 
         assertEquals( "one url", 1, urls.length );
 

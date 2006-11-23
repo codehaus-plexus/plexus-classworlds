@@ -16,7 +16,7 @@ package org.codehaus.classworlds.realm;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.realm.DefaultClassRealm;
+import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.Entry;
 import org.codehaus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.classworlds.ClassWorld;
@@ -43,7 +43,7 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        DefaultClassRealm r = (DefaultClassRealm) cw.newRealm( "test1" );
+        ClassRealm r = (ClassRealm) cw.newRealm( "test1" );
 
         Entry entry1 = new Entry( r, "org.test" );
         Entry entry2 = new Entry( r, "org.test.impl" );
@@ -60,8 +60,8 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        DefaultClassRealm r1 = (DefaultClassRealm) cw.newRealm( "test1" );
-        DefaultClassRealm r2 = (DefaultClassRealm) cw.newRealm( "test2" );
+        ClassRealm r1 = (ClassRealm) cw.newRealm( "test1" );
+        ClassRealm r2 = (ClassRealm) cw.newRealm( "test2" );
 
         Entry entry1 = new Entry( r1, "org.test" );
         Entry entry2 = new Entry( r2, "org.test" );

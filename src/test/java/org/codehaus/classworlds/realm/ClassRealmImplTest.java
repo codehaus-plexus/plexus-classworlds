@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 
 import java.net.URL;
 
-import org.codehaus.classworlds.realm.DefaultClassRealm;
 import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.classworlds.ClassWorld;
@@ -61,7 +60,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_NoImports()
         throws Exception
     {
-        DefaultClassRealm realm = new DefaultClassRealm( this.world, "foo" );
+        ClassRealm realm = new ClassRealm( this.world, "foo" );
 
         assertSame( realm, realm.locateSourceRealm( "com.werken.Stuff" ) );
     }
@@ -69,7 +68,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_SimpleImport()
         throws Exception
     {
-        DefaultClassRealm mainRealm = (DefaultClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
 
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
 
@@ -89,7 +88,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_MultipleImport()
         throws Exception
     {
-        DefaultClassRealm mainRealm = (DefaultClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
 
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
 
@@ -115,7 +114,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_Hierachy()
         throws Exception
     {
-        DefaultClassRealm mainRealm = (DefaultClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
 
         ClassRealm fooRealm = this.world.newRealm( "foo" );
 
@@ -155,7 +154,7 @@ public class ClassRealmImplTest
 
         ClassRealm fooRealm = this.world.newRealm( "foo" );
 
-        DefaultClassRealm mainRealm = (DefaultClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
 
@@ -290,13 +289,13 @@ public class ClassRealmImplTest
 
         assertNotNull( classA );
 
-        assertEquals( realmA.getStrategy(), classA.getClassLoader() );
+        assertEquals( realmA, classA.getClassLoader() );
 
         Class classMain = mainRealm.loadClass( "a.A" );
 
         assertNotNull( classMain );
 
-        assertEquals( realmA.getStrategy(), classMain.getClassLoader() );
+        assertEquals( realmA, classMain.getClassLoader() );
 
         assertSame( classA, classMain );
     }
@@ -342,11 +341,11 @@ public class ClassRealmImplTest
         assertNotNull( classB_B );
         assertNotNull( classC_C );
 
-        assertEquals( realmA.getStrategy(), classA_A.getClassLoader() );
+        assertEquals( realmA, classA_A.getClassLoader() );
 
-        assertEquals( realmB.getStrategy(), classB_B.getClassLoader() );
+        assertEquals( realmB, classB_B.getClassLoader() );
 
-        assertEquals( realmC.getStrategy(), classC_C.getClassLoader() );
+        assertEquals( realmC, classC_C.getClassLoader() );
 
         // load from C
 
@@ -356,7 +355,7 @@ public class ClassRealmImplTest
 
         assertSame( classA_A, classA_C );
 
-        assertEquals( realmA.getStrategy(), classA_C.getClassLoader() );
+        assertEquals( realmA, classA_C.getClassLoader() );
 
         Class classB_C = realmC.loadClass( "b.B" );
 
@@ -364,7 +363,7 @@ public class ClassRealmImplTest
 
         assertSame( classB_B, classB_C );
 
-        assertEquals( realmB.getStrategy(), classB_C.getClassLoader() );
+        assertEquals( realmB, classB_C.getClassLoader() );
 
         // load from A
 
@@ -374,7 +373,7 @@ public class ClassRealmImplTest
 
         assertSame( classC_C, classC_A );
 
-        assertEquals( realmC.getStrategy(), classC_A.getClassLoader() );
+        assertEquals( realmC, classC_A.getClassLoader() );
 
         try
         {
