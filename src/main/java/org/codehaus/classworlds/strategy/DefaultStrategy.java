@@ -136,20 +136,20 @@ public class DefaultStrategy
         if ( sourceRealm != realm )
         {
             // Attempt to load directly first, then go to the imported packages.
-            for ( Enumeration res = sourceRealm.findResources( name ); res.hasMoreElements(); )
+            for ( Enumeration res = sourceRealm.findRealmResources( name ); res.hasMoreElements(); )
             {
                 resources.addElement( res.nextElement() );
             }
         }
 
-        // Load from our classloader
+        // Load from our realm
         for ( Enumeration direct = realm.findRealmResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }
 
         // Find resources from the parent realm.
-        if ( realm.getParent() != null )
+        if ( realm.getParentRealm() != null )
         {
             for ( Enumeration parent = realm.getParentRealm().findRealmResources( name ); parent.hasMoreElements(); )
             {

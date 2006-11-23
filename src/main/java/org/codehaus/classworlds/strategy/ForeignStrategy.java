@@ -28,7 +28,7 @@ public class ForeignStrategy
         this.foreign = foreign;
     }
 
-    public Class loadClass( ClassRealm realm, String name )
+    public Class loadClass( String name )
         throws ClassNotFoundException
     {
         try
@@ -37,25 +37,25 @@ public class ForeignStrategy
         }
         catch ( ClassNotFoundException e )
         {
-            return super.loadClass( name );
+            return realm.loadRealmClass( name );
         }
     }
 
-    public URL getResource( ClassRealm realm, String name )
+    public URL getResource( String name )
     {
-        URL resource = null;
+        URL resource;
 
         resource = foreign.getResource( name );
 
         if ( resource == null )
         {
-            resource = super.getResource( name );
+            resource = realm.getRealmResource( name );
         }
 
         return resource;
     }
 
-    public Enumeration findResources( ClassRealm realm, String name )
+    public Enumeration findResources( String name )
         throws IOException
     {
         name = UrlUtils.normalizeUrlPath( name );
@@ -63,7 +63,7 @@ public class ForeignStrategy
         Vector resources = new Vector();
 
         // Load from DefaultStrategy
-        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = realm.findRealmResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }
