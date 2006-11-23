@@ -1,5 +1,7 @@
 package org.codehaus.classworlds.strategy;
 
+import org.codehaus.classworlds.realm.ClassRealm;
+
 /*
  * Copyright 2001-2006 Codehaus Foundation.
  *
@@ -22,4 +24,10 @@ package org.codehaus.classworlds.strategy;
 public abstract class AbstractStrategy
     implements Strategy    
 {
+    protected ClassRealm realm;
+
+    public AbstractStrategy( ClassRealm realm )
+    {
+        this.realm = realm;
+    }
 }

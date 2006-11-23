@@ -33,13 +33,11 @@ import java.util.Vector;
  * @version: $Id$
  */
 public class DefaultStrategy
-    implements Strategy
+    extends AbstractStrategy
 {
-    private ClassRealm realm;
-
     public DefaultStrategy( ClassRealm realm )
     {
-        this.realm = realm;
+        super( realm );
     }
 
     public Class loadClass( String name )
