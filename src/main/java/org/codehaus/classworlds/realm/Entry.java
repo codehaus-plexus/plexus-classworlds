@@ -1,7 +1,5 @@
 package org.codehaus.classworlds.realm;
 
-import org.codehaus.classworlds.realm.ClassRealm;
-
 /*
  * Copyright 2001-2006 Codehaus Foundation.
  *

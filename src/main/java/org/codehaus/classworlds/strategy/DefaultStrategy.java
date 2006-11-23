@@ -38,9 +38,18 @@ public class DefaultStrategy
     extends URLClassLoader
     implements Strategy
 {
-    public DefaultStrategy()
+    private ClassRealm realm;
+
+    public DefaultStrategy( ClassRealm realm )
     {
         super( new URL[0], null );
+        this.realm = realm;
+    }
+
+    public Class loadClass( String name )
+        throws ClassNotFoundException
+    {
+        return loadClass( realm, name );
     }
 
     public Class loadClass( ClassRealm realm, String name )
@@ -77,6 +86,11 @@ public class DefaultStrategy
 
             throw e;
         }
+    }
+
+    public URL getResource( String name )
+    {
+        return getResource( realm, name );
     }
 
     public URL getResource( ClassRealm realm, String name )
@@ -125,7 +139,7 @@ public class DefaultStrategy
         return is;
     }
 
-    public Enumeration getResources( ClassRealm realm, String name )
+    public Enumeration findResources( String name )
         throws IOException
     {
         return findResources( realm, name );

@@ -16,9 +16,7 @@ package org.codehaus.classworlds.launcher;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.launcher.Configurator;
 import org.codehaus.classworlds.ClassWorld;
-import org.codehaus.classworlds.launcher.ConfigurationException;
 import org.codehaus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.classworlds.realm.ClassRealm;
 import org.codehaus.classworlds.realm.NoSuchRealmException;
