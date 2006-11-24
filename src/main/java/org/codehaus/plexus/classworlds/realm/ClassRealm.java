@@ -254,4 +254,12 @@ public class ClassRealm
             System.out.println( "import: " + i.next() );
         }
     }
+
+    public boolean equals(Object o)
+    {
+        if ( !( o instanceof ClassRealm ) )
+            return false;
+
+        return getId().equals( ( (ClassRealm) o ).getId() );
+    }    
 }

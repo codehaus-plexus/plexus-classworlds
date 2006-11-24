@@ -43,7 +43,8 @@ public class DefaultStrategy
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) )
+        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) ||
+            name.startsWith( "org.codehaus.classworlds." ) )
         {
             return realm.getWorld().getClass().getClassLoader().loadClass( name );
         }
@@ -85,7 +86,7 @@ public class DefaultStrategy
 
         ClassRealm sourceRealm = realm.locateSourceRealm( name );
 
-        if ( sourceRealm != realm )
+        if ( !sourceRealm.equals( realm ) )
         {
             resource = sourceRealm.getResource( name );
         }
