@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.launcher;
+package org.codehaus.plexus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -19,9 +19,8 @@ package org.codehaus.classworlds.launcher;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.codehaus.classworlds.launcher.Launcher;
-import org.codehaus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.plexus.classworlds.TestUtil;
 
 public class LauncherTest
     extends AbstractClassWorldsTestCase

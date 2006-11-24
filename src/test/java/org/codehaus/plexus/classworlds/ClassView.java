@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.plexus.classworlds;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.

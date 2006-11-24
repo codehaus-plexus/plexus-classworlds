@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.launcher;
+package org.codehaus.plexus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,10 +16,10 @@ package org.codehaus.classworlds.launcher;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.ClassWorld;
-import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -118,9 +118,9 @@ public class Launcher
      * @throws IOException             If an error occurs reading the config file.
      * @throws MalformedURLException   If the config file contains invalid URLs.
      * @throws ConfigurationException  If the config file is corrupt.
-     * @throws org.codehaus.classworlds.realm.DuplicateRealmException If the config file defines two realms
+     * @throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException If the config file defines two realms
      *                                 with the same id.
-     * @throws org.codehaus.classworlds.realm.NoSuchRealmException    If the config file defines a main entry
+     * @throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException    If the config file defines a main entry
      *                                 point in a non-existent realm.
      */
     public void configure( InputStream is )

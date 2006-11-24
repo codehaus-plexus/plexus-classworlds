@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.realm;
+package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -20,10 +20,9 @@ import java.net.MalformedURLException;
 
 import java.net.URL;
 
-import org.codehaus.classworlds.realm.ClassRealm;
-import org.codehaus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.classworlds.ClassWorld;
-import org.codehaus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.TestUtil;
 
 public class ClassRealmImplTest
     extends AbstractClassWorldsTestCase
@@ -213,7 +212,7 @@ public class ClassRealmImplTest
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
-        Class cls = mainRealm.loadClass( "org.codehaus.classworlds.ClassWorld" );
+        Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
 
         assertNotNull( cls );
 
@@ -421,7 +420,7 @@ public class ClassRealmImplTest
 
         for ( int i = 0; i < 100; i++ )
         {
-            Class cls = mainRealm.loadClass( "org.codehaus.classworlds.ClassWorld" );
+            Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
 
             assertNotNull( cls );
 

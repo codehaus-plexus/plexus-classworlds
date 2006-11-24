@@ -1,10 +1,4 @@
-/*
- * Created on Jul 31, 2003
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code Template
- */
-package org.codehaus.classworlds;
+package org.codehaus.plexus.classworlds;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -23,7 +17,6 @@ package org.codehaus.classworlds;
  */
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 

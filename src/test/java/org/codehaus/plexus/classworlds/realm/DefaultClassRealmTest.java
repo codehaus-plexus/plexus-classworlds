@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.realm;
+package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -19,9 +19,8 @@ package org.codehaus.classworlds.realm;
 import java.io.File;
 import java.net.URL;
 
-import org.codehaus.classworlds.realm.ClassRealm;
-import org.codehaus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.plexus.classworlds.ClassWorld;
 
 public class DefaultClassRealmTest
     extends AbstractClassWorldsTestCase

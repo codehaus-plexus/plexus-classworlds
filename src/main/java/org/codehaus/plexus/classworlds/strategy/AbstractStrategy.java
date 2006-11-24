@@ -1,6 +1,6 @@
-package org.codehaus.classworlds.strategy;
+package org.codehaus.plexus.classworlds.strategy;
 
-import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.

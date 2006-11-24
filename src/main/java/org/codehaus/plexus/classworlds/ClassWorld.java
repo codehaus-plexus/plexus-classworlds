@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.plexus.classworlds;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,9 +16,9 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
-import org.codehaus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 import java.util.Map;
 import java.util.Collection;

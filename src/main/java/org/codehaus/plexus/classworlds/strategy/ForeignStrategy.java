@@ -1,7 +1,7 @@
-package org.codehaus.classworlds.strategy;
+package org.codehaus.plexus.classworlds.strategy;
 
-import org.codehaus.classworlds.UrlUtils;
-import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.UrlUtils;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
 import java.net.URL;

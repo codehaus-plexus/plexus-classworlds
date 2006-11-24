@@ -16,7 +16,7 @@ package b;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.ClassWorld;
 
 public class Bb
 {

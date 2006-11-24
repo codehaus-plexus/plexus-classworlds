@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.realm;
+package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,9 +16,9 @@ package org.codehaus.classworlds.realm;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.strategy.Strategy;
-import org.codehaus.classworlds.strategy.StrategyFactory;
-import org.codehaus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
+import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
+import org.codehaus.plexus.classworlds.ClassWorld;
 
 import java.io.IOException;
 import java.io.InputStream;

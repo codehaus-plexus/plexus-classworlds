@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.launcher;
+package org.codehaus.plexus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -22,15 +22,12 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
 
-import org.codehaus.classworlds.strategy.Strategy;
-import org.codehaus.classworlds.launcher.Configurator;
-import org.codehaus.classworlds.launcher.Launcher;
-import org.codehaus.classworlds.launcher.ConfigurationException;
-import org.codehaus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.classworlds.realm.ClassRealm;
-import org.codehaus.classworlds.ClassWorld;
-import org.codehaus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.TestUtil;
 
 public class ConfiguratorTest
     extends AbstractClassWorldsTestCase

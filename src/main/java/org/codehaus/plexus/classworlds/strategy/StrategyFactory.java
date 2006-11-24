@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.strategy;
+package org.codehaus.plexus.classworlds.strategy;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,7 +16,7 @@ package org.codehaus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * StrategyFactory loads a strategy, either default or from a given hint.

@@ -1,4 +1,4 @@
-package org.codehaus.classworlds;
+package org.codehaus.plexus.classworlds;
 
 import junit.framework.TestCase;
 

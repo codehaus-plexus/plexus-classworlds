@@ -1,4 +1,4 @@
-package org.codehaus.classworlds.strategy;
+package org.codehaus.plexus.classworlds.strategy;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -16,8 +16,8 @@ package org.codehaus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.classworlds.UrlUtils;
-import org.codehaus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.UrlUtils;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +43,7 @@ public class DefaultStrategy
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        if ( name.startsWith( "org.codehaus.classworlds." ) )
+        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) )
         {
             return realm.getWorld().getClass().getClassLoader().loadClass( name );
         }
