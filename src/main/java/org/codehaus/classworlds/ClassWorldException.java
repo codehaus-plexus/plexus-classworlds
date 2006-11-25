@@ -47,32 +47,59 @@ package org.codehaus.classworlds;
  */
 
 /**
- * Indicates an error during <code>Launcher</code> configuration.
+ * Base exception for <code>ClassWorld</code> errors.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @version $Id$
  */
-public class ConfigurationException extends Exception
+public class ClassWorldException extends Exception
 {
+    // ------------------------------------------------------------
+    //     Instance members
+    // ------------------------------------------------------------
+
+    /**
+     * The world.
+     */
+    private ClassWorld world;
+
+    // ------------------------------------------------------------
+    //     Constructors
+    // ------------------------------------------------------------
+
     /**
      * Construct.
      *
-     * @param msg The message.
+     * @param world The world.
      */
-    public ConfigurationException( String msg )
+    public ClassWorldException( final ClassWorld world )
     {
-        super( msg );
+        this.world = world;
     }
 
     /**
      * Construct.
      *
-     * @param msg    The message.
-     * @param lineNo The number of configuraton line where the problem occured.
-     * @param line   The configuration line where the problem occured.
+     * @param world The world.
+     * @param msg   The detail message.
      */
-    public ConfigurationException( String msg, int lineNo, String line )
+    public ClassWorldException( final ClassWorld world, final String msg )
     {
-        super( msg + " (" + lineNo + "): " + line );
+        super( msg );
+        this.world = world;
+    }
+
+    // ------------------------------------------------------------
+    //     Instance methods
+    // ------------------------------------------------------------
+
+    /**
+     * Retrieve the world.
+     *
+     * @return The world.
+     */
+    public ClassWorld getWorld()
+    {
+        return this.world;
     }
 }
