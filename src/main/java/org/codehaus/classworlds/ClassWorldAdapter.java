@@ -2,6 +2,8 @@ package org.codehaus.classworlds;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * An adapter for ClassWorlds
@@ -89,6 +91,17 @@ public class ClassWorldAdapter
 
     public Collection getRealms()
     {
-        return world.getRealms();
+        Collection realms = world.getRealms();
+        Vector ret = new Vector();
+
+        Iterator it = realms.iterator();
+        while ( it.hasNext() )
+        {
+            org.codehaus.plexus.classworlds.realm.ClassRealm realm =
+                (org.codehaus.plexus.classworlds.realm.ClassRealm) it.next();
+            ret.add( ClassRealmAdapter.getInstance( realm ) );
+        }
+
+        return ret;
     }
 }
