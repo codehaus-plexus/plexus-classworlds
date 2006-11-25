@@ -19,6 +19,7 @@ package org.codehaus.plexus.classworlds.realm;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.UrlUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -198,7 +199,7 @@ public class ClassRealm
 
     public URL getResource( String name )
     {
-        return strategy.getResource( name );
+        return strategy.getResource( UrlUtils.normalizeUrlPath( name ) );
     }
 
     public InputStream getResourceAsStream( String name )
@@ -209,7 +210,7 @@ public class ClassRealm
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( name );
+        return strategy.findResources( UrlUtils.normalizeUrlPath( name ) );
     }
 
     // ----------------------------------------------------------------------------
