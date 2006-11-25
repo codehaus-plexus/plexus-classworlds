@@ -16,9 +16,6 @@ public class ClassWorldAdapter
 
     public static ClassWorldAdapter getInstance( org.codehaus.plexus.classworlds.ClassWorld newWorld )
     {
-        if ( newWorld instanceof ClassWorldAdapter )
-            return (ClassWorldAdapter) newWorld;
-
         if ( instances.containsKey( newWorld ) )
             return (ClassWorldAdapter) instances.get( newWorld );
 
@@ -32,11 +29,11 @@ public class ClassWorldAdapter
 
     private ClassWorldAdapter( org.codehaus.plexus.classworlds.ClassWorld newWorld )
     {
-        super();
+        super( false );
         this.world = newWorld;
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id )
+    public ClassRealm newRealm( String id )
         throws DuplicateRealmException
     {
         try
@@ -49,7 +46,7 @@ public class ClassWorldAdapter
         }
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id,
+    public ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
@@ -77,7 +74,7 @@ public class ClassWorldAdapter
         }
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm( String id )
+    public ClassRealm getRealm( String id )
         throws NoSuchRealmException
     {
         try

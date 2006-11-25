@@ -383,10 +383,11 @@ public class Configurator
         reader.close();
     }
 
+    // TODO return this to protected when the legacy wrappers can be removed.
     /**
      * Associate parent realms with their children.
      */
-    protected void associateRealms()
+    public void associateRealms()
     {
         List sortRealmNames = new ArrayList( configuredRealms.keySet() );
 

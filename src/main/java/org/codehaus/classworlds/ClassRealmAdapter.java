@@ -13,15 +13,12 @@ import java.io.InputStream;
  * @version $Id$
  */
 public class ClassRealmAdapter
-    extends ClassRealm
+    implements ClassRealm
 {
     private static HashMap instances = new HashMap();
 
     public static ClassRealmAdapter getInstance( org.codehaus.plexus.classworlds.realm.ClassRealm newRealm )
     {
-        if ( newRealm instanceof ClassRealmAdapter )
-            return (ClassRealmAdapter) newRealm;
-
         if ( instances.containsKey( newRealm ) )
             return (ClassRealmAdapter) instances.get( newRealm );
 
@@ -35,7 +32,6 @@ public class ClassRealmAdapter
 
     private ClassRealmAdapter( org.codehaus.plexus.classworlds.realm.ClassRealm newRealm )
     {
-        super( ClassWorldAdapter.getInstance( newRealm.getWorld() ), newRealm.getId(), null );
         this.realm = newRealm;
     }
 
@@ -44,7 +40,7 @@ public class ClassRealmAdapter
         return realm.getId();
     }
 
-    public org.codehaus.plexus.classworlds.ClassWorld getWorld()
+    public ClassWorld getWorld()
     {
         return ClassWorldAdapter.getInstance( realm.getWorld() );
     }
@@ -59,7 +55,7 @@ public class ClassRealmAdapter
         }
         catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
         {
-            throw new NoSuchRealmException( (ClassWorld) getWorld(), e.getId() );
+            throw new NoSuchRealmException( getWorld(), e.getId() );
         }
     }
 
@@ -68,7 +64,7 @@ public class ClassRealmAdapter
         realm.addURL( constituent );
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm locateSourceRealm( String className )
+    public ClassRealm locateSourceRealm( String className )
     {
         return ClassRealmAdapter.getInstance( realm.locateSourceRealm(
             className ) );
@@ -76,10 +72,10 @@ public class ClassRealmAdapter
 
     public void setParent( ClassRealm classRealm )
     {
-        realm.setParentRealm( classRealm );
+        realm.setParentRealm( ClassRealmReverseAdapter.getInstance( classRealm ) );
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm createChildRealm( String id )
+    public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
         try
@@ -88,13 +84,23 @@ public class ClassRealmAdapter
         }
         catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
         {
-            throw new DuplicateRealmException( (ClassWorld) getWorld(), e.getId() );
+            throw new DuplicateRealmException( getWorld(), e.getId() );
         }
     }
 
     public ClassLoader getClassLoader()
     {
         return realm;
+    }
+
+    public ClassRealm getParent()
+    {
+        return ClassRealmAdapter.getInstance( realm.getParentRealm() );
+    }
+
+    public ClassRealm getParentRealm()
+    {
+        return ClassRealmAdapter.getInstance( realm.getParentRealm() );
     }
 
     public URL[] getConstituents()

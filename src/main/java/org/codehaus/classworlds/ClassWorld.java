@@ -1,8 +1,6 @@
 package org.codehaus.classworlds;
 
 import java.util.Collection;
-import java.util.Vector;
-import java.util.Iterator;
 
 /**
  * A compatibility wrapper for org.codehaus.plexus.classworlds.ClassWorld
@@ -12,86 +10,54 @@ import java.util.Iterator;
  * @version $Id$
  */
 public class ClassWorld
-    extends org.codehaus.plexus.classworlds.ClassWorld
 {
+    private ClassWorldAdapter adapter;
+
     public ClassWorld( String realmId,
                        ClassLoader classLoader )
     {
-        super( realmId, classLoader );
+        adapter = ClassWorldAdapter.getInstance(
+            new org.codehaus.plexus.classworlds.ClassWorld( realmId, classLoader ) );
     }
 
     public ClassWorld()
     {
-        super();
+        adapter = ClassWorldAdapter.getInstance(
+            new org.codehaus.plexus.classworlds.ClassWorld( ) );
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id )
+    public ClassWorld( boolean ignore )
+    {
+        /* fake */
+    }
+
+    public ClassRealm newRealm( String id )
         throws DuplicateRealmException
     {
-        try
-        {
-            return ClassRealmAdapter.getInstance( super.newRealm( id ) );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
-        {
-            throw new DuplicateRealmException( this, e.getId() );
-        }
+        return adapter.newRealm( id );
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id,
+    public ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
-        try
-        {
-            return ClassRealmAdapter.getInstance( super.newRealm( id, classLoader ) );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
-        {
-            throw new DuplicateRealmException( this, e.getId() );
-        }
+        return adapter.newRealm( id, classLoader );
     }
 
     public void disposeRealm( String id )
         throws NoSuchRealmException
     {
-        try
-        {
-            super.disposeRealm( id );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
-        {
-            throw new NoSuchRealmException( this, e.getId() );
-        }
+        adapter.disposeRealm( id );
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm( String id )
+    public ClassRealm getRealm( String id )
         throws NoSuchRealmException
     {
-        try
-        {
-            return ClassRealmAdapter.getInstance( super.getRealm( id ) );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
-        {
-            throw new NoSuchRealmException( this, e.getId() );
-        }
+        return adapter.getRealm( id );
     }
 
     public Collection getRealms()
     {
-        Collection parent = super.getRealms();
-        Vector ret = new Vector();
-
-        Iterator realms = parent.iterator();
-        while ( realms.hasNext() )
-        {
-            org.codehaus.plexus.classworlds.realm.ClassRealm classRealm =
-                (org.codehaus.plexus.classworlds.realm.ClassRealm) realms.next();
-
-            ret.add( ClassRealmAdapter.getInstance( classRealm ) );
-        }
-
-        return ret;
+        return adapter.getRealms();
     }
 }
