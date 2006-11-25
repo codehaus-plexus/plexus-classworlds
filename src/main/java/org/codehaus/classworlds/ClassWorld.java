@@ -25,7 +25,7 @@ public class ClassWorld
         super();
     }
 
-    public ClassRealm newRealm( String id )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id )
         throws DuplicateRealmException
     {
         try
@@ -38,7 +38,7 @@ public class ClassWorld
         }
     }
 
-    public ClassRealm newRealm( String id,
+    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
@@ -65,7 +65,7 @@ public class ClassWorld
         }
     }
 
-    public ClassRealm getRealm( String id )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm( String id )
         throws NoSuchRealmException
     {
         try

@@ -36,7 +36,7 @@ public class ClassWorldAdapter
         this.world = newWorld;
     }
 
-    public ClassRealm newRealm( String id )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id )
         throws DuplicateRealmException
     {
         try
@@ -49,7 +49,7 @@ public class ClassWorldAdapter
         }
     }
 
-    public ClassRealm newRealm( String id,
+    public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
@@ -77,7 +77,7 @@ public class ClassWorldAdapter
         }
     }
 
-    public ClassRealm getRealm( String id )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm( String id )
         throws NoSuchRealmException
     {
         try

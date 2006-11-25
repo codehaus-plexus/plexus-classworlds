@@ -44,7 +44,7 @@ public class ClassRealmAdapter
         return realm.getId();
     }
 
-    public ClassWorld getWorld()
+    public org.codehaus.plexus.classworlds.ClassWorld getWorld()
     {
         return ClassWorldAdapter.getInstance( realm.getWorld() );
     }
@@ -59,7 +59,7 @@ public class ClassRealmAdapter
         }
         catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
         {
-            throw new NoSuchRealmException( getWorld(), e.getId() );
+            throw new NoSuchRealmException( (ClassWorld) getWorld(), e.getId() );
         }
     }
 
@@ -68,7 +68,7 @@ public class ClassRealmAdapter
         realm.addURL( constituent );
     }
 
-    public ClassRealm locateSourceRealm( String className )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm locateSourceRealm( String className )
     {
         return ClassRealmAdapter.getInstance( realm.locateSourceRealm(
             className ) );
@@ -79,7 +79,7 @@ public class ClassRealmAdapter
         realm.setParentRealm( classRealm );
     }
 
-    public ClassRealm createChildRealm( String id )
+    public org.codehaus.plexus.classworlds.realm.ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
         try
@@ -88,7 +88,7 @@ public class ClassRealmAdapter
         }
         catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
         {
-            throw new DuplicateRealmException( getWorld(), e.getId() );
+            throw new DuplicateRealmException( (ClassWorld) getWorld(), e.getId() );
         }
     }
 
