@@ -199,7 +199,7 @@ public class ClassRealm
 
     public URL getResource( String name )
     {
-        return strategy.getResource( UrlUtils.normalizeUrlPath( name ) );
+        return strategy.getResource( name );
     }
 
     public InputStream getResourceAsStream( String name )
@@ -210,7 +210,7 @@ public class ClassRealm
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( UrlUtils.normalizeUrlPath( name ) );
+        return strategy.findResources( name );
     }
 
     // ----------------------------------------------------------------------------

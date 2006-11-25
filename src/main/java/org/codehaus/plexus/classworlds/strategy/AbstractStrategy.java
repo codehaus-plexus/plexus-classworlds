@@ -1,6 +1,7 @@
 package org.codehaus.plexus.classworlds.strategy;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.UrlUtils;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -29,5 +30,10 @@ public abstract class AbstractStrategy
     public AbstractStrategy( ClassRealm realm )
     {
         this.realm = realm;
+    }
+
+    protected String getNormalizedResource( String name  )
+    {
+        return UrlUtils.normalizeUrlPath( name );
     }
 }

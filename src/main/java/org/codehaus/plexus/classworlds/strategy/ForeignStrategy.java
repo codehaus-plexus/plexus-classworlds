@@ -43,6 +43,8 @@ public class ForeignStrategy
 
     public URL getResource( String name )
     {
+        name = getNormalizedResource( name );
+
         URL resource;
 
         resource = foreign.getResource( name );
@@ -58,8 +60,8 @@ public class ForeignStrategy
     public Enumeration findResources( String name )
         throws IOException
     {
-        name = UrlUtils.normalizeUrlPath( name );
-
+        name = getNormalizedResource( name );
+        
         Vector resources = new Vector();
 
         // Load from DefaultStrategy

@@ -16,6 +16,7 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
+import org.codehaus.plexus.classworlds.UrlUtils;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
@@ -42,8 +43,7 @@ public class DefaultStrategy
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) ||
-            name.startsWith( "org.codehaus.classworlds." ) )
+        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) || name.startsWith( "org.codehaus.classworlds." ) )
         {
             return realm.getWorld().getClass().getClassLoader().loadClass( name );
         }
@@ -79,6 +79,8 @@ public class DefaultStrategy
 
     public URL getResource( String name )
     {
+        name = getNormalizedResource( name );
+
         URL resource = null;
 
         ClassRealm sourceRealm = realm.locateSourceRealm( name );
@@ -124,6 +126,8 @@ public class DefaultStrategy
     public Enumeration findResources( String name )
         throws IOException
     {
+        name = UrlUtils.normalizeUrlPath( name );
+
         Vector resources = new Vector();
 
         // Load imports
