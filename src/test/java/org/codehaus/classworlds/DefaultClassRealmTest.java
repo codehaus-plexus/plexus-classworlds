@@ -80,7 +80,7 @@ public class DefaultClassRealmTest
 
         mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
 
-        ClassRealm childRealm = (ClassRealm) mainRealm.createChildRealm( "child" );
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
 
         childRealm.loadClass( "org.codehaus.plexus.Component0" );
     }
@@ -92,9 +92,9 @@ public class DefaultClassRealmTest
 
         mainRealm.addConstituent( getJarUrl( "component0-1.0.jar" ) );
 
-        ClassRealm childRealm = (ClassRealm) mainRealm.createChildRealm( "child" );
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
 
-        ClassRealm grandchildRealm = (ClassRealm) childRealm.createChildRealm( "grandchild" );
+        ClassRealm grandchildRealm = childRealm.createChildRealm( "grandchild" );
 
         grandchildRealm.loadClass( "org.codehaus.plexus.Component0" );
     }
@@ -122,9 +122,9 @@ public class DefaultClassRealmTest
     {
         ClassWorld world = new ClassWorld();
 
-        ClassRealm r0 = (ClassRealm) world.newRealm( "r0" );
+        ClassRealm r0 = world.newRealm( "r0" );
 
-        ClassRealm r1 = (ClassRealm) world.newRealm( "r1" );
+        ClassRealm r1 = world.newRealm( "r1" );
 
         r0.addConstituent( getJarUrl( "component0-1.0.jar" ) );
 
