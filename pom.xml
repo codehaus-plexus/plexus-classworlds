@@ -26,7 +26,7 @@
   <artifactId>plexus-classworlds</artifactId>
   <packaging>jar</packaging>
   <name>Plexus Classworlds</name>
-  <version>1.2-alpha-4-SNAPSHOT</version>
+  <version>1.2-alpha-4</version>
   <description />
   <inceptionYear>2002</inceptionYear>
   <dependencies>
@@ -49,8 +49,8 @@
     </plugins>
   </build>
   <scm> 
-    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/trunk</developerConnection> 
-    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/trunk/</url>
+    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-4</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-4</developerConnection> 
+    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-4</url>
   </scm>
 </project>
