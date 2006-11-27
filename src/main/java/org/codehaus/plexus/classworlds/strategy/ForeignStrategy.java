@@ -1,6 +1,5 @@
 package org.codehaus.plexus.classworlds.strategy;
 
-import org.codehaus.plexus.classworlds.UrlUtils;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 import java.io.IOException;
