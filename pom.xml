@@ -46,9 +46,47 @@
           <forkMode>once</forkMode>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>org/codehaus/plexus/classworlds/event/*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-  <scm> 
+  <profiles>
+    <profile>
+      <id>debug</id>
+      <dependencies>
+        <dependency>
+          <groupId>aspectj</groupId>
+          <artifactId>aspectjrt</artifactId>
+          <version>1.5.0</version>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>aspectj-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>compile</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <complianceLevel>1.4</complianceLevel>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  <scm>
     <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</connection>
     <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</developerConnection> 
     <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</url>
