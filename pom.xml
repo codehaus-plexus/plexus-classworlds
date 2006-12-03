@@ -87,8 +87,8 @@
     </profile>
   </profiles>
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</developerConnection> 
-    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/tags/plexus-classworlds-1.2-alpha-5</url>
+    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/trunk</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/trunk</developerConnection> 
+    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/trunk</url>
   </scm>
 </project>
