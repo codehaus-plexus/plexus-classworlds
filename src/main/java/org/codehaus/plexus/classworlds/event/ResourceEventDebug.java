@@ -2,6 +2,8 @@ package org.codehaus.plexus.classworlds.event;
 
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 
+import java.net.URL;
+
 /**
  * Created by IntelliJ IDEA.
  *
@@ -9,19 +11,10 @@ import org.codehaus.plexus.classworlds.strategy.Strategy;
  * @since: Nov 29, 2006
  * @version: $Id$
  */
-public class ClassEventDebug
-    implements ClassEventListener
+public class ResourceEventDebug
+    extends ClassEventDebug
+    implements ResourceEventListener
 {
-    protected static String getClassName( Class in )
-    {
-        String name = in.getName();
-
-        int pos = name.lastIndexOf( '.' );
-        if ( pos == -1 )
-            return name;
-
-        return name.substring( pos + 1 );
-    }
 
     private void log( Strategy strategy, String message )
     {
@@ -32,21 +25,19 @@ public class ClassEventDebug
     public void lookup( String name,
                         Strategy strategy )
     {
-        log( strategy, "Lookup: " + name );
+        log( strategy, "Lookup res: " + name );
     }
 
     public void failed( String name,
-                        Strategy strategy,
-                        Exception reason )
+                        Strategy strategy )
     {
-        log( strategy, "Failed: " + name + " (" + reason.getClass().getName() +
-            ": " + reason.getMessage() + ")");
+        log( strategy, "Failed res: " + name );
     }
 
     public void found( String name,
                        Strategy strategy,
-                       Class found )
+                       URL found )
     {
-        log( strategy, "Found : " + name );
+        log( strategy, "Found res: " + name );
     }
 }

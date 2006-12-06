@@ -1,5 +1,7 @@
 package org.codehaus.plexus.classworlds.event;
 
+import java.net.URL;
+
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 /**
@@ -12,7 +14,8 @@ import org.codehaus.plexus.classworlds.strategy.Strategy;
 aspect ListenerAspect
 {
     // TODO: here we want a proper listener registering system, not just a debugger
-    private ClassEventDebug debugger = new ClassEventDebug();
+    private ClassEventDebug classDebugger = new ClassEventDebug();
+    private ResourceEventDebug resourceDebugger = new ResourceEventDebug();
 
     pointcut loadClass( String name, Strategy strategy ):
         args( name ) && target( strategy ) &&
@@ -21,18 +24,37 @@ aspect ListenerAspect
     before( String name, Strategy strategy ):
         loadClass( name, strategy )
     {
-        debugger.lookup( name, strategy );
+        classDebugger.lookup( name, strategy );
     }
 
     after( String name, Strategy strategy ) returning( Class result ):
         loadClass( name, strategy )
     {
-        debugger.found( name, strategy, result );
+        classDebugger.found( name, strategy, result );
     }
 
     after( String name, Strategy strategy ) throwing( Exception e ):
         loadClass( name, strategy )
     {
-        debugger.failed( name, strategy, e );
+        classDebugger.failed( name, strategy, e );
+    }
+
+    pointcut getResource( String name, Strategy strategy ):
+        args( name ) && target( strategy ) &&
+        call( URL Strategy.getResource( String ) );
+
+    before( String name, Strategy strategy ):
+        getResource( name, strategy )
+    {
+        resourceDebugger.lookup( name, strategy );
+    }
+
+    after( String name, Strategy strategy ) returning( URL result ):
+        getResource( name, strategy )
+    {
+        if ( result == null )
+            resourceDebugger.failed( name, strategy );
+        else
+            resourceDebugger.found( name, strategy, result );
     }
 }
