@@ -225,7 +225,7 @@ public class ClassRealm
 
         showUrls( cr );
 
-        while ( cr.getParent() != null )
+        while ( cr.getParentRealm() != null )
         {
             System.out.println( "\n" );
 
