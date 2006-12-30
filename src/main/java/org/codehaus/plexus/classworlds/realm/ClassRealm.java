@@ -19,7 +19,6 @@ package org.codehaus.plexus.classworlds.realm;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.UrlUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -223,6 +222,9 @@ public class ClassRealm
 
         System.out.println( "-----------------------------------------------------" );
 
+        System.out.println( "this realm =    " + cr.getId() );
+        System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
+
         showUrls( cr );
 
         while ( cr.getParentRealm() != null )
@@ -239,8 +241,6 @@ public class ClassRealm
 
     private void showUrls( ClassRealm classRealm )
     {
-        System.out.println( "this realm = " + classRealm.getId() );
-
         URL[] urls = classRealm.getURLs();
 
         for ( int i = 0; i < urls.length; i++ )
