@@ -38,6 +38,6 @@ public class ResourceEventDebug
                        Strategy strategy,
                        URL found )
     {
-        log( strategy, "Found res : " + name );
+        log( strategy, "Found res : " + name + " (" + found + ")" );
     }
 }
