@@ -94,7 +94,7 @@ public class DefaultStrategy
             resource = realm.getRealmResource( name );
         }
 
-        if ( resource == null && realm.getParent() != null )
+        if ( resource == null && realm.getParentRealm() != null )
         {
             resource = realm.getParentRealm().getRealmResource( name );
         }
