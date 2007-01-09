@@ -5,10 +5,10 @@ import java.net.URL;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 /**
- * Created by IntelliJ IDEA.
+ * A simlple aspect to hook event code in when compiling with debug enabled
  *
  * @uthor: Andrew Williams
- * @since: Nov 29, 2006
+ * @since: 1.2-alpha-15
  * @version: $Id$
  */
 aspect ListenerAspect
