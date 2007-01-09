@@ -72,7 +72,10 @@ public class ClassRealmAdapter
 
     public void setParent( ClassRealm classRealm )
     {
-        realm.setParentRealm( ClassRealmReverseAdapter.getInstance( classRealm ) );
+        if ( classRealm != null )
+        {
+            realm.setParentRealm( ClassRealmReverseAdapter.getInstance( classRealm ) );
+        }
     }
 
     public ClassRealm createChildRealm( String id )
