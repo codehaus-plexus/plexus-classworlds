@@ -42,4 +42,6 @@ public interface Strategy
 
     Enumeration findResources( String name )
         throws IOException;
+
+    ClassRealm getRealm();
 }

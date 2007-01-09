@@ -25,7 +25,7 @@ import org.codehaus.plexus.classworlds.UrlUtils;
 public abstract class AbstractStrategy
     implements Strategy    
 {
-    protected ClassRealm realm;
+    private ClassRealm realm;
 
     public AbstractStrategy( ClassRealm realm )
     {
@@ -35,5 +35,10 @@ public abstract class AbstractStrategy
     protected String getNormalizedResource( String name  )
     {
         return UrlUtils.normalizeUrlPath( name );
+    }
+
+    public ClassRealm getRealm()
+    {
+        return realm;
     }
 }

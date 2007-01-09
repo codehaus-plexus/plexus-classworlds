@@ -45,14 +45,14 @@ public class DefaultStrategy
     {
         if ( name.startsWith( "org.codehaus.plexus.classworlds." ) || name.startsWith( "org.codehaus.classworlds." ) )
         {
-            return realm.getWorld().getClass().getClassLoader().loadClass( name );
+            return getRealm().getWorld().getClass().getClassLoader().loadClass( name );
         }
 
         try
         {
-            ClassRealm sourceRealm = realm.locateSourceRealm( name );
+            ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
 
-            if ( sourceRealm != realm )
+            if ( sourceRealm != getRealm() )
             {
                 try
                 {
@@ -64,13 +64,13 @@ public class DefaultStrategy
                 }
             }
 
-            return realm.loadRealmClass( name );
+            return getRealm().loadRealmClass( name );
         }
         catch ( ClassNotFoundException e )
         {
-            if ( realm.getParentRealm() != null )
+            if ( getRealm().getParentRealm() != null )
             {
-                return realm.getParentRealm().loadClass( name );
+                return getRealm().getParentRealm().loadClass( name );
             }
 
             throw e;
@@ -83,20 +83,20 @@ public class DefaultStrategy
 
         URL resource = null;
 
-        ClassRealm sourceRealm = realm.locateSourceRealm( name );
+        ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
 
-        if ( !sourceRealm.equals( realm ) )
+        if ( !sourceRealm.equals( getRealm() ) )
         {
             resource = sourceRealm.getResource( name );
         }
         if ( resource == null )
         {
-            resource = realm.getRealmResource( name );
+            resource = getRealm().getRealmResource( name );
         }
 
-        if ( resource == null && realm.getParentRealm() != null )
+        if ( resource == null && getRealm().getParentRealm() != null )
         {
-            resource = realm.getParentRealm().getRealmResource( name );
+            resource = getRealm().getParentRealm().getRealmResource( name );
         }
 
         return resource;
@@ -131,9 +131,9 @@ public class DefaultStrategy
         Vector resources = new Vector();
 
         // Load imports
-        ClassRealm sourceRealm = realm.locateSourceRealm( name );
+        ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
 
-        if ( sourceRealm != realm )
+        if ( sourceRealm != getRealm() )
         {
             // Attempt to load directly first, then go to the imported packages.
             for ( Enumeration res = sourceRealm.findRealmResources( name ); res.hasMoreElements(); )
@@ -143,15 +143,15 @@ public class DefaultStrategy
         }
 
         // Load from our realm
-        for ( Enumeration direct = realm.findRealmResources( name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = getRealm().findRealmResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }
 
         // Find resources from the parent realm.
-        if ( realm.getParentRealm() != null )
+        if ( getRealm().getParentRealm() != null )
         {
-            for ( Enumeration parent = realm.getParentRealm().findRealmResources( name ); parent.hasMoreElements(); )
+            for ( Enumeration parent = getRealm().getParentRealm().findRealmResources( name ); parent.hasMoreElements(); )
             {
                 resources.addElement( parent.nextElement() );
             }
