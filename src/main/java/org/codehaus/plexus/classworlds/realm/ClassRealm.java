@@ -96,7 +96,7 @@ public class ClassRealm
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
     }
-        
+
     public ClassRealm locateSourceRealm( String classname )
     {
         for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
@@ -215,7 +215,7 @@ public class ClassRealm
     // ----------------------------------------------------------------------------
     // Display methods
     // ----------------------------------------------------------------------------
-        
+
     public void display()
     {
         ClassRealm cr = this;
@@ -262,5 +262,10 @@ public class ClassRealm
             return false;
 
         return getId().equals( ( (ClassRealm) o ).getId() );
-    }    
+    }
+
+    public String toString()
+    {
+         return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
+    }
 }
