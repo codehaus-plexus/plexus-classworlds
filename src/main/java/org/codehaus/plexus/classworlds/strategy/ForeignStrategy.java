@@ -36,7 +36,7 @@ public class ForeignStrategy
         }
         catch ( ClassNotFoundException e )
         {
-            return getRealm().loadRealmClass( name );
+            return super.loadClass( name );
         }
     }
 
@@ -50,7 +50,7 @@ public class ForeignStrategy
 
         if ( resource == null )
         {
-            resource = getRealm().getRealmResource( name );
+            resource = super.getResource( name );
         }
 
         return resource;
@@ -64,7 +64,7 @@ public class ForeignStrategy
         Vector resources = new Vector();
 
         // Load from DefaultStrategy
-        for ( Enumeration direct = getRealm().findRealmResources( name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }
