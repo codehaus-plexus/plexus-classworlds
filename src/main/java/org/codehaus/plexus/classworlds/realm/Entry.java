@@ -51,7 +51,7 @@ public class Entry
     }
 
     /**
-     * Retrieve the page name.
+     * Retrieve the package name.
      *
      * @return The package name.
      */
@@ -136,5 +136,10 @@ public class Entry
     public int hashCode()
     {
         return getPackageName().hashCode();
+    }
+
+    public String toString()
+    {
+         return "Entry[import " + getPackageName() + " from realm " + getRealm() + "]";
     }
 }
