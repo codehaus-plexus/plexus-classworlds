@@ -222,18 +222,16 @@ public class ClassRealm
 
         System.out.println( "-----------------------------------------------------" );
 
-        System.out.println( "this realm =    " + cr.getId() );
-        System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
-
-        showUrls( cr );
-
-        while ( cr.getParentRealm() != null )
+        while ( cr != null )
         {
+            System.out.println( "this realm =    " + cr.getId() );
+            System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
+
+            showUrls( cr );
+
             System.out.println( "\n" );
 
             cr = cr.getParentRealm();
-
-            showUrls( cr );
         }
 
         System.out.println( "-----------------------------------------------------" );
