@@ -77,6 +77,11 @@ public class ClassRealm
         imports = new TreeSet();
 
         strategy = StrategyFactory.getStrategy( this, foreignClassLoader );
+
+        if ( foreignClassLoader != null && foreignClassLoader instanceof ClassRealm )
+        {
+            this.parent = (ClassRealm) foreignClassLoader;
+        }
     }
 
     public String getId()
