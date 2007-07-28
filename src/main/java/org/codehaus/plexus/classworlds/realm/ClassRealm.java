@@ -134,8 +134,8 @@ public class ClassRealm
 
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
-    {
-        ClassRealm childRealm = getWorld().newRealm( id );
+    {        
+        ClassRealm childRealm = getWorld().newRealm( id, this );
 
         childRealm.setParentRealm( this );
 
