@@ -1,0 +1,10 @@
+A Classworld is for an application
+A Realm is for
+  - A shared level
+  - An isolated context like a plugin, or extension
+
+Where we can search any of those Realms
+ClassWorld
+  R0 R1 R2
+
+The ClassWorld is necessary if you want to have multiple roots to search. Have to decide if that's useful. If it's not   
