@@ -320,7 +320,7 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        curRealm.addURL( file.toURL() );
+                        curRealm.addURL( file.toURI().toURL() );
                     }
                     else
                     {
@@ -351,7 +351,7 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        curRealm.addURL( file.toURL() );
+                        curRealm.addURL( file.toURI().toURL() );
                     }
                     else
                     {
@@ -514,7 +514,7 @@ public class Configurator
 
         for ( int i = 0; i < matches.length; ++i )
         {
-            realm.addURL( matches[i].toURL() );
+            realm.addURL( matches[i].toURI().toURL() );
         }
     }
 

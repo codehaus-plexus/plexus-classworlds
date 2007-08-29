@@ -157,7 +157,7 @@ public class StrategyTest
     {
         File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
 
-        return jarFile.toURL();
+        return jarFile.toURI().toURL();
     }
 
     protected String getContent( InputStream in )

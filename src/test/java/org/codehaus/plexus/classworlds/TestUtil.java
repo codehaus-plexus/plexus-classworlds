@@ -35,7 +35,7 @@ public class TestUtil
 
         File resourceFile = new File( testDir, resourceName );
 
-        return resourceFile.toURL();
+        return resourceFile.toURI().toURL();
     }
 
     public static String getBasedir()

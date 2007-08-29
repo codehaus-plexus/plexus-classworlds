@@ -158,7 +158,7 @@ public class DefaultClassRealmTest
     {
         File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
 
-        return jarFile.toURL();
+        return jarFile.toURI().toURL();
     }
 }
 

@@ -170,10 +170,10 @@ public class ConfiguratorTest
         URL[] urls = globRealm.getURLs();
 
         String basedir = TestUtil.getBasedir();
-        assertArrayContains( urls, new File( basedir, "src/test/test-data/nested.jar" ).toURL() );
-        assertArrayContains( urls, new File( basedir, "src/test/test-data/a.jar" ).toURL() );
-        assertArrayContains( urls, new File( basedir, "src/test/test-data/b.jar" ).toURL() );
-        assertArrayContains( urls, new File( basedir, "src/test/test-data/c.jar" ).toURL() );
+        assertArrayContains( urls, new File( basedir, "src/test/test-data/nested.jar" ).toURI().toURL() );
+        assertArrayContains( urls, new File( basedir, "src/test/test-data/a.jar" ).toURI().toURL() );
+        assertArrayContains( urls, new File( basedir, "src/test/test-data/b.jar" ).toURI().toURL() );
+        assertArrayContains( urls, new File( basedir, "src/test/test-data/c.jar" ).toURI().toURL() );
     }
 
     public void testConfigure_Optionally_NonExistent()

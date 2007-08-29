@@ -96,7 +96,7 @@ public class DefaultClassRealm
             }
 
             addConstituent( new URL( null,
-                                     file.toURL().toExternalForm(),
+                                     file.toURI().toURL().toExternalForm(),
                                      new BytesURLStreamHandler(b) ) );
         }
         catch (java.io.IOException e)
