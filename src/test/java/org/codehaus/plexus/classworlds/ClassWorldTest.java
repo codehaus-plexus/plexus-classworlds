@@ -16,6 +16,10 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -116,4 +120,34 @@ public class ClassWorldTest
 
         assertTrue( this.world.getRealms().contains( bar ) );
     }
+    
+    public void testPLX334() 
+        throws Exception 
+    {
+        ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl("component1-1.0.jar") } );
+        ClassRealm nb = world.newRealm( "netbeans", loader );
+        ClassRealm plexus = world.newRealm( "plexus" );
+        plexus.importFrom( "netbeans", "META-INF/plexus" );
+        plexus.importFrom( "netbeans", "org.codehaus.plexus" );
+        Enumeration e = plexus.findResources( "META-INF/plexus/components.xml" );
+        assertNotNull( e );
+        int resourceCount = 0;
+        for ( Enumeration resources = e; resources.hasMoreElements(); )
+        {
+            resources.nextElement();
+            resourceCount++;
+        }
+        assertEquals( 2, resourceCount );
+        Class c = plexus.loadClass( "org.codehaus.plexus.Component1" );
+        assertNotNull( c );
+        
+    }
+    
+    protected URL getJarUrl( String jarName )
+        throws Exception
+    {
+        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
+        return jarFile.toURI().toURL();
+    }
+    
 }

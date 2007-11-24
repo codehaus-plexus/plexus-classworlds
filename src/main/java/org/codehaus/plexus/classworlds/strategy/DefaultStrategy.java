@@ -56,7 +56,7 @@ public class DefaultStrategy
             {
                 try
                 {
-                    return sourceRealm.loadRealmClass( name );
+                    return sourceRealm.loadClass( name );
                 }
                 catch ( ClassNotFoundException cnfe )
                 {
@@ -136,17 +136,17 @@ public class DefaultStrategy
         if ( sourceRealm != getRealm() )
         {
             // Attempt to load directly first, then go to the imported packages.
-            for ( Enumeration res = sourceRealm.findRealmResources( name ); res.hasMoreElements(); )
+            for ( Enumeration res = sourceRealm.findResources( name ); res.hasMoreElements(); )
             {
                 resources.addElement( res.nextElement() );
+                }
             }
-        }
 
         // Load from our realm
         for ( Enumeration direct = getRealm().findRealmResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
-        }
+                }
 
         // Find resources from the parent realm.
         if ( getRealm().getParentRealm() != null )
@@ -154,8 +154,8 @@ public class DefaultStrategy
             for ( Enumeration parent = getRealm().getParentRealm().findRealmResources( name ); parent.hasMoreElements(); )
             {
                 resources.addElement( parent.nextElement() );
+                }
             }
-        }
 
         return resources.elements();
     }
