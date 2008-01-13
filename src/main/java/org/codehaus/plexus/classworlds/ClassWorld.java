@@ -16,12 +16,14 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 import java.util.Map;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 /**
@@ -60,7 +62,7 @@ public class ClassWorld
         return newRealm( id, null );
     }
 
-    public ClassRealm newRealm( String id,
+    public synchronized ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
@@ -87,13 +89,13 @@ public class ClassWorld
         return realm;
     }
 
-    public void disposeRealm( String id )
+    public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
         realms.remove( id );
     }
 
-    public ClassRealm getRealm( String id )
+    public synchronized ClassRealm getRealm( String id )
         throws NoSuchRealmException
     {
         if ( realms.containsKey( id ) )
@@ -104,8 +106,8 @@ public class ClassWorld
         throw new NoSuchRealmException( this, id );
     }
 
-    public Collection getRealms()
+    public synchronized Collection getRealms()
     {
-        return realms.values();
+        return Collections.unmodifiableList( new ArrayList(realms.values()) );
     }
 }
