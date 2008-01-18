@@ -135,7 +135,7 @@ public class ClassWorldTest
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             URL obj = (URL) resources.nextElement();
-            assertTrue(obj.getPath().contains("plexus-classworlds/src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml"));
+            assertTrue(obj.getPath().contains("src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml"));
             resourceCount++;
         }
 //        assertEquals( 2, resourceCount );
