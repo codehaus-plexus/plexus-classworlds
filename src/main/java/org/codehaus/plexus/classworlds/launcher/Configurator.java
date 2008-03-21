@@ -123,7 +123,7 @@ public class Configurator
     public void configure( InputStream is )
         throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
-        BufferedReader reader = new BufferedReader( new InputStreamReader( is ) );
+        BufferedReader reader = new BufferedReader( new InputStreamReader( is, "UTF-8" ) );
 
         if ( world == null )
         {
@@ -198,7 +198,7 @@ public class Configurator
                 String property = null;
 
                 String propertiesFileName = null;
-                
+
                 if ( usingLoc > 0 )
                 {
                     property = conf.substring( 0, usingLoc ).trim();
@@ -596,4 +596,3 @@ public class Configurator
         return ( line.length() == 0 || line.startsWith( "#" ) );
     }
 }
-
