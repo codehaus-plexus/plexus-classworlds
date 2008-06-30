@@ -1,4 +1,4 @@
-package org.codehaus.plexus.classworlds;
+package org.codehaus.plexus.classworlds.strategy;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.net.URLClassLoader;
 
 /**
- * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
+ * @author Jason van Zyl
  * @version $Id$
  */
 public class UrlUtils

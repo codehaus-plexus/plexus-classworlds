@@ -2,23 +2,21 @@ package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 /**
  * Import description entry.
- *
+ * 
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
 public class Entry
@@ -28,8 +26,7 @@ public class Entry
 
     private final String pkgName;
 
-    Entry( ClassRealm realm,
-           String pkgName )
+    Entry( ClassRealm realm, String pkgName )
     {
         this.realm = realm;
 
@@ -42,7 +39,7 @@ public class Entry
 
     /**
      * Retrieve the realm.
-     *
+     * 
      * @return The realm.
      */
     ClassRealm getRealm()
@@ -52,7 +49,7 @@ public class Entry
 
     /**
      * Retrieve the package name.
-     *
+     * 
      * @return The package name.
      */
     String getPackageName()
@@ -61,12 +58,10 @@ public class Entry
     }
 
     /**
-     * Determine if the classname matches the package
-     * described by this entry.
-     *
+     * Determine if the classname matches the package described by this entry.
+     * 
      * @param classname The class name to test.
-     * @return <code>true</code> if this entry matches the
-     *         classname, otherwise <code>false</code>.
+     * @return <code>true</code> if this entry matches the classname, otherwise <code>false</code>.
      */
     boolean matches( String classname )
     {
@@ -78,17 +73,12 @@ public class Entry
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     /**
-     * Compare this entry to another for relative ordering.
-     * <p/>
-     * <p/>
-     * The natural ordering of Entry objects is reverse-alphabetical
-     * based upon package name.
-     * </p>
-     *
+     * Compare this entry to another for relative ordering. <p/> <p/> The natural ordering of Entry
+     * objects is reverse-alphabetical based upon package name. </p>
+     * 
      * @param thatObj The object to compare.
-     * @return -1 if this object sorts before that object, 0
-     *         if they are equal, or 1 if this object sorts
-     *         after that object.
+     * @return -1 if this object sorts before that object, 0 if they are equal, or 1 if this object
+     *         sorts after that object.
      */
     public int compareTo( Object thatObj )
     {
@@ -109,16 +99,12 @@ public class Entry
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     /**
-     * Test this entry for equality to another.
-     * <p/>
-     * <p/>
-     * Consistent with {@link #compareTo}, this method tests
-     * for equality purely on the package name.
-     * </p>
-     *
+     * Test this entry for equality to another. <p/> <p/> Consistent with {@link #compareTo}, this
+     * method tests for equality purely on the package name. </p>
+     * 
      * @param thatObj The object to compare
-     * @return <code>true</code> if the two objects are
-     *         semantically equivalent, otherwise <code>false</code>.
+     * @return <code>true</code> if the two objects are semantically equivalent, otherwise
+     *         <code>false</code>.
      */
     public boolean equals( Object thatObj )
     {
@@ -128,10 +114,8 @@ public class Entry
     }
 
     /**
-     * <p/>
-     * Consistent with {@link #equals}, this method creates a hashCode
-     * based on the packagename.
-     * </p>
+     * <p/> Consistent with {@link #equals}, this method creates a hashCode based on the
+     * packagename. </p>
      */
     public int hashCode()
     {
@@ -140,6 +124,6 @@ public class Entry
 
     public String toString()
     {
-         return "Entry[import " + getPackageName() + " from realm " + getRealm() + "]";
+        return "Entry[import " + getPackageName() + " from realm " + getRealm() + "]";
     }
 }

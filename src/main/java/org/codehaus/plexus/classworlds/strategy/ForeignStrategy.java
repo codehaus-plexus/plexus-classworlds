@@ -8,19 +8,15 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Created by IntelliJ IDEA.
- *
- * @uthor: Andrew Williams
- * @since: Nov 22, 2006
- * @version: $Id$
+ * @author Jason van Zyl
+ * @author: Andrew Williams
  */
 public class ForeignStrategy
     extends DefaultStrategy
 {
     private ClassLoader foreign;
 
-    public ForeignStrategy( ClassRealm realm,
-                            ClassLoader foreign )
+    public ForeignStrategy( ClassRealm realm, ClassLoader foreign )
     {
         super( realm );
 
@@ -42,8 +38,6 @@ public class ForeignStrategy
 
     public URL getResource( String name )
     {
-        name = getNormalizedResource( name );
-
         URL resource;
 
         resource = foreign.getResource( name );
@@ -59,8 +53,6 @@ public class ForeignStrategy
     public Enumeration findResources( String name )
         throws IOException
     {
-        name = getNormalizedResource( name );
-        
         Vector resources = new Vector();
 
         // Load from DefaultStrategy

@@ -2,22 +2,22 @@ package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
+import org.codehaus.plexus.classworlds.strategy.DefaultStrategy;
+import org.codehaus.plexus.classworlds.strategy.ForeignStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
-import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
+import org.codehaus.plexus.classworlds.strategy.UrlUtils;
 import org.codehaus.plexus.classworlds.ClassWorld;
 
 import java.io.IOException;
@@ -29,19 +29,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-
 /**
- * Implementation of <code>ClassRealm</code>.  The realm is the class loading gateway.
- * The search is proceded as follows:
- * <ol>
- * <li>Search the parent class loader (passed via the constructor) if there
- * is one.</li>
- * <li>Search the imports.</li>
- * <li>Search this realm's constituents.</li>
- * <li>Search the parent realm.</li>
- * </ol>
- *
- * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  * @version $Id$
  */
@@ -49,34 +37,35 @@ public class ClassRealm
     extends URLClassLoader
 {
     private ClassWorld world;
-
     private String id;
 
+    /** Packages this ClassRealm is willing to make visible to outside callers. */
+    private TreeSet exports;
+
+    /** Pacakges this ClassRealm wants to import from other realms. */
     private TreeSet imports;
 
     private Strategy strategy;
-
     private ClassRealm parent;
 
-    public ClassRealm( ClassWorld world,
-                       String id )
+    public ClassRealm( ClassWorld world, String id )
     {
         this( world, id, null );
     }
 
-    public ClassRealm( ClassWorld world,
-                       String id,
-                       ClassLoader foreignClassLoader )
+    public ClassRealm( ClassWorld world, String id, ClassLoader foreignClassLoader )
     {
-        super( new URL[]{}, foreignClassLoader );
+        super( new URL[] {}, foreignClassLoader );
 
         this.world = world;
 
         this.id = id;
 
+        exports = new TreeSet();
+
         imports = new TreeSet();
 
-        strategy = StrategyFactory.getStrategy( this, foreignClassLoader );
+        strategy = getStrategy( this, foreignClassLoader );
 
         if ( foreignClassLoader != null && foreignClassLoader instanceof ClassRealm )
         {
@@ -94,12 +83,26 @@ public class ClassRealm
         return this.world;
     }
 
-    public void importFrom( String realmId,
-                            String packageName )
+    public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
+    }
+
+    public ClassRealm getImportRealm( String classname )
+    {
+        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
+        {
+            Entry entry = (Entry) iterator.next();
+
+            if ( entry.matches( classname ) )
+            {
+                return entry.getRealm();
+            }
+        }
+
+        return null;
     }
 
     public ClassRealm locateSourceRealm( String classname )
@@ -134,7 +137,7 @@ public class ClassRealm
 
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
-    {        
+    {
         ClassRealm childRealm = getWorld().newRealm( id, this );
 
         childRealm.setParentRealm( this );
@@ -190,6 +193,55 @@ public class ClassRealm
         return super.findResources( name );
     }
 
+    //---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies
+    //---------------------------------------------------------------------------------------------
+    
+    public Class loadClassFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+        
+        if ( importRealm != null )
+        {
+            try
+            {
+                return importRealm.loadClass( name );
+            }
+            catch ( ClassNotFoundException e )
+            {
+                return null;
+            }
+        }
+        
+        return null;
+    }
+
+    public Class loadClassFromSelf( String name )
+    {
+        Class clazz;
+        
+        try
+        {
+            clazz = findClass( name );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return null;
+        }
+
+        if ( true )
+        {
+            resolveClass( clazz );
+        }
+
+        return clazz;
+    }
+
+    public Class loadClassFromParent( String name )
+    {
+        return getParentRealm().loadClassFromSelf( name );
+    }
+
     // ----------------------------------------------------------------------
     // We delegate to the Strategy here so that we can change the behavior
     // of any existing ClassRealm.
@@ -198,12 +250,17 @@ public class ClassRealm
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
+        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) )
+        {
+            return getWorld().getClass().getClassLoader().loadClass( name );
+        }
+
         return strategy.loadClass( name );
     }
 
     public URL getResource( String name )
     {
-        return strategy.getResource( name );
+        return strategy.getResource( UrlUtils.normalizeUrlPath( name ) );
     }
 
     public InputStream getResourceAsStream( String name )
@@ -214,7 +271,7 @@ public class ClassRealm
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( name );
+        return strategy.findResources( UrlUtils.normalizeUrlPath( name ) );
     }
 
     // ----------------------------------------------------------------------------
@@ -259,16 +316,49 @@ public class ClassRealm
         }
     }
 
-    public boolean equals(Object o)
+    public boolean equals( Object o )
     {
         if ( !( o instanceof ClassRealm ) )
+        {
             return false;
+        }
 
         return getId().equals( ( (ClassRealm) o ).getId() );
     }
 
     public String toString()
     {
-         return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
+        return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
     }
+    
+    // These need to be simplified or the strategy being passed in knowingly by the user
+    
+    public Strategy getStrategy( ClassRealm realm )
+    {
+        return getStrategy( realm, "default", null );
+    }
+
+    public Strategy getStrategy( ClassRealm realm, ClassLoader foreign )
+    {
+        return getStrategy( realm, "default", foreign );
+    }
+
+    public Strategy getStrategy( ClassRealm realm, String hint )
+    {
+        return getStrategy( realm, hint, null );
+    }
+
+    public static Strategy getStrategy( ClassRealm realm, String hint, ClassLoader foreign )
+    {
+        if ( foreign != null )
+        {
+            return new ForeignStrategy( realm, foreign );
+        }
+
+        // Here we shall check hint to load non-default strategies
+
+        Strategy ret = new DefaultStrategy( realm );
+
+        return ret;
+    }    
 }

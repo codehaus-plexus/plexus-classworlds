@@ -1,7 +1,6 @@
 package org.codehaus.plexus.classworlds.strategy;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.classworlds.UrlUtils;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -25,7 +24,7 @@ import org.codehaus.plexus.classworlds.UrlUtils;
 public abstract class AbstractStrategy
     implements Strategy    
 {
-    private ClassRealm realm;
+    protected ClassRealm realm;
 
     public AbstractStrategy( ClassRealm realm )
     {
