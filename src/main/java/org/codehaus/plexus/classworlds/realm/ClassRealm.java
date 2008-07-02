@@ -81,11 +81,6 @@ public class ClassRealm
         {
             this.strategy = strategy;
         }
-
-        if ( parent != null && parent instanceof ClassRealm )
-        {
-            this.parentRealm = (ClassRealm) parent;
-        }
     }
 
     public String getId()
