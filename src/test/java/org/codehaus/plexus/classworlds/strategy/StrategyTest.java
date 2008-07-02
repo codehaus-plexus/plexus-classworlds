@@ -42,9 +42,7 @@ public class StrategyTest
         throws Exception
     {
         this.world = new ClassWorld();
-
         this.realm = this.world.newRealm( "realm" );
-
         this.strategy = this.realm.getStrategy();
         
         realm.addURL( getJarUrl( "component0-1.0.jar" ) );

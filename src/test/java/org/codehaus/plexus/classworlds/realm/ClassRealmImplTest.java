@@ -2,18 +2,16 @@ package org.codehaus.plexus.classworlds.realm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.net.MalformedURLException;
@@ -48,11 +46,8 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm realm = this.world.newRealm( "foo" );
-
         assertNotNull( realm );
-
         assertSame( this.world, realm.getWorld() );
-
         assertEquals( "foo", realm.getId() );
     }
 
@@ -60,7 +55,6 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm realm = new ClassRealm( this.world, "foo" );
-
         assertSame( realm, realm.locateSourceRealm( "com.werken.Stuff" ) );
     }
 
@@ -68,19 +62,13 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
-
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
 
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
-
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.process.ProcessManager" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "com.werken.blissed.Process" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
@@ -88,25 +76,17 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
-
         ClassRealm blissedRealm = this.world.newRealm( "blissed" );
 
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
-
         mainRealm.importFrom( "blissed", "com.werken.blissed" );
 
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
-
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.process.ProcessManager" ) );
-
         assertSame( blissedRealm, mainRealm.locateSourceRealm( "com.werken.blissed.Process" ) );
-
         assertSame( blissedRealm, mainRealm.locateSourceRealm( "com.werken.blissed.guard.BooleanGuard" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
@@ -114,33 +94,21 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-
         ClassRealm fooRealm = this.world.newRealm( "foo" );
-
         ClassRealm fooBarRealm = this.world.newRealm( "fooBar" );
-
         ClassRealm fooBarBazRealm = this.world.newRealm( "fooBarBaz" );
 
         mainRealm.importFrom( "foo", "foo" );
-
         mainRealm.importFrom( "fooBar", "foo.bar" );
-
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
 
         assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.Goober" ) );
-
         assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.cheese.Goober" ) );
-
         assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.Goober" ) );
-
         assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.cheese.Goober" ) );
-
         assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.Goober" ) );
-
         assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
@@ -148,33 +116,21 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm fooBarBazRealm = this.world.newRealm( "fooBarBaz" );
-
         ClassRealm fooBarRealm = this.world.newRealm( "fooBar" );
-
         ClassRealm fooRealm = this.world.newRealm( "foo" );
-
         ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
-
         mainRealm.importFrom( "fooBar", "foo.bar" );
-
         mainRealm.importFrom( "foo", "foo" );
 
         assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.Goober" ) );
-
         assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.cheese.Goober" ) );
-
         assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.Goober" ) );
-
         assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.cheese.Goober" ) );
-
         assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.Goober" ) );
-
         assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
-
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
@@ -196,8 +152,6 @@ public class ClassRealmImplTest
         try
         {
             Class c = mainRealm.loadClass( "com.werken.projectz.UberThing" );
-
-            System.out.println( "c = " + c );
 
             fail( "A ClassNotFoundException should be thrown!" );
         }
@@ -258,10 +212,14 @@ public class ClassRealmImplTest
 
         ClassRealm realmA = this.world.newRealm( "realmA" );
 
+        realmA.display();
+        
         try
         {
-            realmA.loadClass( "a.A" );
+            Class a = realmA.loadClass( "a.A" );
 
+            System.out.println( realmA.getClassLocation( a ));
+            
             fail( "realmA.loadClass(a.A) should have thrown a ClassNotFoundException" );
         }
         catch ( ClassNotFoundException e )
@@ -313,7 +271,6 @@ public class ClassRealmImplTest
         assertNotNull( p );
         assertEquals( "p.getName()", "a", p.getName() );
     }
-
 
     public void testLoadClass_Complex()
         throws Exception
@@ -426,5 +383,29 @@ public class ClassRealmImplTest
 
             assertSame( ClassWorld.class, cls );
         }
+    }
+
+    // 
+
+    public void testP()
+        throws Exception
+    {
+        ClassRealm realmA = this.world.newRealm( "realmA" );
+        ClassRealm realmB = this.world.newRealm( "realmB" );
+        ClassRealm realmC = this.world.newRealm( "realmC" );
+
+        realmA.addURL( getJarUrl( "a.jar" ) );
+        realmB.addURL( getJarUrl( "b.jar" ) );
+        realmC.addURL( getJarUrl( "c.jar" ) );
+
+        realmC.importFrom( "realmA", "a" );
+        realmC.importFrom( "realmB", "b" );
+        realmA.importFrom( "realmC", "c" );
+
+        Class classAFromSelf = realmA.loadClassFromSelf( "a.A" );
+        assertNotNull( classAFromSelf );
+
+        Class classAFromImport = realmC.loadClassFromImport( "a.A" );
+        assertNotNull( classAFromImport );
     }
 }

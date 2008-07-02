@@ -138,12 +138,6 @@ public class ClassWorldTest
             assertTrue(obj.getPath().indexOf( "src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
-//        assertEquals( 2, resourceCount );
-// for some reason surefire-plugin 2.3 returned 2 items there:        
-//        for example:
-//jar:file:/home/mkleint/.m2/repository/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7.jar!/META-INF/plexus/components.xml
-//jar:file:/home/mkleint/src/plexus-trunk/plexus-classworlds/src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml
-//    However only 1 is correct, which is actually returned by the 2.4 surefire-plugin
         
         assertEquals( 1, resourceCount );
         Class c = plexus.loadClass( "org.codehaus.plexus.Component1" );
