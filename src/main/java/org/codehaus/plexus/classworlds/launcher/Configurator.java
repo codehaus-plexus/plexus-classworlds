@@ -241,6 +241,11 @@ public class Configurator
 
                 String realmName = line.substring( 1, rbrack );
 
+                if ( configuredRealms.containsKey( realmName ) )
+                {
+                    throw new DuplicateRealmException(world, realmName );
+                }
+                
                 currentRealm = new RealmConfiguration( realmName );
 
                 // Stash the configured realm for subsequent association processing.
@@ -274,8 +279,6 @@ public class Configurator
             {
                 String constituent = line.substring( LOAD_PREFIX.length() ).trim();
 
-                currentRealm.addLoad( constituent );
-
                 constituent = filter( constituent );
 
                 if ( constituent.indexOf( "*" ) >= 0 )
@@ -288,13 +291,13 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        currentRealm.addLoad( file.toURI().toURL().toExternalForm() );
+                        currentRealm.addLoad( file.toURI().toURL().toString() );
                     }
                     else
                     {
                         try
                         {
-                            currentRealm.addLoad( new URL( constituent ).toExternalForm() );
+                            currentRealm.addLoad( new URL( constituent ).toString() );
                         }
                         catch ( MalformedURLException e )
                         {
@@ -326,9 +329,10 @@ public class Configurator
      * 
      * @throws DuplicateRealmException
      * @throws NoSuchRealmException
+     * @throws MalformedURLException
      */
     public void createRealms()
-        throws DuplicateRealmException, NoSuchRealmException
+        throws DuplicateRealmException, NoSuchRealmException, MalformedURLException
     {
         List sortRealmNames = new ArrayList( configuredRealms.keySet() );
 
@@ -365,20 +369,45 @@ public class Configurator
             {
                 String parentRealmName = realmName.substring( 0, j );
 
-                RealmConfiguration parentRealm = (RealmConfiguration) configuredRealms.get( parentRealmName );
+                RealmConfiguration parentRealmConfiguration = (RealmConfiguration) configuredRealms.get( parentRealmName );
 
-                if ( parentRealm != null )
+                if ( parentRealmConfiguration != null )
                 {
-                    RealmConfiguration realm = (RealmConfiguration) configuredRealms.get( realmName );
-
-                    world.newRealm( realm.id, world.getRealm( parentRealm.id ) );
+                    RealmConfiguration realmConfiguration = (RealmConfiguration) configuredRealms.get( realmName );
+                    world.newRealm( realmConfiguration.id, world.getRealm( parentRealmConfiguration.id ) );
                 }
             }
             else
             {
-                world.newRealm( realmName );
+                ClassRealm realm = world.newRealm( realmName );
             }
         }
+        
+        for ( Iterator i = configuredRealms.values().iterator(); i.hasNext(); )
+        {
+            RealmConfiguration rc = (RealmConfiguration) i.next();
+            
+            configureRealm( world.getRealm( rc.id ), rc );
+        }
+    }
+
+    private void configureRealm( ClassRealm realm, RealmConfiguration realmConfiguration )
+        throws NoSuchRealmException, MalformedURLException
+    {
+        for ( Iterator i = realmConfiguration.imports.iterator(); i.hasNext(); )
+        {
+            ImportStatement is = (ImportStatement) i.next();
+
+            realm.importFrom( is.importRealm, is.importSpecification );
+        }
+
+        for ( Iterator i = realmConfiguration.loads.iterator(); i.hasNext(); )
+        {
+            String load = (String) i.next();
+
+            realm.addURL( new URL( load ) );
+        }
+
     }
 
     /**
@@ -430,7 +459,7 @@ public class Configurator
 
         for ( int i = 0; i < matches.length; ++i )
         {
-            realm.addLoad( matches[i].toURI().toURL().toExternalForm() );
+            realm.addLoad( matches[i].toURI().toURL().toString() );
         }
     }
 
@@ -511,9 +540,9 @@ public class Configurator
     class RealmConfiguration
     {
         String id;
-        TreeSet imports;
-        TreeSet exports;
-        TreeSet loads;
+        TreeSet imports = new TreeSet();
+        TreeSet exports = new TreeSet();
+        TreeSet loads = new TreeSet();
 
         public RealmConfiguration( String id )
         {
@@ -538,9 +567,10 @@ public class Configurator
 
     class ImportStatement
     {
-        public ImportStatement( String relamName, String importSpec )
+        public ImportStatement( String importRealm, String importSpecification )
         {
-            // TODO Auto-generated constructor stub
+            this.importRealm = importRealm;
+            this.importSpecification = importSpecification;
         }
 
         String importRealm;
