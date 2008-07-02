@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeSet;
 
 /**
  * <code>Launcher</code> configurator.
@@ -50,63 +51,28 @@ import java.util.Properties;
 public class Configurator
 {
     public static final String MAIN_PREFIX = "main is";
-
     public static final String SET_PREFIX = "set";
-
     public static final String IMPORT_PREFIX = "import";
-
     public static final String LOAD_PREFIX = "load";
 
-    /**
-     * Optionally spec prefix.
-     */
-    public static final String OPTIONALLY_PREFIX = "optionally";
-
-    /**
-     * The launcher to configure.
-     */
+    /** The launcher to configure. */
     private Launcher launcher;
 
+    /** The ClassWorld to create */
     private ClassWorld world;
 
-    /**
-     * Processed Realms.
-     */
+    /** Processed Realms. */
     private Map configuredRealms;
 
-    /**
-     * Construct.
-     *
-     * @param launcher The launcher to configure.
-     */
     public Configurator( Launcher launcher )
     {
         this.launcher = launcher;
-
-        configuredRealms = new HashMap();
+        this.configuredRealms = new HashMap();
     }
 
-    /**
-     * Construct.
-     *
-     * @param world The classWorld to configure.
-     */
     public Configurator( ClassWorld world )
     {
-        setClassWorld( world );
-    }
-
-    /**
-     * set world.
-     * this setter is provided so you can use the same configurator to configure several "worlds"
-     *
-     * @param world The classWorld to configure.
-     */
-    public void setClassWorld( ClassWorld world )
-    {
         this.world = world;
-
-        configuredRealms = new HashMap();
     }
 
     /**
@@ -279,7 +245,8 @@ public class Configurator
                 curRealm = world.newRealm( realmName, foreignClassLoader );
 
                 // Stash the configured realm for subsequent association processing.
-                configuredRealms.put( realmName, curRealm );
+                //configuredRealms.put( realmName, curRealm );
+                configuredRealms.put( realmName, new RealmConfiguration( realmName ) );
             }
             else if ( line.startsWith( IMPORT_PREFIX ) )
             {
@@ -335,37 +302,6 @@ public class Configurator
                     }
                 }
             }
-            else if ( line.startsWith( OPTIONALLY_PREFIX ) )
-            {
-                String constituent = line.substring( OPTIONALLY_PREFIX.length() ).trim();
-
-                constituent = filter( constituent );
-
-                if ( constituent.indexOf( "*" ) >= 0 )
-                {
-                    loadGlob( constituent, curRealm, true );
-                }
-                else
-                {
-                    File file = new File( constituent );
-
-                    if ( file.exists() )
-                    {
-                        curRealm.addURL( file.toURI().toURL() );
-                    }
-                    else
-                    {
-                        try
-                        {
-                            curRealm.addURL( new URL( constituent ) );
-                        }
-                        catch ( MalformedURLException e )
-                        {
-                            // swallow
-                        }
-                    }
-                }
-            }
             else
             {
                 throw new ConfigurationException( "Unhandled configuration", lineNo, line );
@@ -386,8 +322,10 @@ public class Configurator
     // TODO return this to protected when the legacy wrappers can be removed.
     /**
      * Associate parent realms with their children.
+     * @throws DuplicateRealmException 
+     * @throws NoSuchRealmException 
      */
-    public void associateRealms()
+    public void associateRealms() throws DuplicateRealmException, NoSuchRealmException
     {
         List sortRealmNames = new ArrayList( configuredRealms.keySet() );
 
@@ -425,14 +363,18 @@ public class Configurator
             {
                 String parentRealmName = realmName.substring( 0, j );
 
-                ClassRealm parentRealm = (ClassRealm) configuredRealms.get( parentRealmName );
+                RealmConfiguration parentRealm = (RealmConfiguration) configuredRealms.get( parentRealmName );
 
                 if ( parentRealm != null )
                 {
-                    ClassRealm realm = (ClassRealm) configuredRealms.get( realmName );
+                    RealmConfiguration realm = (RealmConfiguration) configuredRealms.get( realmName );
 
-                    realm.setParentRealm( parentRealm );
+                    world.newRealm( realm.id, world.getRealm( parentRealm.id ) );
                 }
+            }
+            else
+            {
+                world.newRealm( realmName );
             }
         }
     }
@@ -566,7 +508,6 @@ public class Configurator
             if ( propName.equals( "basedir" ) && ( propValue == null || propValue.equals( "" ) ) )
             {
                 propValue = ( new File( "" ) ).getAbsolutePath();
-
             }
 
             if ( propValue == null )
@@ -594,5 +535,33 @@ public class Configurator
     private boolean canIgnore( String line )
     {
         return ( line.length() == 0 || line.startsWith( "#" ) );
+    }
+    
+    class RealmConfiguration
+    {        
+        String id;
+        TreeSet imports;
+        TreeSet exports;
+        TreeSet loads;
+        
+        public RealmConfiguration( String id )
+        {
+            this.id = id;
+        }
+        
+        public void addImport( String importStatement )
+        {            
+            imports.add(  importStatement );
+        }
+
+        public void addExport( String exportStatement )
+        {
+            exports.add(  exportStatement );
+        }
+        
+        public void addLoad( String loadStatement )
+        {
+            loads.add( loadStatement );
+        }
     }
 }
