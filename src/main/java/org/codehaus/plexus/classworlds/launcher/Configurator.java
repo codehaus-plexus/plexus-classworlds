@@ -2,18 +2,16 @@ package org.codehaus.plexus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import org.codehaus.plexus.classworlds.ClassWorld;
@@ -43,7 +41,7 @@ import java.util.TreeSet;
 
 /**
  * <code>Launcher</code> configurator.
- *
+ * 
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  * @version $Id$
@@ -77,14 +75,15 @@ public class Configurator
 
     /**
      * Configure from a file.
-     *
+     * 
      * @param is The config input stream
-     * @throws IOException             If an error occurs reading the config file.
-     * @throws MalformedURLException   If the config file contains invalid URLs.
-     * @throws ConfigurationException  If the config file is corrupt.
-     * @throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException If the config file defines two realms with the same id.
-     * @throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException    If the config file defines a main entry point in
-     *                                 a non-existent realm.
+     * @throws IOException If an error occurs reading the config file.
+     * @throws MalformedURLException If the config file contains invalid URLs.
+     * @throws ConfigurationException If the config file is corrupt.
+     * @throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException If the config file
+     *             defines two realms with the same id.
+     * @throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException If the config file defines
+     *             a main entry point in a non-existent realm.
      */
     public void configure( InputStream is )
         throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
@@ -103,7 +102,7 @@ public class Configurator
             foreignClassLoader = this.launcher.getSystemClassLoader();
         }
 
-        ClassRealm curRealm = null;
+        RealmConfiguration currentRealm = null;
 
         String line = null;
 
@@ -242,15 +241,15 @@ public class Configurator
 
                 String realmName = line.substring( 1, rbrack );
 
-                curRealm = world.newRealm( realmName, foreignClassLoader );
+                currentRealm = new RealmConfiguration( realmName );
 
                 // Stash the configured realm for subsequent association processing.
                 //configuredRealms.put( realmName, curRealm );
-                configuredRealms.put( realmName, new RealmConfiguration( realmName ) );
+                configuredRealms.put( realmName, currentRealm );
             }
             else if ( line.startsWith( IMPORT_PREFIX ) )
             {
-                if ( curRealm == null )
+                if ( currentRealm == null )
                 {
                     throw new ConfigurationException( "Unhandled import", lineNo, line );
                 }
@@ -268,18 +267,20 @@ public class Configurator
 
                 String relamName = conf.substring( fromLoc + 4 ).trim();
 
-                curRealm.importFrom( relamName, importSpec );
+                currentRealm.addImport( new ImportStatement( relamName, importSpec ) );
 
             }
             else if ( line.startsWith( LOAD_PREFIX ) )
             {
                 String constituent = line.substring( LOAD_PREFIX.length() ).trim();
 
+                currentRealm.addLoad( constituent );
+
                 constituent = filter( constituent );
 
                 if ( constituent.indexOf( "*" ) >= 0 )
                 {
-                    loadGlob( constituent, curRealm );
+                    loadGlob( constituent, currentRealm );
                 }
                 else
                 {
@@ -287,13 +288,13 @@ public class Configurator
 
                     if ( file.exists() )
                     {
-                        curRealm.addURL( file.toURI().toURL() );
+                        currentRealm.addLoad( file.toURI().toURL().toExternalForm() );
                     }
                     else
                     {
                         try
                         {
-                            curRealm.addURL( new URL( constituent ) );
+                            currentRealm.addLoad( new URL( constituent ).toExternalForm() );
                         }
                         catch ( MalformedURLException e )
                         {
@@ -309,7 +310,7 @@ public class Configurator
         }
 
         // Associate child realms to their parents.
-        associateRealms();
+        createRealms();
 
         if ( this.launcher != null )
         {
@@ -322,18 +323,19 @@ public class Configurator
     // TODO return this to protected when the legacy wrappers can be removed.
     /**
      * Associate parent realms with their children.
-     * @throws DuplicateRealmException 
-     * @throws NoSuchRealmException 
+     * 
+     * @throws DuplicateRealmException
+     * @throws NoSuchRealmException
      */
-    public void associateRealms() throws DuplicateRealmException, NoSuchRealmException
+    public void createRealms()
+        throws DuplicateRealmException, NoSuchRealmException
     {
         List sortRealmNames = new ArrayList( configuredRealms.keySet() );
 
         // sort by name
         Comparator comparator = new Comparator()
         {
-            public int compare( Object o1,
-                                Object o2 )
+            public int compare( Object o1, Object o2 )
             {
                 String g1 = (String) o1;
                 String g2 = (String) o2;
@@ -381,35 +383,15 @@ public class Configurator
 
     /**
      * Load a glob into the specified classloader.
-     *
-     * @param line  The path configuration line.
+     * 
+     * @param line The path configuration line.
      * @param realm The realm to populate
-     * @throws MalformedURLException If the line does not represent
-     *                               a valid path element.
-     * @throws FileNotFoundException If the line does not represent
-     *                               a valid path element in the filesystem.
-     */
-    protected void loadGlob( String line,
-                             ClassRealm realm )
-        throws MalformedURLException, FileNotFoundException
-    {
-        loadGlob( line, realm, false );
-    }
-
-    /**
-     * Load a glob into the specified classloader.
-     *
-     * @param line       The path configuration line.
-     * @param realm      The realm to populate
      * @param optionally Whether the path is optional or required
-     * @throws MalformedURLException If the line does not represent
-     *                               a valid path element.
-     * @throws FileNotFoundException If the line does not represent
-     *                               a valid path element in the filesystem.
+     * @throws MalformedURLException If the line does not represent a valid path element.
+     * @throws FileNotFoundException If the line does not represent a valid path element in the
+     *             filesystem.
      */
-    protected void loadGlob( String line,
-                             ClassRealm realm,
-                             boolean optionally )
+    protected void loadGlob( String line, RealmConfiguration realm )
         throws MalformedURLException, FileNotFoundException
     {
         File globFile = new File( line );
@@ -417,14 +399,7 @@ public class Configurator
         File dir = globFile.getParentFile();
         if ( !dir.exists() )
         {
-            if ( optionally )
-            {
-                return;
-            }
-            else
-            {
-                throw new FileNotFoundException( dir.toString() );
-            }
+            throw new FileNotFoundException( dir.toString() );
         }
 
         String localName = globFile.getName();
@@ -437,8 +412,7 @@ public class Configurator
 
         File[] matches = dir.listFiles( new FilenameFilter()
         {
-            public boolean accept( File dir,
-                                   String name )
+            public boolean accept( File dir, String name )
             {
                 if ( !name.startsWith( prefix ) )
                 {
@@ -456,17 +430,16 @@ public class Configurator
 
         for ( int i = 0; i < matches.length; ++i )
         {
-            realm.addURL( matches[i].toURI().toURL() );
+            realm.addLoad( matches[i].toURI().toURL().toExternalForm() );
         }
     }
 
     /**
      * Filter a string for system properties.
-     *
+     * 
      * @param text The text to filter.
      * @return The filtered text.
-     * @throws ConfigurationException If the property does not
-     *                                exist or if there is a syntax error.
+     * @throws ConfigurationException If the property does not exist or if there is a syntax error.
      */
     protected String filter( String text )
         throws ConfigurationException
@@ -525,43 +498,52 @@ public class Configurator
     }
 
     /**
-     * Determine if a line can be ignored because it is
-     * a comment or simply blank.
-     *
+     * Determine if a line can be ignored because it is a comment or simply blank.
+     * 
      * @param line The line to test.
-     * @return <code>true</code> if the line is ignorable,
-     *         otherwise <code>false</code>.
+     * @return <code>true</code> if the line is ignorable, otherwise <code>false</code>.
      */
     private boolean canIgnore( String line )
     {
         return ( line.length() == 0 || line.startsWith( "#" ) );
     }
-    
+
     class RealmConfiguration
-    {        
+    {
         String id;
         TreeSet imports;
         TreeSet exports;
         TreeSet loads;
-        
+
         public RealmConfiguration( String id )
         {
             this.id = id;
         }
-        
-        public void addImport( String importStatement )
-        {            
-            imports.add(  importStatement );
+
+        public void addImport( ImportStatement importStatement )
+        {
+            imports.add( importStatement );
         }
 
         public void addExport( String exportStatement )
         {
-            exports.add(  exportStatement );
+            exports.add( exportStatement );
         }
-        
+
         public void addLoad( String loadStatement )
         {
             loads.add( loadStatement );
         }
+    }
+
+    class ImportStatement
+    {
+        public ImportStatement( String relamName, String importSpec )
+        {
+            // TODO Auto-generated constructor stub
+        }
+
+        String importRealm;
+        String importSpecification;
     }
 }
