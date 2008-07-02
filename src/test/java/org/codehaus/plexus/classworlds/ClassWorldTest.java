@@ -2,30 +2,32 @@ package org.codehaus.plexus.classworlds;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+
+import junit.framework.TestCase;
+
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 public class ClassWorldTest
-    extends AbstractClassWorldsTestCase
+    extends TestCase
 {
     private ClassWorld world;
 
@@ -120,9 +122,9 @@ public class ClassWorldTest
 
         assertTrue( this.world.getRealms().contains( bar ) );
     }
-    
-    public void testPLX334() 
-        throws Exception 
+
+    public void testPLX334()
+        throws Exception
     {
         ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl( "component1-1.0.jar" ) } );
         ClassRealm nb = world.newRealm( "netbeans", loader );
@@ -135,21 +137,26 @@ public class ClassWorldTest
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             URL obj = (URL) resources.nextElement();
-            assertTrue(obj.getPath().indexOf( "src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            assertTrue( obj.getPath().indexOf( "src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
-        
+
         assertEquals( 1, resourceCount );
         Class c = plexus.loadClass( "org.codehaus.plexus.Component1" );
         assertNotNull( c );
-        
+
     }
-    
+
     protected URL getJarUrl( String jarName )
         throws Exception
     {
         File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
         return jarFile.toURI().toURL();
     }
-    
+
+    public static URL getTestResourceUrl( String resourceName )
+        throws MalformedURLException
+    {
+        return TestUtil.getTestResourceUrl( resourceName );
+    }
 }

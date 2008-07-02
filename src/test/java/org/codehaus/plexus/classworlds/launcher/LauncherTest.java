@@ -19,11 +19,12 @@ package org.codehaus.plexus.classworlds.launcher;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import junit.framework.TestCase;
+
 import org.codehaus.plexus.classworlds.TestUtil;
 
 public class LauncherTest
-    extends AbstractClassWorldsTestCase
+    extends TestCase
 {
     private Launcher launcher;
 

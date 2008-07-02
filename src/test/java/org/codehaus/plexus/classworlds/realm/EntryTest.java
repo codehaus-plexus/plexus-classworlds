@@ -16,7 +16,8 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import junit.framework.TestCase;
+
 import org.codehaus.plexus.classworlds.ClassWorld;
 
 /**
@@ -24,7 +25,7 @@ import org.codehaus.plexus.classworlds.ClassWorld;
  * @version $Id$
  */
 public class EntryTest
-    extends AbstractClassWorldsTestCase
+    extends TestCase
 {
 
     /**

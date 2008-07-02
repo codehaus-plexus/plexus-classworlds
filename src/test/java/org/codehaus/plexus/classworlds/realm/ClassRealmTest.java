@@ -14,20 +14,22 @@ package org.codehaus.plexus.classworlds.realm;
  * the License.
  */
 
+import java.io.File;
 import java.net.MalformedURLException;
 
 import java.net.URL;
 
-import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import junit.framework.TestCase;
+
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
 
-public class ClassRealmImplTest
-    extends AbstractClassWorldsTestCase
+public class ClassRealmTest
+    extends TestCase
 {
     private ClassWorld world;
 
-    public ClassRealmImplTest( String name )
+    public ClassRealmTest( String name )
     {
         super( name );
     }
@@ -138,9 +140,7 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
-
         Class cls = mainRealm.loadClass( "java.lang.Object" );
-
         assertNotNull( cls );
     }
 
@@ -152,7 +152,6 @@ public class ClassRealmImplTest
         try
         {
             Class c = mainRealm.loadClass( "com.werken.projectz.UberThing" );
-
             fail( "A ClassNotFoundException should be thrown!" );
         }
         catch ( ClassNotFoundException e )
@@ -165,11 +164,8 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
-
         Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
-
         assertNotNull( cls );
-
         assertSame( ClassWorld.class, cls );
     }
 
@@ -177,7 +173,6 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
-
         try
         {
             mainRealm.loadClass( "a.A" );
@@ -188,11 +183,8 @@ public class ClassRealmImplTest
         }
 
         mainRealm.addURL( getJarUrl( "a.jar" ) );
-
         Class classA = mainRealm.loadClass( "a.A" );
-
         assertNotNull( classA );
-
         ClassRealm otherRealm = this.world.newRealm( "other" );
 
         try
@@ -209,13 +201,11 @@ public class ClassRealmImplTest
         throws Exception
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
-
         ClassRealm realmA = this.world.newRealm( "realmA" );
         
         try
         {
-            realmA.loadClass( "a.A" );
-            
+            realmA.loadClass( "a.A" );         
             fail( "realmA.loadClass(a.A) should have thrown a ClassNotFoundException" );
         }
         catch ( ClassNotFoundException e )
@@ -228,7 +218,6 @@ public class ClassRealmImplTest
         try
         {
             mainRealm.loadClass( "a.A" );
-
             fail( "mainRealm.loadClass(a.A) should have thrown a ClassNotFoundException" );
         }
         catch ( ClassNotFoundException e )
@@ -237,19 +226,12 @@ public class ClassRealmImplTest
         }
 
         mainRealm.importFrom( "realmA", "a" );
-
         Class classA = realmA.loadClass( "a.A" );
-
         assertNotNull( classA );
-
         assertEquals( realmA, classA.getClassLoader() );
-
         Class classMain = mainRealm.loadClass( "a.A" );
-
         assertNotNull( classMain );
-
         assertEquals( realmA, classMain.getClassLoader() );
-
         assertSame( classA, classMain );
     }
 
@@ -294,37 +276,25 @@ public class ClassRealmImplTest
         assertNotNull( classC_C );
 
         assertEquals( realmA, classA_A.getClassLoader() );
-
         assertEquals( realmB, classB_B.getClassLoader() );
-
         assertEquals( realmC, classC_C.getClassLoader() );
 
         // load from C
 
         Class classA_C = realmC.loadClass( "a.A" );
-
         assertNotNull( classA_C );
-
         assertSame( classA_A, classA_C );
-
         assertEquals( realmA, classA_C.getClassLoader() );
-
         Class classB_C = realmC.loadClass( "b.B" );
-
         assertNotNull( classB_C );
-
         assertSame( classB_B, classB_C );
-
         assertEquals( realmB, classB_C.getClassLoader() );
 
         // load from A
 
         Class classC_A = realmA.loadClass( "c.C" );
-
         assertNotNull( classC_A );
-
         assertSame( classC_C, classC_A );
-
         assertEquals( realmC, classC_A.getClassLoader() );
 
         try
@@ -374,9 +344,7 @@ public class ClassRealmImplTest
         for ( int i = 0; i < 100; i++ )
         {
             Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
-
             assertNotNull( cls );
-
             assertSame( ClassWorld.class, cls );
         }
     }
@@ -404,4 +372,89 @@ public class ClassRealmImplTest
         Class classAFromImport = realmC.loadClassFromImport( "a.A" );
         assertNotNull( classAFromImport );
     }
+    
+    // From original ClassRealmImplTest
+    
+    // ----------------------------------------------------------------------
+    // Class testing
+    // ----------------------------------------------------------------------
+
+    public void testLoadClassFromRealm()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.loadClass( "org.codehaus.plexus.Component0" );
+    }
+
+    public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+        childRealm.loadClass( "org.codehaus.plexus.Component0" );
+    }
+
+    public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+        ClassRealm grandchildRealm = childRealm.createChildRealm( "grandchild" );
+        grandchildRealm.loadClass( "org.codehaus.plexus.Component0" );
+    }
+
+    public void testLoadNonExistentClass()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+
+        try
+        {
+            mainRealm.loadClass( "org.foo.bar.NonExistentClass" );
+            fail( "A ClassNotFoundException should have been thrown!" );
+        }
+        catch ( ClassNotFoundException e )
+        {
+        }
+    }
+
+    public void testImport()
+        throws Exception
+    {
+        ClassWorld world = new ClassWorld();
+        ClassRealm r0 = world.newRealm( "r0" );
+        ClassRealm r1 = world.newRealm( "r1" );
+        
+        r0.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        r1.importFrom( "r0", "org.codehaus.plexus" );
+        r1.loadClass( "org.codehaus.plexus.Component0" );
+    }
+
+    // ----------------------------------------------------------------------
+    // Resource testing
+    // ----------------------------------------------------------------------
+
+    public void testResource()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        URL resource = mainRealm.getResource( "META-INF/plexus/components.xml" );
+        assertNotNull( resource );
+    }
+
+    // ----------------------------------------------------------------------
+    //
+    // ----------------------------------------------------------------------
+
+    protected URL getJarUrl2( String jarName )
+        throws Exception
+    {
+        File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
+        return jarFile.toURI().toURL();
+    }    
 }
