@@ -412,6 +412,13 @@ public class ClassRealm
         return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
     }
     
+    /**
+     * Find the exact URL that a particular class was loaded from. This can be used to debug problems where you need
+     * to know exactly what JAR, or location in the file system that a class came from.
+     * 
+     * @param clazz
+     * @return The location of class that was loaded in URL external form.
+     */
     public String getClassLocation( final Class clazz )
     {
         if ( clazz == null )
