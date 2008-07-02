@@ -14,20 +14,23 @@ package org.codehaus.plexus.classworlds.realm;
  * the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.TreeSet;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.strategy.DefaultStrategy;
 import org.codehaus.plexus.classworlds.strategy.ForeignStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.strategy.UrlUtils;
-import org.codehaus.plexus.classworlds.ClassWorld;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.MalformedURLException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.TreeSet;
 
 /**
  * @author Jason van Zyl
@@ -46,30 +49,44 @@ public class ClassRealm
     private TreeSet imports;
 
     private Strategy strategy;
-    private ClassRealm parent;
+    private ClassRealm parentRealm;
 
     public ClassRealm( ClassWorld world, String id )
     {
-        this( world, id, null );
+        this( world, id, ClassLoader.getSystemClassLoader(), null );
     }
 
-    public ClassRealm( ClassWorld world, String id, ClassLoader foreignClassLoader )
+    public ClassRealm( ClassWorld world, String id, Strategy strategy )
     {
-        super( new URL[] {}, foreignClassLoader );
+        this( world, id, ClassLoader.getSystemClassLoader(), strategy );
+    }
+
+    public ClassRealm( ClassWorld world, String id, ClassLoader parent )
+    {
+        this( world, id, parent, null );
+    }
+
+    public ClassRealm( ClassWorld world, String id, ClassLoader parent, Strategy strategy )
+    {
+        super( new URL[] {}, parent );
 
         this.world = world;
-
         this.id = id;
-
         exports = new TreeSet();
-
         imports = new TreeSet();
 
-        strategy = getStrategy( this, foreignClassLoader );
-
-        if ( foreignClassLoader != null && foreignClassLoader instanceof ClassRealm )
+        if ( strategy == null )
         {
-            this.parent = (ClassRealm) foreignClassLoader;
+            this.strategy = new DefaultStrategy( this );
+        }
+        else
+        {
+            this.strategy = strategy;
+        }
+
+        if ( parent != null && parent instanceof ClassRealm )
+        {
+            this.parentRealm = (ClassRealm) parent;
         }
     }
 
@@ -110,7 +127,6 @@ public class ClassRealm
         for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
         {
             Entry entry = (Entry) iterator.next();
-
             if ( entry.matches( classname ) )
             {
                 return entry.getRealm();
@@ -127,42 +143,24 @@ public class ClassRealm
 
     public void setParentRealm( ClassRealm realm )
     {
-        this.parent = realm;
+        this.parentRealm = realm;
     }
 
     public ClassRealm getParentRealm()
     {
-        return parent;
+        return parentRealm;
     }
 
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
         ClassRealm childRealm = getWorld().newRealm( id, this );
-
         childRealm.setParentRealm( this );
-
         return childRealm;
     }
 
     public void addURL( URL url )
     {
-        String urlStr = url.toExternalForm();
-
-        if ( urlStr.startsWith( "jar:" ) && urlStr.endsWith( "!/" ) )
-        {
-            urlStr = urlStr.substring( 4, urlStr.length() - 2 );
-
-            try
-            {
-                url = new URL( urlStr );
-            }
-            catch ( MalformedURLException e )
-            {
-                e.printStackTrace();
-            }
-        }
-
         super.addURL( url );
     }
 
@@ -170,22 +168,6 @@ public class ClassRealm
     // These are the methods that the Strategy must use to get direct access
     // the contents of the ClassRealm.
     // ----------------------------------------------------------------------------
-
-    public Class loadRealmClass( String name )
-        throws ClassNotFoundException
-    {
-        return super.loadClass( name );
-    }
-
-    public URL getRealmResource( String name )
-    {
-        return super.getResource( name );
-    }
-
-    public InputStream getRealmResourceAsStream( String name )
-    {
-        return super.getResourceAsStream( name );
-    }
 
     public Enumeration findRealmResources( String name )
         throws IOException
@@ -200,48 +182,147 @@ public class ClassRealm
     public Class loadClassFromImport( String name )
     {
         ClassRealm importRealm = getImportRealm( name );
+
+        Class clazz = null;
         
         if ( importRealm != null )
         {
-            try
+            clazz = importRealm.loadClassFromSelf( name );
+            
+            if ( clazz == null )
             {
-                return importRealm.loadClass( name );
-            }
-            catch ( ClassNotFoundException e )
-            {
-                return null;
+                clazz = importRealm.loadClassFromParent( name );
             }
         }
-        
-        return null;
+
+        return clazz;
     }
 
     public Class loadClassFromSelf( String name )
     {
         Class clazz;
-        
+
         try
         {
-            clazz = findClass( name );
+            clazz = findLoadedClass( name );
+
+            if ( clazz == null )
+            {
+                clazz = findClass( name );
+            }                       
         }
         catch ( ClassNotFoundException e )
         {
             return null;
         }
 
-        if ( true )
-        {
-            resolveClass( clazz );
-        }
+        resolveClass( clazz );
 
         return clazz;
     }
 
     public Class loadClassFromParent( String name )
     {
-        return getParentRealm().loadClassFromSelf( name );
+        if ( getParent() != null )
+        {
+            try
+            {
+                return getParent().loadClass( name );
+            }
+            catch ( ClassNotFoundException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }    
+    
+    //---------------------------------------------------------------------------------------------
+    // Resources
+    //---------------------------------------------------------------------------------------------
+    
+    public URL loadResourceFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+
+        if ( importRealm != null )
+        {
+            return importRealm.findResource( name );
+        }
+
+        return null;
     }
 
+    public URL loadResourceFromSelf( String name )
+    {
+        URL url = findResource( name );
+
+        return url;
+    }
+
+    public URL loadResourceFromParent( String name )
+    {
+        if ( getParent() != null )
+        {
+            return getParent().getResource( name );
+        }
+
+        return null;
+    }    
+
+    // Resources
+    
+    public Enumeration loadResourcesFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+
+        if ( importRealm != null )
+        {
+            try
+            {
+                return importRealm.findResources( name );
+            }
+            catch ( IOException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public Enumeration loadResourcesFromSelf( String name )
+    {
+        try
+        {
+            return super.findResources( name );
+        }
+        catch ( IOException e )
+        {
+            return null;
+        }        
+    }
+    
+
+    public Enumeration loadResourcesFromParent( String name )
+    {
+        if ( getParent() != null )
+        {
+            try
+            {
+                return getParent().getResources( name );
+            }
+            catch ( IOException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }    
+    
+    
     // ----------------------------------------------------------------------
     // We delegate to the Strategy here so that we can change the behavior
     // of any existing ClassRealm.
@@ -287,6 +368,7 @@ public class ClassRealm
         while ( cr != null )
         {
             System.out.println( "this realm =    " + cr.getId() );
+            System.out.println( "classloader parent: " + cr.getParent() );
             System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
 
             showUrls( cr );
@@ -331,34 +413,62 @@ public class ClassRealm
         return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
     }
     
-    // These need to be simplified or the strategy being passed in knowingly by the user
-    
-    public Strategy getStrategy( ClassRealm realm )
+    public String getClassLocation( final Class clazz )
     {
-        return getStrategy( realm, "default", null );
-    }
-
-    public Strategy getStrategy( ClassRealm realm, ClassLoader foreign )
-    {
-        return getStrategy( realm, "default", foreign );
-    }
-
-    public Strategy getStrategy( ClassRealm realm, String hint )
-    {
-        return getStrategy( realm, hint, null );
-    }
-
-    public static Strategy getStrategy( ClassRealm realm, String hint, ClassLoader foreign )
-    {
-        if ( foreign != null )
+        if ( clazz == null )
         {
-            return new ForeignStrategy( realm, foreign );
+            return null;
         }
 
-        // Here we shall check hint to load non-default strategies
+        URL result = null;
+        String classAsResource = clazz.getName().replace( '.', '/' ).concat( ".class" );
 
-        Strategy ret = new DefaultStrategy( realm );
+        ProtectionDomain protectionDomain = clazz.getProtectionDomain();
+        // java.lang.Class contract does not specify if 'pd' can ever be null;
+        // it is not the case for Sun's implementations, but guard against null
+        // just in case:
+        if ( protectionDomain != null )
+        {
+            CodeSource codeSource = protectionDomain.getCodeSource();
+            // 'cs' can be null depending on the classloader behavior:
+            if ( codeSource != null )
+            {
+                result = codeSource.getLocation();
+            }
 
-        return ret;
+            if ( result != null )
+            {
+                // Convert a code source location into a full class file location
+                // for some common cases:
+                if ( "file".equals( result.getProtocol() ) )
+                {
+                    try
+                    {
+                        if ( result.toExternalForm().endsWith( ".jar" ) || result.toExternalForm().endsWith( ".zip" ) )
+                        {
+                            result = new URL( "jar:".concat( result.toExternalForm() ).concat( "!/" ).concat( classAsResource ) );
+                        }
+                        else if ( new File( result.getFile() ).isDirectory() )
+                        {
+                            result = new URL( result, classAsResource );
+                        }
+                    }
+                    catch ( MalformedURLException ignore )
+                    {
+                    }
+                }
+            }
+        }
+
+        if ( result == null )
+        {
+            // Try to find 'cls' definition as a resource; this is not
+            // documented to be legal, but Sun's implementations seem to allow this:
+            ClassLoader classLoader = clazz.getClassLoader();
+
+            result = classLoader != null ? classLoader.getResource( classAsResource ) : ClassLoader.getSystemResource( classAsResource );
+        }
+
+        return result.toExternalForm();
     }    
 }
