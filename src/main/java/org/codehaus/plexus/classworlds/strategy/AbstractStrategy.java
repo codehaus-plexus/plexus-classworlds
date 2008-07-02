@@ -31,11 +31,6 @@ public abstract class AbstractStrategy
         this.realm = realm;
     }
 
-    protected String getNormalizedResource( String name  )
-    {
-        return UrlUtils.normalizeUrlPath( name );
-    }
-
     public ClassRealm getRealm()
     {
         return realm;

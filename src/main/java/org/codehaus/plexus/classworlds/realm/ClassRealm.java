@@ -28,9 +28,7 @@ import java.util.TreeSet;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.strategy.DefaultStrategy;
-import org.codehaus.plexus.classworlds.strategy.ForeignStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
-import org.codehaus.plexus.classworlds.strategy.UrlUtils;
 
 /**
  * @author Jason van Zyl
@@ -340,7 +338,7 @@ public class ClassRealm
 
     public URL getResource( String name )
     {
-        return strategy.getResource( UrlUtils.normalizeUrlPath( name ) );
+        return strategy.getResource( normalizeUrlPath( name ) );
     }
 
     public InputStream getResourceAsStream( String name )
@@ -351,7 +349,7 @@ public class ClassRealm
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( UrlUtils.normalizeUrlPath( name ) );
+        return strategy.findResources( normalizeUrlPath( name ) );
     }
 
     // ----------------------------------------------------------------------------
@@ -476,5 +474,32 @@ public class ClassRealm
         }
 
         return result.toExternalForm();
+    }    
+    
+    // Util methods
+    
+    public static String normalizeUrlPath( String name )
+    {
+        if ( name.startsWith( "/" ) )
+        {
+            name = name.substring( 1 );
+        }
+
+        // Looking for org/codehaus/werkflow/personality/basic/../common/core-idioms.xml
+        //                                               |    i  |
+        //                                               +-------+ remove
+        //
+        int i = name.indexOf( "/.." );
+
+        // Can't be at the beginning because we have no root to refer to so
+        // we start at 1.
+        if ( i > 0 )
+        {
+            int j = name.lastIndexOf( "/", i - 1 );
+
+            name = name.substring( 0, j ) + name.substring( i + 3 );
+        }
+
+        return name;
     }    
 }

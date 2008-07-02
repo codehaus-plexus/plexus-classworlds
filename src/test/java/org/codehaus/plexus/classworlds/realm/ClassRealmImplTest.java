@@ -211,14 +211,10 @@ public class ClassRealmImplTest
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
         ClassRealm realmA = this.world.newRealm( "realmA" );
-
-        realmA.display();
         
         try
         {
-            Class a = realmA.loadClass( "a.A" );
-
-            System.out.println( realmA.getClassLocation( a ));
+            realmA.loadClass( "a.A" );
             
             fail( "realmA.loadClass(a.A) should have thrown a ClassNotFoundException" );
         }
