@@ -37,7 +37,10 @@ import org.codehaus.plexus.classworlds.strategy.Strategy;
 public class ClassRealm
     extends URLClassLoader
 {
+    /** The ClassWorld we live in. */
     private ClassWorld world;
+    
+    /** The unique id of our ClassRealm */
     private String id;
 
     /** Packages this ClassRealm is willing to make visible to outside callers. */
@@ -46,8 +49,8 @@ public class ClassRealm
     /** Pacakges this ClassRealm wants to import from other realms. */
     private TreeSet imports;
 
+    /** The strategy we are using to load classes and resources. */
     private Strategy strategy;
-    private ClassRealm parentRealm;
 
     public ClassRealm( ClassWorld world, String id )
     {
@@ -92,7 +95,7 @@ public class ClassRealm
     {
         return this.world;
     }
-
+    
     public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
@@ -134,22 +137,10 @@ public class ClassRealm
         return strategy;
     }
 
-    public void setParentRealm( ClassRealm realm )
-    {
-        this.parentRealm = realm;
-    }
-
-    public ClassRealm getParentRealm()
-    {
-        return parentRealm;
-    }
-
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
-        ClassRealm childRealm = getWorld().newRealm( id, this );
-        childRealm.setParentRealm( this );
-        return childRealm;
+        return getWorld().newRealm( id, this );
     }
 
     public void addURL( URL url )
@@ -366,8 +357,6 @@ public class ClassRealm
             showUrls( cr );
 
             System.out.println( "\n" );
-
-            cr = cr.getParentRealm();
         }
 
         System.out.println( "-----------------------------------------------------" );
@@ -402,7 +391,7 @@ public class ClassRealm
 
     public String toString()
     {
-        return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
+        return "ClassRealm[" + getId() + ", parent: " + getParent() + "]";
     }
     
     /**

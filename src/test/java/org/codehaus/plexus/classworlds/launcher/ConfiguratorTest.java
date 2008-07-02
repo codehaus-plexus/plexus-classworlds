@@ -176,60 +176,6 @@ public class ConfiguratorTest
         assertArrayContains( urls, new File( basedir, "src/test/test-data/c.jar" ).toURI().toURL() );
     }
 
-    public void testConfigure_Optionally_NonExistent()
-        throws Exception
-    {
-        this.configurator.configure( getConfigPath( "optionally-nonexistent.conf" ) );
-
-        assertEquals( "org.apache.maven.app.App", this.launcher.getMainClassName() );
-
-        assertEquals( "opt", this.launcher.getMainRealmName() );
-
-        ClassWorld world = this.launcher.getWorld();
-
-        Collection realms = world.getRealms();
-
-        assertEquals( 1, realms.size() );
-
-        assertNotNull( world.getRealm( "opt" ) );
-
-        ClassRealm optRealm = world.getRealm( "opt" );
-
-        Strategy strat = optRealm.getStrategy();
-
-        URL[] urls = optRealm.getURLs();
-
-        assertEquals( "no urls", 0, urls.length );
-    }
-
-    public void testConfigure_Optionally_Existent()
-        throws Exception
-    {
-        this.configurator.configure( getConfigPath( "optionally-existent.conf" ) );
-
-        assertEquals( "org.apache.maven.app.App", this.launcher.getMainClassName() );
-
-        assertEquals( "opt", this.launcher.getMainRealmName() );
-
-        ClassWorld world = this.launcher.getWorld();
-
-        Collection realms = world.getRealms();
-
-        assertEquals( 1, realms.size() );
-
-        assertNotNull( world.getRealm( "opt" ) );
-
-        ClassRealm optRealm = world.getRealm( "opt" );
-
-        Strategy strat = optRealm.getStrategy();
-
-        URL[] urls = optRealm.getURLs();
-
-        assertEquals( "one url", 1, urls.length );
-
-        assertSame( optRealm, optRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
-    }
-
     public void testConfigure_Unhandled()
         throws Exception
     {
