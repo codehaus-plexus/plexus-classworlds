@@ -45,7 +45,7 @@ public class StrategyTest
         this.realm = this.world.newRealm( "realm" );
         this.strategy = this.realm.getStrategy();
         
-        realm.addURL( getJarUrl( "component0-1.0.jar" ) );
+        realm.addURL( TestUtil.getTestJar( "component0-1.0.jar" ) );
     }
 
     public void testLoadingOfApplicationClass()
@@ -118,7 +118,7 @@ public class StrategyTest
     public void testFindResources()
         throws Exception
     {
-        realm.addURL( getJarUrl( "component1-1.0.jar" ) );
+        realm.addURL( TestUtil.getTestJar( "component1-1.0.jar" ) );
 
         Enumeration e = strategy.findResources( "META-INF/plexus/components.xml" );
 
@@ -147,15 +147,6 @@ public class StrategyTest
         String content = getContent( is );
 
         assertTrue( content.startsWith( "<component-set>" ) );
-    }
-
-
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
-
-        return jarFile.toURI().toURL();
     }
 
     protected String getContent( InputStream in )

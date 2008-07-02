@@ -202,10 +202,10 @@ public class ClassRealmTest
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
         ClassRealm realmA = this.world.newRealm( "realmA" );
-        
+
         try
         {
-            realmA.loadClass( "a.A" );         
+            realmA.loadClass( "a.A" );
             fail( "realmA.loadClass(a.A) should have thrown a ClassNotFoundException" );
         }
         catch ( ClassNotFoundException e )
@@ -330,12 +330,6 @@ public class ClassRealmTest
         }
     }
 
-    protected URL getJarUrl( String jarName )
-        throws MalformedURLException
-    {
-        return TestUtil.getTestResourceUrl( jarName );
-    }
-
     public void testLoadClass_ClassWorldsClassRepeatedly()
         throws Exception
     {
@@ -372,9 +366,9 @@ public class ClassRealmTest
         Class classAFromImport = realmC.loadClassFromImport( "a.A" );
         assertNotNull( classAFromImport );
     }
-    
+
     // From original ClassRealmImplTest
-    
+
     // ----------------------------------------------------------------------
     // Class testing
     // ----------------------------------------------------------------------
@@ -428,7 +422,7 @@ public class ClassRealmTest
         ClassWorld world = new ClassWorld();
         ClassRealm r0 = world.newRealm( "r0" );
         ClassRealm r1 = world.newRealm( "r1" );
-        
+
         r0.addURL( getJarUrl2( "component0-1.0.jar" ) );
         r1.importFrom( "r0", "org.codehaus.plexus" );
         r1.loadClass( "org.codehaus.plexus.Component0" );
@@ -451,10 +445,16 @@ public class ClassRealmTest
     //
     // ----------------------------------------------------------------------
 
+    protected URL getJarUrl( String jarName )
+        throws MalformedURLException
+    {
+        return TestUtil.getTestResourceUrl( jarName );
+    }
+
     protected URL getJarUrl2( String jarName )
         throws Exception
     {
-        File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
+        File jarFile = new File( System.getProperty( "basedir" ), "src/test/test-jars/" + jarName );
         return jarFile.toURI().toURL();
-    }    
+    }
 }

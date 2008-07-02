@@ -14,17 +14,15 @@ package org.codehaus.plexus.classworlds;
  * the License.
  */
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 
 import junit.framework.TestCase;
 
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 public class ClassWorldTest
     extends TestCase
@@ -126,7 +124,7 @@ public class ClassWorldTest
     public void testPLX334()
         throws Exception
     {
-        ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl( "component1-1.0.jar" ) } );
+        ClassLoader loader = new URLClassLoader( new URL[] { TestUtil.getTestJar( "component1-1.0.jar" ) } );
         ClassRealm nb = world.newRealm( "netbeans", loader );
         ClassRealm plexus = world.newRealm( "plexus" );
         plexus.importFrom( "netbeans", "META-INF/plexus" );
@@ -137,7 +135,7 @@ public class ClassWorldTest
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             URL obj = (URL) resources.nextElement();
-            assertTrue( obj.getPath().indexOf( "src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            assertTrue( obj.getPath().indexOf( "src/test/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
 
@@ -145,18 +143,5 @@ public class ClassWorldTest
         Class c = plexus.loadClass( "org.codehaus.plexus.Component1" );
         assertNotNull( c );
 
-    }
-
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
-        return jarFile.toURI().toURL();
-    }
-
-    public static URL getTestResourceUrl( String resourceName )
-        throws MalformedURLException
-    {
-        return TestUtil.getTestResourceUrl( resourceName );
     }
 }
