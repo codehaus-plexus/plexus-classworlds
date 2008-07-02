@@ -182,19 +182,18 @@ public class ClassRealm
     public Class loadClassFromImport( String name )
     {
         ClassRealm importRealm = getImportRealm( name );
-
-        Class clazz = null;
-        
+        Class clazz = null;        
         if ( importRealm != null )
         {
-            clazz = importRealm.loadClassFromSelf( name );
-            
-            if ( clazz == null )
+            try
             {
-                clazz = importRealm.loadClassFromParent( name );
+                clazz = importRealm.loadClass( name );
+            }
+            catch ( ClassNotFoundException e )
+            {
+                return null;
             }
         }
-
         return clazz;
     }
 
