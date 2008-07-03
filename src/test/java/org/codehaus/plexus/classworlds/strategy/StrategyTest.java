@@ -45,7 +45,7 @@ public class StrategyTest
         this.realm = this.world.newRealm( "realm" );
         this.strategy = this.realm.getStrategy();
         
-        realm.addURL( TestUtil.getTestJar( "component0-1.0.jar" ) );
+        realm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
     }
 
     public void testLoadingOfApplicationClass()
@@ -118,7 +118,7 @@ public class StrategyTest
     public void testFindResources()
         throws Exception
     {
-        realm.addURL( TestUtil.getTestJar( "component1-1.0.jar" ) );
+        realm.addURL( TestUtil.getTestComponent( "component1-1.0.jar" ) );
 
         Enumeration e = strategy.findResources( "META-INF/plexus/components.xml" );
 

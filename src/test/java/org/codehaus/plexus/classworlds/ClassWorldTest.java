@@ -124,7 +124,7 @@ public class ClassWorldTest
     public void testPLX334()
         throws Exception
     {
-        ClassLoader loader = new URLClassLoader( new URL[] { TestUtil.getTestJar( "component1-1.0.jar" ) } );
+        ClassLoader loader = new URLClassLoader( new URL[] { TestUtil.getTestComponent( "component1-1.0.jar" ) } );
         ClassRealm nb = world.newRealm( "netbeans", loader );
         ClassRealm plexus = world.newRealm( "plexus" );
         plexus.importFrom( "netbeans", "META-INF/plexus" );
@@ -135,7 +135,7 @@ public class ClassWorldTest
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             URL obj = (URL) resources.nextElement();
-            assertTrue( obj.getPath().indexOf( "src/test/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            assertTrue( obj.getPath().indexOf( "src/test/test-data/components/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
 

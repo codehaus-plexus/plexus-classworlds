@@ -24,7 +24,7 @@ import java.net.URL;
  */
 public class TestUtil
 {
-    public static URL getTestResourceUrl( String resourceName )
+    public static URL getJarUrl( String resourceName )
         throws MalformedURLException
     {
         File baseDir = new File( getBasedir() );
@@ -33,11 +33,11 @@ public class TestUtil
         return resourceFile.toURI().toURL();
     }
 
-    public static URL getTestJar( String resourceName )
+    public static URL getTestComponent( String resourceName )
         throws MalformedURLException
     {
         File baseDir = new File( getBasedir() );
-        File testDir = new File( baseDir, "src/test/test-jars" );
+        File testDir = new File( baseDir, "src/test/test-data/components" );
         File resourceFile = new File( testDir, resourceName );
         return resourceFile.toURI().toURL();
     }

@@ -14,9 +14,6 @@ package org.codehaus.plexus.classworlds.realm;
  * the License.
  */
 
-import java.io.File;
-import java.net.MalformedURLException;
-
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -182,7 +179,7 @@ public class ClassRealmTest
             // expected and correct
         }
 
-        mainRealm.addURL( getJarUrl( "a.jar" ) );
+        mainRealm.addURL( TestUtil.getJarUrl( "a.jar" ) );
         Class classA = mainRealm.loadClass( "a.A" );
         assertNotNull( classA );
         ClassRealm otherRealm = this.world.newRealm( "other" );
@@ -213,7 +210,7 @@ public class ClassRealmTest
             // expected and correct
         }
 
-        realmA.addURL( getJarUrl( "a.jar" ) );
+        realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
 
         try
         {
@@ -239,7 +236,7 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm realmA = this.world.newRealm( "realmA" );
-        realmA.addURL( getJarUrl( "a.jar" ) );
+        realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
 
         Class clazz = realmA.loadClass( "a.A" );
         assertNotNull( clazz );
@@ -257,9 +254,9 @@ public class ClassRealmTest
         ClassRealm realmB = this.world.newRealm( "realmB" );
         ClassRealm realmC = this.world.newRealm( "realmC" );
 
-        realmA.addURL( getJarUrl( "a.jar" ) );
-        realmB.addURL( getJarUrl( "b.jar" ) );
-        realmC.addURL( getJarUrl( "c.jar" ) );
+        realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
+        realmB.addURL( TestUtil.getJarUrl( "b.jar" ) );
+        realmC.addURL( TestUtil.getJarUrl( "c.jar" ) );
 
         realmC.importFrom( "realmA", "a" );
 
@@ -352,9 +349,9 @@ public class ClassRealmTest
         ClassRealm realmB = this.world.newRealm( "realmB" );
         ClassRealm realmC = this.world.newRealm( "realmC" );
 
-        realmA.addURL( getJarUrl( "a.jar" ) );
-        realmB.addURL( getJarUrl( "b.jar" ) );
-        realmC.addURL( getJarUrl( "c.jar" ) );
+        realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
+        realmB.addURL( TestUtil.getJarUrl( "b.jar" ) );
+        realmC.addURL( TestUtil.getJarUrl( "c.jar" ) );
 
         realmC.importFrom( "realmA", "a" );
         realmC.importFrom( "realmB", "b" );
@@ -377,7 +374,7 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
-        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
         mainRealm.loadClass( "org.codehaus.plexus.Component0" );
     }
 
@@ -385,7 +382,7 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
-        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
         ClassRealm childRealm = mainRealm.createChildRealm( "child" );
         childRealm.loadClass( "org.codehaus.plexus.Component0" );
     }
@@ -394,7 +391,7 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
-        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
         ClassRealm childRealm = mainRealm.createChildRealm( "child" );
         ClassRealm grandchildRealm = childRealm.createChildRealm( "grandchild" );
         grandchildRealm.loadClass( "org.codehaus.plexus.Component0" );
@@ -404,7 +401,7 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
-        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
 
         try
         {
@@ -423,7 +420,7 @@ public class ClassRealmTest
         ClassRealm r0 = world.newRealm( "r0" );
         ClassRealm r1 = world.newRealm( "r1" );
 
-        r0.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        r0.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
         r1.importFrom( "r0", "org.codehaus.plexus" );
         r1.loadClass( "org.codehaus.plexus.Component0" );
     }
@@ -436,25 +433,8 @@ public class ClassRealmTest
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
-        mainRealm.addURL( getJarUrl2( "component0-1.0.jar" ) );
+        mainRealm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
         URL resource = mainRealm.getResource( "META-INF/plexus/components.xml" );
         assertNotNull( resource );
-    }
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-
-    protected URL getJarUrl( String jarName )
-        throws MalformedURLException
-    {
-        return TestUtil.getTestResourceUrl( jarName );
-    }
-
-    protected URL getJarUrl2( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( System.getProperty( "basedir" ), "src/test/test-jars/" + jarName );
-        return jarFile.toURI().toURL();
     }
 }
