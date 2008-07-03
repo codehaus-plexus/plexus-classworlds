@@ -44,24 +44,24 @@ public class ClassRealmTest
     public void testNewRealm()
         throws Exception
     {
-        ClassRealm realm = this.world.newRealm( "foo" );
+        ClassRealm realm = world.newRealm( "foo" );
         assertNotNull( realm );
-        assertSame( this.world, realm.getWorld() );
+        assertSame( world, realm.getWorld() );
         assertEquals( "foo", realm.getId() );
     }
 
     public void testLocateSourceRealm_NoImports()
         throws Exception
     {
-        ClassRealm realm = new ClassRealm( this.world, "foo" );
+        ClassRealm realm = new ClassRealm( world, "foo" );
         assertSame( realm, realm.locateSourceRealm( "com.werken.Stuff" ) );
     }
 
     public void testLocateSourceRealm_SimpleImport()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-        ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
+        ClassRealm mainRealm = world.newRealm( "main" );
+        ClassRealm werkflowRealm = world.newRealm( "werkflow" );
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
 
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
@@ -74,9 +74,9 @@ public class ClassRealmTest
     public void testLocateSourceRealm_MultipleImport()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-        ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
-        ClassRealm blissedRealm = this.world.newRealm( "blissed" );
+        ClassRealm mainRealm = world.newRealm( "main" );
+        ClassRealm werkflowRealm = world.newRealm( "werkflow" );
+        ClassRealm blissedRealm = world.newRealm( "blissed" );
 
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
         mainRealm.importFrom( "blissed", "com.werken.blissed" );
@@ -89,13 +89,13 @@ public class ClassRealmTest
         assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
     }
 
-    public void testLocateSourceRealm_Hierachy()
+    public void testLocateSourceRealm_Hierarchy()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
-        ClassRealm fooRealm = this.world.newRealm( "foo" );
-        ClassRealm fooBarRealm = this.world.newRealm( "fooBar" );
-        ClassRealm fooBarBazRealm = this.world.newRealm( "fooBarBaz" );
+        ClassRealm mainRealm = world.newRealm( "main" );
+        ClassRealm fooRealm = world.newRealm( "foo" );
+        ClassRealm fooBarRealm = world.newRealm( "fooBar" );
+        ClassRealm fooBarBazRealm = world.newRealm( "fooBarBaz" );
 
         mainRealm.importFrom( "foo", "foo" );
         mainRealm.importFrom( "fooBar", "foo.bar" );
@@ -114,10 +114,10 @@ public class ClassRealmTest
     public void testLocateSourceRealm_Hierachy_Reverse()
         throws Exception
     {
-        ClassRealm fooBarBazRealm = this.world.newRealm( "fooBarBaz" );
-        ClassRealm fooBarRealm = this.world.newRealm( "fooBar" );
-        ClassRealm fooRealm = this.world.newRealm( "foo" );
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
+        ClassRealm fooBarBazRealm = world.newRealm( "fooBarBaz" );
+        ClassRealm fooBarRealm = world.newRealm( "fooBar" );
+        ClassRealm fooRealm = world.newRealm( "foo" );
+        ClassRealm mainRealm = world.newRealm( "main" );
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
         mainRealm.importFrom( "fooBar", "foo.bar" );
@@ -136,7 +136,7 @@ public class ClassRealmTest
     public void testLoadClass_SystemClass()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
+        ClassRealm mainRealm = world.newRealm( "main" );
         Class cls = mainRealm.loadClass( "java.lang.Object" );
         assertNotNull( cls );
     }
@@ -144,7 +144,7 @@ public class ClassRealmTest
     public void testLoadClass_NonSystemClass()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
+        ClassRealm mainRealm = world.newRealm( "main" );
 
         try
         {
@@ -160,7 +160,7 @@ public class ClassRealmTest
     public void testLoadClass_ClassWorldsClass()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
+        ClassRealm mainRealm = world.newRealm( "main" );
         Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
         assertNotNull( cls );
         assertSame( ClassWorld.class, cls );
@@ -169,7 +169,7 @@ public class ClassRealmTest
     public void testLoadClass_Local()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
+        ClassRealm mainRealm = world.newRealm( "main" );
         try
         {
             mainRealm.loadClass( "a.A" );
@@ -182,7 +182,7 @@ public class ClassRealmTest
         mainRealm.addURL( TestUtil.getJarUrl( "a.jar" ) );
         Class classA = mainRealm.loadClass( "a.A" );
         assertNotNull( classA );
-        ClassRealm otherRealm = this.world.newRealm( "other" );
+        ClassRealm otherRealm = world.newRealm( "other" );
 
         try
         {
@@ -197,8 +197,8 @@ public class ClassRealmTest
     public void testLoadClass_Imported()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
-        ClassRealm realmA = this.world.newRealm( "realmA" );
+        ClassRealm mainRealm = world.newRealm( "main" );
+        ClassRealm realmA = world.newRealm( "realmA" );
 
         try
         {
@@ -235,7 +235,7 @@ public class ClassRealmTest
     public void testLoadClass_Package()
         throws Exception
     {
-        ClassRealm realmA = this.world.newRealm( "realmA" );
+        ClassRealm realmA = world.newRealm( "realmA" );
         realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
 
         Class clazz = realmA.loadClass( "a.A" );
@@ -250,18 +250,16 @@ public class ClassRealmTest
     public void testLoadClass_Complex()
         throws Exception
     {
-        ClassRealm realmA = this.world.newRealm( "realmA" );
-        ClassRealm realmB = this.world.newRealm( "realmB" );
-        ClassRealm realmC = this.world.newRealm( "realmC" );
+        ClassRealm realmA = world.newRealm( "realmA" );
+        ClassRealm realmB = world.newRealm( "realmB" );
+        ClassRealm realmC = world.newRealm( "realmC" );
 
         realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
         realmB.addURL( TestUtil.getJarUrl( "b.jar" ) );
         realmC.addURL( TestUtil.getJarUrl( "c.jar" ) );
 
         realmC.importFrom( "realmA", "a" );
-
         realmC.importFrom( "realmB", "b" );
-
         realmA.importFrom( "realmC", "c" );
 
         Class classA_A = realmA.loadClass( "a.A" );
@@ -330,7 +328,7 @@ public class ClassRealmTest
     public void testLoadClass_ClassWorldsClassRepeatedly()
         throws Exception
     {
-        ClassRealm mainRealm = this.world.newRealm( "main" );
+        ClassRealm mainRealm = world.newRealm( "main" );
 
         for ( int i = 0; i < 100; i++ )
         {
@@ -345,9 +343,9 @@ public class ClassRealmTest
     public void testP()
         throws Exception
     {
-        ClassRealm realmA = this.world.newRealm( "realmA" );
-        ClassRealm realmB = this.world.newRealm( "realmB" );
-        ClassRealm realmC = this.world.newRealm( "realmC" );
+        ClassRealm realmA = world.newRealm( "realmA" );
+        ClassRealm realmB = world.newRealm( "realmB" );
+        ClassRealm realmC = world.newRealm( "realmC" );
 
         realmA.addURL( TestUtil.getJarUrl( "a.jar" ) );
         realmB.addURL( TestUtil.getJarUrl( "b.jar" ) );
