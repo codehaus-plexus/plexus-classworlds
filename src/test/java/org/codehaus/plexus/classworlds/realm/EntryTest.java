@@ -68,6 +68,4 @@ public class EntryTest
         assertTrue( "entry1 == entry2", entry1.equals( entry2 ) );
         assertTrue( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode() == entry2.hashCode() );
     }
-
-
 }
