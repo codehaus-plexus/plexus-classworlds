@@ -24,11 +24,15 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.strategy.DefaultStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
+
+import com.sun.tools.jdi.LinkedHashMap;
 
 /**
  * @author Jason van Zyl
@@ -39,16 +43,19 @@ public class ClassRealm
 {
     /** The ClassWorld we live in. */
     private ClassWorld world;
-    
+
     /** The unique id of our ClassRealm */
     private String id;
 
     /** Packages this ClassRealm is willing to make visible to outside callers. */
-    private TreeSet exports;
+    private Set exports;
 
     /** Pacakges this ClassRealm wants to import from other realms. */
-    private TreeSet imports;
-
+    private Set imports;
+    
+    /** Map of packages to import from given realms */
+    private Map importRealmMappings;
+    
     /** The strategy we are using to load classes and resources. */
     private Strategy strategy;
 
@@ -73,8 +80,9 @@ public class ClassRealm
 
         this.world = world;
         this.id = id;
-        exports = new TreeSet();
-        imports = new TreeSet();
+        this.exports = new TreeSet();
+        this.imports = new TreeSet();
+        this.importRealmMappings = new LinkedHashMap();
 
         if ( strategy == null )
         {
@@ -95,12 +103,17 @@ public class ClassRealm
     {
         return this.world;
     }
-    
+
     public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
-        imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
-        imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
+        Entry e = new Entry( packageName );
+        imports.add( e );
+        importRealmMappings.put( e.pkgName, realmId );
+        
+        Entry e1 = new Entry( packageName.replace( '.', '/' ) );
+        imports.add( e1 );
+        importRealmMappings.put( e1.pkgName, realmId );            
     }
 
     public ClassRealm getImportRealm( String classname )
@@ -111,7 +124,7 @@ public class ClassRealm
 
             if ( entry.matches( classname ) )
             {
-                return entry.getRealm();
+                return world.getClassRealm( (String) importRealmMappings.get( entry.pkgName ) );
             }
         }
 
@@ -120,16 +133,14 @@ public class ClassRealm
 
     public ClassRealm locateSourceRealm( String classname )
     {
-        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
+        ClassRealm importRealm = getImportRealm( classname );
+        
+        if ( importRealm != null )
         {
-            Entry entry = (Entry) iterator.next();
-            if ( entry.matches( classname ) )
-            {
-                return entry.getRealm();
-            }
+            return importRealm;
         }
-
-        return this;
+        
+        return this;        
     }
 
     public ClassRealm createChildRealm( String id )
@@ -157,11 +168,11 @@ public class ClassRealm
     //---------------------------------------------------------------------------------------------
     // Search methods that can be ordered by strategies
     //---------------------------------------------------------------------------------------------
-    
+
     public Class loadClassFromImport( String name )
     {
         ClassRealm importRealm = getImportRealm( name );
-        Class clazz = null;        
+        Class clazz = null;
         if ( importRealm != null )
         {
             try
@@ -187,7 +198,7 @@ public class ClassRealm
             if ( clazz == null )
             {
                 clazz = findClass( name );
-            }                       
+            }
         }
         catch ( ClassNotFoundException e )
         {
@@ -214,12 +225,12 @@ public class ClassRealm
         }
 
         return null;
-    }    
-    
+    }
+
     //---------------------------------------------------------------------------------------------
     // Resources
     //---------------------------------------------------------------------------------------------
-    
+
     public URL loadResourceFromImport( String name )
     {
         ClassRealm importRealm = getImportRealm( name );
@@ -247,10 +258,10 @@ public class ClassRealm
         }
 
         return null;
-    }    
+    }
 
     // Resources
-    
+
     public Enumeration loadResourcesFromImport( String name )
     {
         ClassRealm importRealm = getImportRealm( name );
@@ -279,9 +290,8 @@ public class ClassRealm
         catch ( IOException e )
         {
             return null;
-        }        
+        }
     }
-    
 
     public Enumeration loadResourcesFromParent( String name )
     {
@@ -298,9 +308,8 @@ public class ClassRealm
         }
 
         return null;
-    }    
-    
-    
+    }
+
     // ----------------------------------------------------------------------
     // We delegate to the Strategy here so that we can change the behavior
     // of any existing ClassRealm.
@@ -388,10 +397,11 @@ public class ClassRealm
     {
         return "ClassRealm[" + getId() + ", parent: " + getParent() + "]";
     }
-    
+
     /**
-     * Find the exact URL that a particular class was loaded from. This can be used to debug problems where you need
-     * to know exactly what JAR, or location in the file system that a class came from.
+     * Find the exact URL that a particular class was loaded from. This can be used to debug
+     * problems where you need to know exactly what JAR, or location in the file system that a class
+     * came from.
      * 
      * @param clazz
      * @return The location of class that was loaded in URL external form.
@@ -453,10 +463,10 @@ public class ClassRealm
         }
 
         return result.toExternalForm();
-    }    
-    
+    }
+
     // Util methods
-    
+
     public static String normalizeUrlPath( String name )
     {
         if ( name.startsWith( "/" ) )
@@ -480,5 +490,87 @@ public class ClassRealm
         }
 
         return name;
-    }    
+    }
+
+    public static class Entry
+        implements Comparable
+    {
+        private final String pkgName;
+
+        Entry( String pkgName )
+        {
+            this.pkgName = pkgName;
+        }
+
+        String getPackageName()
+        {
+            return this.pkgName;
+        }
+
+        /**
+         * Determine if the classname matches the package described by this entry.
+         * 
+         * @param classname The class name to test.
+         * @return <code>true</code> if this entry matches the classname, otherwise
+         *         <code>false</code>.
+         */
+        boolean matches( String classname )
+        {
+            return classname.startsWith( getPackageName() );
+        }
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        //     java.lang.Comparable
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        /**
+         * Compare this entry to another for relative ordering. <p/> <p/> The natural ordering of
+         * Entry objects is reverse-alphabetical based upon package name. </p>
+         * 
+         * @param thatObj The object to compare.
+         * @return -1 if this object sorts before that object, 0 if they are equal, or 1 if this
+         *         object sorts after that object.
+         */
+        public int compareTo( Object thatObj )
+        {
+            Entry that = (Entry) thatObj;
+
+            // We are reverse sorting this list, so that
+            // we get longer matches first:
+            //
+            //     com.werken.foo.bar
+            //     com.werken.foo
+            //     com.werken
+
+            return ( getPackageName().compareTo( that.getPackageName() ) ) * -1;
+        }
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        //     java.lang.Object
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+        /**
+         * Test this entry for equality to another. <p/> <p/> Consistent with {@link #compareTo},
+         * this method tests for equality purely on the package name. </p>
+         * 
+         * @param thatObj The object to compare
+         * @return <code>true</code> if the two objects are semantically equivalent, otherwise
+         *         <code>false</code>.
+         */
+        public boolean equals( Object thatObj )
+        {
+            Entry that = (Entry) thatObj;
+
+            return getPackageName().equals( that.getPackageName() );
+        }
+
+        /**
+         * <p/> Consistent with {@link #equals}, this method creates a hashCode based on the
+         * packagename. </p>
+         */
+        public int hashCode()
+        {
+            return getPackageName().hashCode();
+        }
+    }
 }

@@ -85,10 +85,21 @@ public class ClassWorld
         return realm;
     }
 
+    //TODO: the import statements are not updated to reflect the removal of the realm.
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
         realms.remove( id );
+    }
+
+    public synchronized ClassRealm getClassRealm( String id )
+    {
+        if ( realms.containsKey( id ) )
+        {
+            return (ClassRealm) realms.get( id );
+        }
+
+        return null;
     }
 
     public synchronized ClassRealm getRealm( String id )

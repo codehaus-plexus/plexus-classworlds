@@ -19,15 +19,11 @@ package org.codehaus.plexus.classworlds.realm;
 import junit.framework.TestCase;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm.Entry;
 
-/**
- * @author <a href="bwalding@jakarta.org">Ben Walding</a>
- * @version $Id$
- */
 public class EntryTest
     extends TestCase
 {
-
     /**
      * Constructor for EntryTest.
      *
@@ -42,10 +38,10 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        ClassRealm r = (ClassRealm) cw.newRealm( "test1" );
+        ClassRealm r = cw.newRealm( "test1" );
 
-        Entry entry1 = new Entry( r, "org.test" );
-        Entry entry2 = new Entry( r, "org.test.impl" );
+        Entry entry1 = new Entry( "org.test" );
+        Entry entry2 = new Entry( "org.test.impl" );
 
         assertTrue( "org.test > org.test.impl", entry1.compareTo( entry2 ) > 0 );
     }
@@ -59,11 +55,11 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        ClassRealm r1 = (ClassRealm) cw.newRealm( "test1" );
-        ClassRealm r2 = (ClassRealm) cw.newRealm( "test2" );
+        ClassRealm r1 = cw.newRealm( "test1" );
+        ClassRealm r2 = cw.newRealm( "test2" );
 
-        Entry entry1 = new Entry( r1, "org.test" );
-        Entry entry2 = new Entry( r2, "org.test" );
+        Entry entry1 = new Entry( "org.test" );
+        Entry entry2 = new Entry( "org.test" );
 
         assertTrue( "entry1 == entry2", entry1.equals( entry2 ) );
         assertTrue( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode() == entry2.hashCode() );

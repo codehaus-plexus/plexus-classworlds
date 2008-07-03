@@ -107,17 +107,11 @@ public class ClassWorldTest
         throws Exception
     {
         assertTrue( this.world.getRealms().isEmpty() );
-
         ClassRealm foo = this.world.newRealm( "foo" );
-
         assertEquals( 1, this.world.getRealms().size() );
-
         assertTrue( this.world.getRealms().contains( foo ) );
-
         ClassRealm bar = this.world.newRealm( "bar" );
-
         assertEquals( 2, this.world.getRealms().size() );
-
         assertTrue( this.world.getRealms().contains( bar ) );
     }
 
