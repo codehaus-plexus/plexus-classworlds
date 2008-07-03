@@ -36,7 +36,6 @@ public class LauncherTest
     public void setUp()
     {
         System.setProperty( "java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol" );
-
         this.launcher = new Launcher();
     }
 
@@ -49,13 +48,10 @@ public class LauncherTest
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
-
         Class mainClass = launcher.getMainClass();
 
         assertNotNull( mainClass );
-
         assertEquals( "a.A", mainClass.getName() );
-
         assertEquals( "app", launcher.getMainRealm().getId() );
     }
 
@@ -63,7 +59,6 @@ public class LauncherTest
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
-
         launcher.launch( new String[]{} );
     }
 
@@ -71,7 +66,6 @@ public class LauncherTest
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch-exitCode.conf" ) );
-
         launcher.launch( new String[]{} );
 
         assertEquals( "check exit code", 15, launcher.getExitCode() );
@@ -89,7 +83,6 @@ public class LauncherTest
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-enh-launch-exitCode.conf" ) );
-
         launcher.launch( new String[]{} );
 
         assertEquals( "check exit code", 45, launcher.getExitCode() );
@@ -132,6 +125,6 @@ public class LauncherTest
     {
         String basedir = TestUtil.getBasedir();
 
-        return new FileInputStream( new File( new File( basedir, "src/test/test-data" ), name ) );
+        return new FileInputStream( new File( new File( basedir, "src/test/test-data/launcher-configurations" ), name ) );
     }
 }

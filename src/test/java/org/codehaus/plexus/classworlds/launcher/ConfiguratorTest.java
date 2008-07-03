@@ -2,18 +2,16 @@ package org.codehaus.plexus.classworlds.launcher;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.io.File;
@@ -24,11 +22,10 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 
 public class ConfiguratorTest
     extends TestCase
@@ -139,7 +136,6 @@ public class ConfiguratorTest
         this.configurator.configure( getConfigPath( "valid.conf" ) );
 
         assertEquals( "org.apache.maven.app.App", this.launcher.getMainClassName() );
-
         assertEquals( "maven", this.launcher.getMainRealmName() );
 
         ClassWorld world = this.launcher.getWorld();
@@ -158,15 +154,9 @@ public class ConfiguratorTest
         ClassRealm globRealm = world.getRealm( "glob" );
 
         assertSame( antRealm, antRealm.locateSourceRealm( "org.apache.tools.Ant" ) );
-
         assertSame( xmlRealm, antRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
-
         assertSame( mavenRealm, mavenRealm.locateSourceRealm( "org.apache.maven.app.App" ) );
-
         assertSame( xmlRealm, mavenRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
-
-        // Test the glob support
-        Strategy strat = globRealm.getStrategy();
 
         URL[] urls = globRealm.getURLs();
 
@@ -211,9 +201,7 @@ public class ConfiguratorTest
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
-
         String result = this.configurator.filter( "${classworlds.test.prop}" );
-
         assertEquals( "test prop value", result );
     }
 
@@ -221,9 +209,7 @@ public class ConfiguratorTest
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
-
         String result = this.configurator.filter( "${classworlds.test.prop}cheese" );
-
         assertEquals( "test prop valuecheese", result );
     }
 
@@ -231,9 +217,7 @@ public class ConfiguratorTest
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
-
         String result = this.configurator.filter( "cheese${classworlds.test.prop}" );
-
         assertEquals( "cheesetest prop value", result );
     }
 
@@ -241,12 +225,8 @@ public class ConfiguratorTest
         throws Exception
     {
         System.setProperty( "classworlds.test.prop.one", "test prop value one" );
-
         System.setProperty( "classworlds.test.prop.two", "test prop value two" );
-
-        String result =
-            this.configurator.filter( "I like ${classworlds.test.prop.one} and ${classworlds.test.prop.two} a lot" );
-
+        String result = this.configurator.filter( "I like ${classworlds.test.prop.one} and ${classworlds.test.prop.two} a lot" );
         assertEquals( "I like test prop value one and test prop value two a lot", result );
     }
 
@@ -269,9 +249,7 @@ public class ConfiguratorTest
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
-
         String result = this.configurator.filter( "cheese${classworlds.test.prop}toast" );
-
         assertEquals( "cheesetest prop valuetoast", result );
     }
 
@@ -279,9 +257,7 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.existent" ) );
-
         this.configurator.configure( getConfigPath( "set-using-existent.conf" ) );
-
         assertEquals( "testSet_Using_Existent", System.getProperty( "set.using.existent" ) );
     }
 
@@ -289,9 +265,7 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.nonexistent" ) );
-
         this.configurator.configure( getConfigPath( "set-using-nonexistent.conf" ) );
-
         assertNull( System.getProperty( "set.using.nonexistent" ) );
     }
 
@@ -299,9 +273,7 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.nonexistent.default" ) );
-
         this.configurator.configure( getConfigPath( "set-using-nonexistent.conf" ) );
-
         assertEquals( "testSet_Using_NonExistent_Default", System.getProperty( "set.using.nonexistent.default" ) );
     }
 
@@ -310,9 +282,7 @@ public class ConfiguratorTest
     {
         assertNull( System.getProperty( "set.using.default" ) );
         System.setProperty( "set.using.default", "testSet_Using_NonExistent_Override" );
-
         this.configurator.configure( getConfigPath( "set-using-nonexistent.conf" ) );
-
         assertEquals( "testSet_Using_NonExistent_Override", System.getProperty( "set.using.default" ) );
     }
 
@@ -321,9 +291,7 @@ public class ConfiguratorTest
     {
         assertNull( System.getProperty( "set.using.existent" ) );
         System.setProperty( "set.using.existent", "testSet_Using_Existent_Override" );
-
         this.configurator.configure( getConfigPath( "set-using-existent.conf" ) );
-
         assertEquals( "testSet_Using_Existent_Override", System.getProperty( "set.using.existent" ) );
     }
 
@@ -331,9 +299,7 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.default" ) );
-
         this.configurator.configure( getConfigPath( "set-using-existent.conf" ) );
-
         assertEquals( "testSet_Using_Existent_Default", System.getProperty( "set.using.default" ) );
     }
 
@@ -341,9 +307,7 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.missing" ) );
-
         this.configurator.configure( getConfigPath( "set-using-missing.conf" ) );
-
         assertEquals( "testSet_Using_Missing_Default", System.getProperty( "set.using.missing" ) );
     }
 
@@ -352,9 +316,7 @@ public class ConfiguratorTest
     {
         assertNull( System.getProperty( "set.using.missing" ) );
         System.setProperty( "set.using.missing", "testSet_Using_Missing_Override" );
-
         this.configurator.configure( getConfigPath( "set-using-missing.conf" ) );
-
         assertEquals( "testSet_Using_Missing_Override", System.getProperty( "set.using.missing" ) );
     }
 
@@ -362,21 +324,17 @@ public class ConfiguratorTest
         throws Exception
     {
         assertNull( System.getProperty( "set.using.filtered.default" ) );
-
         this.configurator.configure( getConfigPath( "set-using-missing.conf" ) );
-
         assertEquals( System.getProperty( "user.home" ) + "/m2", System.getProperty( "set.using.filtered.default" ) );
     }
 
     private FileInputStream getConfigPath( String name )
         throws Exception
     {
-        return new FileInputStream(
-            new File( new File( TestUtil.getBasedir(), "src/test/test-data" ), name ) );
+        return new FileInputStream( new File( new File( TestUtil.getBasedir(), "src/test/test-data/launcher-configurations" ), name ) );
     }
 
-    private void assertArrayContains( URL[] array,
-                                      URL url )
+    private void assertArrayContains( URL[] array, URL url )
         throws Exception
     {
         for ( int i = 0; i < array.length; ++i )
