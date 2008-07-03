@@ -132,11 +132,6 @@ public class ClassRealm
         return this;
     }
 
-    public Strategy getStrategy()
-    {
-        return strategy;
-    }
-
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
@@ -352,7 +347,7 @@ public class ClassRealm
         {
             System.out.println( "this realm =    " + cr.getId() );
             System.out.println( "classloader parent: " + cr.getParent() );
-            System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
+            System.out.println( "this strategy = " + strategy.getClass().getName() );
 
             showUrls( cr );
 

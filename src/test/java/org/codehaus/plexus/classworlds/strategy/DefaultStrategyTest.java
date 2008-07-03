@@ -16,34 +16,29 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.TestUtil;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-// jars within jars
-// hierarchy vs graph
+import junit.framework.TestCase;
 
-public class StrategyTest
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+
+public class DefaultStrategyTest
         extends TestCase
 {
-    private ClassWorld world;
-    
+    private ClassWorld world;    
     private ClassRealm realm;
-
     private Strategy strategy;
 
     public void setUp()
         throws Exception
     {
         this.world = new ClassWorld();
-        this.realm = this.world.newRealm( "realm" );
-        this.strategy = this.realm.getStrategy();
+        this.realm = new ClassRealm( world, "realm" );
+        this.strategy = new DefaultStrategy( realm );
         
         realm.addURL( TestUtil.getTestComponent( "component0-1.0.jar" ) );
     }
@@ -52,7 +47,6 @@ public class StrategyTest
         throws Exception
     {
         Class c = strategy.loadClass( "org.codehaus.plexus.Component0" );
-
         assertNotNull( c );
     }
 
@@ -60,13 +54,9 @@ public class StrategyTest
         throws Exception
     {
         Class c;
-
         c = strategy.loadClass( "org.codehaus.plexus.Component0" );
-
         assertNotNull( c );
-
         c = strategy.loadClass( "org.codehaus.plexus.Component0" );
-
         assertNotNull( c );
     }
 
@@ -75,7 +65,6 @@ public class StrategyTest
         throws Exception
     {
         Class c = strategy.loadClass( "java.lang.Object" );
-
         assertNotNull( c );
     }
 
@@ -85,7 +74,6 @@ public class StrategyTest
         try
         {
             strategy.loadClass( "org.codehaus.plexus.NonExistentComponent" );
-
             fail( "Should have thrown a ClassNotFoundException!" );
         }
         catch ( ClassNotFoundException e )
@@ -98,11 +86,8 @@ public class StrategyTest
         throws Exception
     {
         URL resource = strategy.getResource( "META-INF/plexus/components.xml" );
-
         assertNotNull( resource );
-
         String content = getContent( resource.openStream() );
-
         assertTrue( content.startsWith( "<component-set>" ) );
     }
 
@@ -110,7 +95,6 @@ public class StrategyTest
         throws Exception
     {
         URL resource = strategy.getResource( "java/lang/Object.class" );
-
         assertNotNull( resource );
     }
 
@@ -119,20 +103,15 @@ public class StrategyTest
         throws Exception
     {
         realm.addURL( TestUtil.getTestComponent( "component1-1.0.jar" ) );
-
         Enumeration e = strategy.findResources( "META-INF/plexus/components.xml" );
-
         assertNotNull( e );
-
         int resourceCount = 0;
 
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             resources.nextElement();
-
             resourceCount++;
-        }
-
+        }     
         assertEquals( 2, resourceCount );
     }
 
@@ -141,11 +120,8 @@ public class StrategyTest
         throws Exception
     {
         InputStream is = strategy.getResourceAsStream( "META-INF/plexus/components.xml" );
-
         assertNotNull( is );
-
         String content = getContent( is );
-
         assertTrue( content.startsWith( "<component-set>" ) );
     }
 
@@ -153,16 +129,12 @@ public class StrategyTest
         throws Exception
     {
         byte[] buffer = new byte[1024];
-
         int read = 0;
-
         StringBuffer content = new StringBuffer();
-
         while ( ( read = in.read( buffer, 0, 1024 ) ) >= 0 )
         {
             content.append( new String( buffer, 0, read ) );
         }
-
         return content.toString();
     }
 }
