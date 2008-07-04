@@ -14,11 +14,6 @@ package org.codehaus.plexus.classworlds.launcher;
  * the License.
  */
 
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,7 +32,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.TreeSet;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.plexus.classworlds.realm.configuration.ClassRealmConfiguration;
+import org.codehaus.plexus.classworlds.realm.configuration.ClassRealmImport;
 
 /**
  * <code>Launcher</code> configurator.
@@ -102,7 +103,7 @@ public class Configurator
             foreignClassLoader = this.launcher.getSystemClassLoader();
         }
 
-        RealmConfiguration currentRealm = null;
+        ClassRealmConfiguration currentRealm = null;
 
         String line = null;
 
@@ -246,7 +247,7 @@ public class Configurator
                     throw new DuplicateRealmException(world, realmName );
                 }
                 
-                currentRealm = new RealmConfiguration( realmName );
+                currentRealm = new ClassRealmConfiguration( realmName );
 
                 // Stash the configured realm for subsequent association processing.
                 //configuredRealms.put( realmName, curRealm );
@@ -268,11 +269,11 @@ public class Configurator
                     throw new ConfigurationException( "Missing from clause", lineNo, line );
                 }
 
-                String importSpec = conf.substring( 0, fromLoc ).trim();
-
-                String relamName = conf.substring( fromLoc + 4 ).trim();
-
-                currentRealm.addImport( new ImportStatement( relamName, importSpec ) );
+                String importSpecification = conf.substring( 0, fromLoc ).trim();
+                
+                String realmName = conf.substring( fromLoc + 4 ).trim();
+                
+                currentRealm.addImport( realmName, importSpecification );
 
             }
             else if ( line.startsWith( LOAD_PREFIX ) )
@@ -323,7 +324,6 @@ public class Configurator
         reader.close();
     }
 
-    // TODO return this to protected when the legacy wrappers can be removed.
     /**
      * Associate parent realms with their children.
      * 
@@ -331,7 +331,7 @@ public class Configurator
      * @throws NoSuchRealmException
      * @throws MalformedURLException
      */
-    public void createRealms()
+    protected void createRealms()
         throws DuplicateRealmException, NoSuchRealmException, MalformedURLException
     {
         List sortRealmNames = new ArrayList( configuredRealms.keySet() );
@@ -369,12 +369,12 @@ public class Configurator
             {
                 String parentRealmName = realmName.substring( 0, j );
 
-                RealmConfiguration parentRealmConfiguration = (RealmConfiguration) configuredRealms.get( parentRealmName );
+                ClassRealmConfiguration parentRealmConfiguration = (ClassRealmConfiguration) configuredRealms.get( parentRealmName );
 
                 if ( parentRealmConfiguration != null )
                 {
-                    RealmConfiguration realmConfiguration = (RealmConfiguration) configuredRealms.get( realmName );
-                    world.newRealm( realmConfiguration.id, world.getRealm( parentRealmConfiguration.id ) );
+                    ClassRealmConfiguration realmConfiguration = (ClassRealmConfiguration) configuredRealms.get( realmName );
+                    world.newRealm( realmConfiguration.getId(), world.getRealm( parentRealmConfiguration.getId() ) );
                 }
             }
             else
@@ -385,29 +385,28 @@ public class Configurator
         
         for ( Iterator i = configuredRealms.values().iterator(); i.hasNext(); )
         {
-            RealmConfiguration rc = (RealmConfiguration) i.next();
+            ClassRealmConfiguration rc = (ClassRealmConfiguration) i.next();
             
-            configureRealm( world.getRealm( rc.id ), rc );
+            configureRealm( world.getRealm( rc.getId() ), rc );
         }
     }
 
-    private void configureRealm( ClassRealm realm, RealmConfiguration realmConfiguration )
+    private void configureRealm( ClassRealm realm, ClassRealmConfiguration realmConfiguration )
         throws NoSuchRealmException, MalformedURLException
     {
-        for ( Iterator i = realmConfiguration.imports.iterator(); i.hasNext(); )
+        for ( Iterator i = realmConfiguration.getImports().iterator(); i.hasNext(); )
         {
-            ImportStatement is = (ImportStatement) i.next();
+            ClassRealmImport is = (ClassRealmImport) i.next();
 
-            realm.importFrom( is.importRealm, is.importSpecification );
+            realm.importFrom( is.getImportRealm(), is.getImportSpecification() );
         }
 
-        for ( Iterator i = realmConfiguration.loads.iterator(); i.hasNext(); )
+        for ( Iterator i = realmConfiguration.getLoads().iterator(); i.hasNext(); )
         {
             String load = (String) i.next();
 
             realm.addURL( new URL( load ) );
         }
-
     }
 
     /**
@@ -420,7 +419,7 @@ public class Configurator
      * @throws FileNotFoundException If the line does not represent a valid path element in the
      *             filesystem.
      */
-    protected void loadGlob( String line, RealmConfiguration realm )
+    protected void loadGlob( String line, ClassRealmConfiguration realm )
         throws MalformedURLException, FileNotFoundException
     {
         File globFile = new File( line );
@@ -535,45 +534,5 @@ public class Configurator
     private boolean canIgnore( String line )
     {
         return ( line.length() == 0 || line.startsWith( "#" ) );
-    }
-
-    class RealmConfiguration
-    {
-        String id;
-        TreeSet imports = new TreeSet();
-        TreeSet exports = new TreeSet();
-        TreeSet loads = new TreeSet();
-
-        public RealmConfiguration( String id )
-        {
-            this.id = id;
-        }
-
-        public void addImport( ImportStatement importStatement )
-        {
-            imports.add( importStatement );
-        }
-
-        public void addExport( String exportStatement )
-        {
-            exports.add( exportStatement );
-        }
-
-        public void addLoad( String loadStatement )
-        {
-            loads.add( loadStatement );
-        }
-    }
-
-    class ImportStatement
-    {
-        public ImportStatement( String importRealm, String importSpecification )
-        {
-            this.importRealm = importRealm;
-            this.importSpecification = importSpecification;
-        }
-
-        String importRealm;
-        String importSpecification;
     }
 }

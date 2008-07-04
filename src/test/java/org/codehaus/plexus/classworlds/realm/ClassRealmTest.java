@@ -435,4 +435,9 @@ public class ClassRealmTest
         URL resource = mainRealm.getResource( "META-INF/plexus/components.xml" );
         assertNotNull( resource );
     }
+    
+    // ----------------------------------------------------------------------
+    // Exports
+    // ----------------------------------------------------------------------
+    
 }
