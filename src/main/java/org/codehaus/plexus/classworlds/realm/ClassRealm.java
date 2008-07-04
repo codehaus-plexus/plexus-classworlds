@@ -107,13 +107,9 @@ public class ClassRealm
     public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
-        Entry e = new Entry( packageName );
-        imports.add( e );
-        importRealmMappings.put( e.pkgName, realmId );
-        
-        Entry e1 = new Entry( packageName.replace( '.', '/' ) );
-        imports.add( e1 );
-        importRealmMappings.put( e1.pkgName, realmId );            
+        Entry entry = new Entry( packageName );
+        imports.add( entry );
+        importRealmMappings.put( entry.pkgName, realmId );        
     }
 
     public ClassRealm getImportRealm( String classname )
@@ -122,7 +118,7 @@ public class ClassRealm
         {
             Entry entry = (Entry) iterator.next();
 
-            if ( entry.matches( classname ) )
+            if ( entry.matches( classname ) || entry.matches( classname.replace(  '.', '/' ) ) )
             {
                 return world.getClassRealm( (String) importRealmMappings.get( entry.pkgName ) );
             }
