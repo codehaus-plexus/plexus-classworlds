@@ -19,14 +19,14 @@
   <parent>
     <artifactId>plexus</artifactId>
     <groupId>org.codehaus.plexus</groupId>
-    <version>1.0.10</version>
+    <version>2.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-classworlds</artifactId>
   <packaging>jar</packaging>
   <name>Plexus Classworlds</name>
-  <version>1.2-alpha-14-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <description />
   <inceptionYear>2002</inceptionYear>
   <dependencies>
