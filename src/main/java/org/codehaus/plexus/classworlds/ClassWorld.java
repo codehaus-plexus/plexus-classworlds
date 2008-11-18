@@ -76,8 +76,6 @@ public class ClassWorld
         if ( classLoader != null )
         {
             realm = new ClassRealm( this, id, classLoader );
-
-            realms.put( id, realm );
         }
         else
         {

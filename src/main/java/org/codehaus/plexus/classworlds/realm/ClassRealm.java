@@ -171,7 +171,7 @@ public class ClassRealm
     public Class loadRealmClass( String name )
         throws ClassNotFoundException
     {
-        return super.loadClass( name );
+        return super.loadClass( name, false );
     }
 
     public URL getRealmResource( String name )
@@ -196,6 +196,12 @@ public class ClassRealm
     // ----------------------------------------------------------------------
 
     public Class loadClass( String name )
+        throws ClassNotFoundException
+    {
+        return loadClass( name, false );
+    }
+
+    protected Class loadClass( String name, boolean resolve )
         throws ClassNotFoundException
     {
         return strategy.loadClass( name );

@@ -18,6 +18,8 @@ package org.codehaus.plexus.classworlds.realm;
 
 import java.io.File;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collections;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
@@ -41,7 +43,7 @@ public class DefaultClassRealmTest
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
-        mainRealm.loadClass( "org.codehaus.plexus.Component0" );
+        loadClass( mainRealm, "org.codehaus.plexus.Component0" );
     }
 
     public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
@@ -53,7 +55,7 @@ public class DefaultClassRealmTest
 
         ClassRealm childRealm = mainRealm.createChildRealm( "child" );
 
-        childRealm.loadClass( "org.codehaus.plexus.Component0" );
+        loadClass( childRealm, "org.codehaus.plexus.Component0" );
     }
 
     public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
@@ -67,7 +69,7 @@ public class DefaultClassRealmTest
 
         ClassRealm grandchildRealm = childRealm.createChildRealm( "grandchild" );
 
-        grandchildRealm.loadClass( "org.codehaus.plexus.Component0" );
+        loadClass( grandchildRealm, "org.codehaus.plexus.Component0" );
     }
 
     public void testLoadNonExistentClass()
@@ -85,6 +87,7 @@ public class DefaultClassRealmTest
         }
         catch ( ClassNotFoundException e )
         {
+            // expected
         }
     }
 
@@ -101,7 +104,7 @@ public class DefaultClassRealmTest
 
         r1.importFrom( "r0", "org.codehaus.plexus" );
 
-        r1.loadClass( "org.codehaus.plexus.Component0" );
+        loadClass( r1, "org.codehaus.plexus.Component0" );
     }
 
     // ----------------------------------------------------------------------
@@ -115,9 +118,7 @@ public class DefaultClassRealmTest
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
-        URL resource = mainRealm.getResource( "META-INF/plexus/components.xml" );
-
-        assertNotNull( resource );
+        getResource( mainRealm, "META-INF/plexus/components.xml" );
     }
 
     // ----------------------------------------------------------------------
@@ -131,4 +132,29 @@ public class DefaultClassRealmTest
 
         return jarFile.toURI().toURL();
     }
+
+    private void loadClass( ClassRealm realm, String name )
+        throws Exception
+    {
+        /*
+         * NOTE: Load the class both directly from the realm and indirectly from an (ordinary) child class loader which
+         * uses the specified class realm for parent delegation. The child class loader itself has no additional class
+         * path entries but relies entirely on the provided class realm. Hence, the created child class loader should in
+         * theory be able to load exactly the same classes/resources as the underlying class realm. In practice, it will
+         * test that class realms properly integrate into the standard Java class loader hierarchy.
+         */
+        ClassLoader childLoader = new URLClassLoader( new URL[0], realm );
+        assertEquals( realm.loadClass( name ), childLoader.loadClass( name ) );
+    }
+
+    private void getResource( ClassRealm realm, String name )
+        throws Exception
+    {
+        ClassLoader childLoader = new URLClassLoader( new URL[0], realm );
+        assertNotNull( realm.getResource( name ) );
+        assertEquals( realm.getResource( name ), childLoader.getResource( name ) );
+        assertEquals( Collections.list( realm.getResources( name ) ),
+                      Collections.list( childLoader.getResources( name ) ) );
+    }
+
 }
