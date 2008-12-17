@@ -16,19 +16,9 @@ package org.codehaus.plexus.classworlds.launcher;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,7 +28,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
  * <code>Launcher</code> configurator.
@@ -47,21 +41,8 @@ import java.util.Properties;
  * @author Jason van Zyl
  * @version $Id$
  */
-public class Configurator
+public class Configurator implements ConfigurationHandler
 {
-    public static final String MAIN_PREFIX = "main is";
-
-    public static final String SET_PREFIX = "set";
-
-    public static final String IMPORT_PREFIX = "import";
-
-    public static final String LOAD_PREFIX = "load";
-
-    /**
-     * Optionally spec prefix.
-     */
-    public static final String OPTIONALLY_PREFIX = "optionally";
-
     /**
      * The launcher to configure.
      */
@@ -75,6 +56,13 @@ public class Configurator
     private Map configuredRealms;
 
     /**
+     * Current Realm.
+     */
+    private ClassRealm curRealm;
+
+    private ClassLoader foreignClassLoader = null;
+    
+    /**
      * Construct.
      *
      * @param launcher The launcher to configure.
@@ -84,6 +72,11 @@ public class Configurator
         this.launcher = launcher;
 
         configuredRealms = new HashMap();
+
+        if ( launcher != null )
+        {
+            this.foreignClassLoader = launcher.getSystemClassLoader();
+        }
     }
 
     /**
@@ -123,254 +116,23 @@ public class Configurator
     public void configure( InputStream is )
         throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
-        BufferedReader reader = new BufferedReader( new InputStreamReader( is, "UTF-8" ) );
-
         if ( world == null )
         {
             world = new ClassWorld();
         }
 
-        ClassLoader foreignClassLoader = null;
+        curRealm = null;
+
+        foreignClassLoader = null;
 
         if ( this.launcher != null )
         {
             foreignClassLoader = this.launcher.getSystemClassLoader();
         }
 
-        ClassRealm curRealm = null;
+        ConfigurationParser parser = new ConfigurationParser( this, System.getProperties() );
 
-        String line = null;
-
-        int lineNo = 0;
-
-        boolean mainSet = false;
-
-        while ( true )
-        {
-            line = reader.readLine();
-
-            if ( line == null )
-            {
-                break;
-            }
-
-            ++lineNo;
-            line = line.trim();
-
-            if ( canIgnore( line ) )
-            {
-                continue;
-            }
-
-            if ( line.startsWith( MAIN_PREFIX ) )
-            {
-                if ( mainSet )
-                {
-                    throw new ConfigurationException( "Duplicate main configuration", lineNo, line );
-                }
-
-                String conf = line.substring( MAIN_PREFIX.length() ).trim();
-
-                int fromLoc = conf.indexOf( "from" );
-
-                if ( fromLoc < 0 )
-                {
-                    throw new ConfigurationException( "Missing from clause", lineNo, line );
-                }
-
-                String mainClassName = conf.substring( 0, fromLoc ).trim();
-
-                String mainRealmName = conf.substring( fromLoc + 4 ).trim();
-
-                if ( this.launcher != null )
-                {
-                    this.launcher.setAppMain( mainClassName, mainRealmName );
-                }
-
-                mainSet = true;
-            }
-            else if ( line.startsWith( SET_PREFIX ) )
-            {
-                String conf = line.substring( SET_PREFIX.length() ).trim();
-
-                int usingLoc = conf.indexOf( " using" ) + 1;
-
-                String property = null;
-
-                String propertiesFileName = null;
-
-                if ( usingLoc > 0 )
-                {
-                    property = conf.substring( 0, usingLoc ).trim();
-
-                    propertiesFileName = filter( conf.substring( usingLoc + 5 ).trim() );
-
-                    conf = propertiesFileName;
-                }
-
-                String defaultValue = null;
-
-                int defaultLoc = conf.indexOf( " default" ) + 1;
-
-                if ( defaultLoc > 0 )
-                {
-                    defaultValue = conf.substring( defaultLoc + 7 ).trim();
-
-                    if ( property == null )
-                    {
-                        property = conf.substring( 0, defaultLoc ).trim();
-                    }
-                    else
-                    {
-                        propertiesFileName = conf.substring( 0, defaultLoc ).trim();
-                    }
-                }
-
-                String value = System.getProperty( property );
-
-                if ( value != null )
-                {
-                    continue;
-                }
-
-                if ( propertiesFileName != null )
-                {
-                    File propertiesFile = new File( propertiesFileName );
-
-                    if ( propertiesFile.exists() )
-                    {
-                        Properties properties = new Properties();
-
-                        try
-                        {
-                            properties.load( new FileInputStream( propertiesFileName ) );
-
-                            value = properties.getProperty( property );
-                        }
-                        catch ( Exception e )
-                        {
-                            // do nothing
-                        }
-                    }
-                }
-
-                if ( value == null && defaultValue != null )
-                {
-                    value = defaultValue;
-                }
-
-                if ( value != null )
-                {
-                    value = filter( value );
-                    System.setProperty( property, value );
-                }
-            }
-            else if ( line.startsWith( "[" ) )
-            {
-                int rbrack = line.indexOf( "]" );
-
-                if ( rbrack < 0 )
-                {
-                    throw new ConfigurationException( "Invalid realm specifier", lineNo, line );
-                }
-
-                String realmName = line.substring( 1, rbrack );
-
-                curRealm = world.newRealm( realmName, foreignClassLoader );
-
-                // Stash the configured realm for subsequent association processing.
-                configuredRealms.put( realmName, curRealm );
-            }
-            else if ( line.startsWith( IMPORT_PREFIX ) )
-            {
-                if ( curRealm == null )
-                {
-                    throw new ConfigurationException( "Unhandled import", lineNo, line );
-                }
-
-                String conf = line.substring( IMPORT_PREFIX.length() ).trim();
-
-                int fromLoc = conf.indexOf( "from" );
-
-                if ( fromLoc < 0 )
-                {
-                    throw new ConfigurationException( "Missing from clause", lineNo, line );
-                }
-
-                String importSpec = conf.substring( 0, fromLoc ).trim();
-
-                String relamName = conf.substring( fromLoc + 4 ).trim();
-
-                curRealm.importFrom( relamName, importSpec );
-
-            }
-            else if ( line.startsWith( LOAD_PREFIX ) )
-            {
-                String constituent = line.substring( LOAD_PREFIX.length() ).trim();
-
-                constituent = filter( constituent );
-
-                if ( constituent.indexOf( "*" ) >= 0 )
-                {
-                    loadGlob( constituent, curRealm );
-                }
-                else
-                {
-                    File file = new File( constituent );
-
-                    if ( file.exists() )
-                    {
-                        curRealm.addURL( file.toURI().toURL() );
-                    }
-                    else
-                    {
-                        try
-                        {
-                            curRealm.addURL( new URL( constituent ) );
-                        }
-                        catch ( MalformedURLException e )
-                        {
-                            throw new FileNotFoundException( constituent );
-                        }
-                    }
-                }
-            }
-            else if ( line.startsWith( OPTIONALLY_PREFIX ) )
-            {
-                String constituent = line.substring( OPTIONALLY_PREFIX.length() ).trim();
-
-                constituent = filter( constituent );
-
-                if ( constituent.indexOf( "*" ) >= 0 )
-                {
-                    loadGlob( constituent, curRealm, true );
-                }
-                else
-                {
-                    File file = new File( constituent );
-
-                    if ( file.exists() )
-                    {
-                        curRealm.addURL( file.toURI().toURL() );
-                    }
-                    else
-                    {
-                        try
-                        {
-                            curRealm.addURL( new URL( constituent ) );
-                        }
-                        catch ( MalformedURLException e )
-                        {
-                            // swallow
-                        }
-                    }
-                }
-            }
-            else
-            {
-                throw new ConfigurationException( "Unhandled configuration", lineNo, line );
-            }
-        }
+        parser.parse( is );
 
         // Associate child realms to their parents.
         associateRealms();
@@ -380,7 +142,6 @@ public class Configurator
             this.launcher.setWorld( world );
         }
 
-        reader.close();
     }
 
     // TODO return this to protected when the legacy wrappers can be removed.
@@ -437,162 +198,41 @@ public class Configurator
         }
     }
 
-    /**
-     * Load a glob into the specified classloader.
-     *
-     * @param line  The path configuration line.
-     * @param realm The realm to populate
-     * @throws MalformedURLException If the line does not represent
-     *                               a valid path element.
-     * @throws FileNotFoundException If the line does not represent
-     *                               a valid path element in the filesystem.
-     */
-    protected void loadGlob( String line,
-                             ClassRealm realm )
-        throws MalformedURLException, FileNotFoundException
+    public void addImportFrom( String relamName, String importSpec ) throws NoSuchRealmException
     {
-        loadGlob( line, realm, false );
+        curRealm.importFrom( relamName, importSpec );
     }
 
-    /**
-     * Load a glob into the specified classloader.
-     *
-     * @param line       The path configuration line.
-     * @param realm      The realm to populate
-     * @param optionally Whether the path is optional or required
-     * @throws MalformedURLException If the line does not represent
-     *                               a valid path element.
-     * @throws FileNotFoundException If the line does not represent
-     *                               a valid path element in the filesystem.
-     */
-    protected void loadGlob( String line,
-                             ClassRealm realm,
-                             boolean optionally )
-        throws MalformedURLException, FileNotFoundException
+    public void addLoadFile( File file )
     {
-        File globFile = new File( line );
-
-        File dir = globFile.getParentFile();
-        if ( !dir.exists() )
+        try
         {
-            if ( optionally )
-            {
-                return;
-            }
-            else
-            {
-                throw new FileNotFoundException( dir.toString() );
-            }
+            curRealm.addURL( file.toURI().toURL() );
         }
-
-        String localName = globFile.getName();
-
-        int starLoc = localName.indexOf( "*" );
-
-        final String prefix = localName.substring( 0, starLoc );
-
-        final String suffix = localName.substring( starLoc + 1 );
-
-        File[] matches = dir.listFiles( new FilenameFilter()
+        catch ( MalformedURLException e )
         {
-            public boolean accept( File dir,
-                                   String name )
-            {
-                if ( !name.startsWith( prefix ) )
-                {
-                    return false;
-                }
-
-                if ( !name.endsWith( suffix ) )
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        } );
-
-        for ( int i = 0; i < matches.length; ++i )
-        {
-            realm.addURL( matches[i].toURI().toURL() );
+            // can't really happen... or can it?
         }
     }
 
-    /**
-     * Filter a string for system properties.
-     *
-     * @param text The text to filter.
-     * @return The filtered text.
-     * @throws ConfigurationException If the property does not
-     *                                exist or if there is a syntax error.
-     */
-    protected String filter( String text )
-        throws ConfigurationException
+    public void addLoadURL( URL url )
     {
-        String result = "";
-
-        int cur = 0;
-        int textLen = text.length();
-
-        int propStart = -1;
-        int propStop = -1;
-
-        String propName = null;
-        String propValue = null;
-
-        while ( cur < textLen )
-        {
-            propStart = text.indexOf( "${", cur );
-
-            if ( propStart < 0 )
-            {
-                break;
-            }
-
-            result += text.substring( cur, propStart );
-
-            propStop = text.indexOf( "}", propStart );
-
-            if ( propStop < 0 )
-            {
-                throw new ConfigurationException( "Unterminated property: " + text.substring( propStart ) );
-            }
-
-            propName = text.substring( propStart + 2, propStop );
-
-            propValue = System.getProperty( propName );
-
-            /* do our best if we are not running from surefire */
-            if ( propName.equals( "basedir" ) && ( propValue == null || propValue.equals( "" ) ) )
-            {
-                propValue = ( new File( "" ) ).getAbsolutePath();
-
-            }
-
-            if ( propValue == null )
-            {
-                throw new ConfigurationException( "No such property: " + propName );
-            }
-            result += propValue;
-
-            cur = propStop + 1;
-        }
-
-        result += text.substring( cur );
-
-        return result;
+        curRealm.addURL( url );
     }
 
-    /**
-     * Determine if a line can be ignored because it is
-     * a comment or simply blank.
-     *
-     * @param line The line to test.
-     * @return <code>true</code> if the line is ignorable,
-     *         otherwise <code>false</code>.
-     */
-    private boolean canIgnore( String line )
+    public void addRealm( String realmName ) throws DuplicateRealmException
     {
-        return ( line.length() == 0 || line.startsWith( "#" ) );
+        curRealm = world.newRealm( realmName, foreignClassLoader );
+
+        // Stash the configured realm for subsequent association processing.
+        configuredRealms.put( realmName, curRealm );
+    }
+
+    public void setAppMain( String mainClassName, String mainRealmName )
+    {
+        if ( this.launcher != null )
+        {
+            this.launcher.setAppMain( mainClassName, mainRealmName );
+        }
     }
 }

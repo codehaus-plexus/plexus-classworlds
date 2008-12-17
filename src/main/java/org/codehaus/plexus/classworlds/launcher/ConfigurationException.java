@@ -48,4 +48,9 @@ public class ConfigurationException
     {
         super( msg + " (" + lineNo + "): " + line );
     }
+
+    protected ConfigurationException( Exception cause )
+    {
+        super( cause );
+    }
 }
