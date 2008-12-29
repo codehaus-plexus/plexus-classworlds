@@ -62,14 +62,10 @@ public class ClassWorld
         return newRealm( id, null );
     }
 
-    public synchronized ClassRealm newRealm( String id,
+    public ClassRealm newRealm( String id,
                                 ClassLoader classLoader )
         throws DuplicateRealmException
     {
-        if ( realms.containsKey( id ) )
-        {
-            throw new DuplicateRealmException( this, id );
-        }
 
         ClassRealm realm;
 
@@ -82,9 +78,27 @@ public class ClassWorld
             realm = new ClassRealm( this, id );
         }
 
-        realms.put( id, realm );
+        addRealm( realm );
 
         return realm;
+    }
+
+    public synchronized void addRealm( ClassRealm realm )
+        throws DuplicateRealmException
+    {
+        if ( realm.getWorld() != this )
+        {
+            throw new IllegalArgumentException();
+        }
+
+        String id = realm.getId();
+
+        if ( realms.containsKey( id ) )
+        {
+            throw new DuplicateRealmException( this, id );
+        }
+
+        realms.put( id, realm );
     }
 
     public synchronized void disposeRealm( String id )

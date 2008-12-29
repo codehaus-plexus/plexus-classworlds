@@ -16,18 +16,20 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
-import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
-import org.codehaus.plexus.classworlds.ClassWorld;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
+import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 
 
 /**
@@ -276,5 +278,23 @@ public class ClassRealm
     public String toString()
     {
          return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
+    }
+
+    /**
+     * Returned list includes all directly and indirectly accessible realms,
+     * starting with this realm.
+     */
+    public List getAccessibleRealms()
+    {
+        ArrayList realms = new ArrayList();
+
+        ClassRealm realm = this;
+
+        while (realm != null) {
+            realms.add(realm);
+            realm = realm.getParentRealm();
+        }
+
+        return realms;
     }
 }
