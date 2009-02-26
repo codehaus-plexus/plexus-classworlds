@@ -15,19 +15,29 @@
   ~  limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>plexus</artifactId>
     <groupId>org.codehaus.plexus</groupId>
     <version>2.0.0</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-classworlds</artifactId>
-  <name>Plexus Classworlds</name>
   <version>1.5-SNAPSHOT</version>
+
+  <name>Plexus Classworlds</name>
   <description />
   <inceptionYear>2002</inceptionYear>
+
+  <scm>
+    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/trunk</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/trunk</developerConnection>
+    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/trunk</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -36,6 +46,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -92,6 +103,7 @@
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
       <id>debug</id>
@@ -121,10 +133,74 @@
         </plugins>
       </build>
     </profile>
+    <profile><!-- TODO: remove when upgrading parent to 2.0.3 -->
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>2.1</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>2.4.3</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.2</version>
+            <configuration>
+              <configLocation>http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-checkstyle-plugin/src/main/resources/config/maven_checks.xml</configLocation>
+              <headerLocation>http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-checkstyle-plugin/src/main/resources/config/maven-header.txt</headerLocation>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+              <rulesets>
+                <ruleset>http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-pmd-plugin/src/main/resources/rulesets/maven.xml</ruleset>
+              </rulesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>taglist-maven-plugin</artifactId>
+            <version>2.2</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <version>2.1</version>
+            <configuration>
+              <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <encoding>${project.build.sourceEncoding}</encoding>
+              <links>
+                <link>http://java.sun.com/j2ee/1.4/docs/api</link>
+                <link>http://junit.sourceforge.net/javadoc/</link>
+              </links>
+            </configuration>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>javadoc</report>
+                  <report>test-javadoc</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
   </profiles>
-  <scm>
-    <connection>scm:svn:http://svn.codehaus.org/plexus/plexus-classworlds/trunk</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/plexus/plexus-classworlds/trunk</developerConnection> 
-    <url>http://fisheye.codehaus.org/browse/plexus/plexus-classworlds/trunk</url>
-  </scm>
 </project>
