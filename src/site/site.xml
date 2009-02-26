@@ -1,0 +1,26 @@
+<project name="Plexus Classworlds">
+  <bannerLeft>
+    <name>Plexus</name>
+    <href>http://plexus.codehaus.org/</href>
+    <src>/images/plexus-logo.png</src>
+  </bannerLeft>
+  <!-- bannerRight>
+    <name>The Codehaus</name>
+    <href>http://codehaus.org</href>
+    <src>http://media.codehaus.org/images/unity-codehaus-logo.png</src>
+  </bannerRight -->
+  <version position="left" />
+  <skin>
+    <groupId>org.codehaus.plexus</groupId>
+    <artifactId>plexus-stylus-skin</artifactId>
+    <version>1.0</version>
+  </skin>
+
+  <body>
+    <links>
+      <item name="Plexus" href="http://plexus.codehaus.org/"/>
+    </links>
+    <menu ref="reports" inherit="bottom" />
+    <menu ref="modules" />
+  </body>
+</project>
