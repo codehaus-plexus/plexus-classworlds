@@ -24,6 +24,7 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,8 +32,6 @@ import java.util.TreeSet;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.strategy.DefaultStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
-
-import com.sun.tools.jdi.LinkedHashMap;
 
 /**
  * @author Jason van Zyl
