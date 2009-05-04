@@ -108,4 +108,15 @@ public class ClassWorld
     {
         return Collections.unmodifiableList( new ArrayList(realms.values()) );
     }
+    
+    // from exports branch
+    public synchronized ClassRealm getClassRealm( String id )                                                                                                      
+    {                                                                                                                                                              
+        if ( realms.containsKey( id ) )                                                                                                                            
+        {                                                                                                                                                          
+            return (ClassRealm) realms.get( id );                                                                                                                  
+        }                                                                                                                                                          
+                                                                                                                                                                   
+        return null;                                                                                                                                               
+    }         
 }

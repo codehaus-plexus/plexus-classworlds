@@ -24,9 +24,9 @@ package org.codehaus.plexus.classworlds.realm;
 public class Entry
     implements Comparable
 {
-    private final ClassRealm realm;
+    final ClassRealm realm;
 
-    private final String pkgName;
+    final String pkgName;
 
     Entry( ClassRealm realm,
            String pkgName )

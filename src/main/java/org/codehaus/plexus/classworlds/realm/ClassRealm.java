@@ -27,6 +27,7 @@ import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeSet;
 
 
@@ -277,4 +278,167 @@ public class ClassRealm
     {
          return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
     }
+    
+    //---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies
+    //---------------------------------------------------------------------------------------------
+
+    /** Map of packages to import from given realms */
+    private Map importRealmMappings;
+    
+    public ClassRealm getImportRealm( String classname )
+    {
+        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
+        {
+            Entry entry = (Entry) iterator.next();
+
+            if ( entry.matches( classname ) || entry.matches( classname.replace(  '.', '/' ) ) )
+            {
+                return world.getClassRealm( (String) importRealmMappings.get( entry.pkgName ) );
+            }
+        }
+
+        return null;
+    }
+    
+    public Class loadClassFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+        Class clazz = null;
+        if ( importRealm != null )
+        {
+            try
+            {
+                clazz = importRealm.loadClass( name );
+            }
+            catch ( ClassNotFoundException e )
+            {
+                return null;
+            }
+        }
+        return clazz;
+    }
+
+    public Class loadClassFromSelf( String name )
+    {
+        Class clazz;
+
+        try
+        {
+            clazz = findLoadedClass( name );
+
+            if ( clazz == null )
+            {
+                clazz = findClass( name );
+            }
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return null;
+        }
+
+        resolveClass( clazz );
+
+        return clazz;
+    }
+
+    public Class loadClassFromParent( String name )
+    {
+        if ( getParent() != null )
+        {
+            try
+            {
+                return getParent().loadClass( name );
+            }
+            catch ( ClassNotFoundException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    //---------------------------------------------------------------------------------------------
+    // Resources
+    //---------------------------------------------------------------------------------------------
+
+    public URL loadResourceFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+
+        if ( importRealm != null )
+        {
+            return importRealm.findResource( name );
+        }
+
+        return null;
+    }
+
+    public URL loadResourceFromSelf( String name )
+    {
+        URL url = findResource( name );
+
+        return url;
+    }
+
+    public URL loadResourceFromParent( String name )
+    {
+        if ( getParent() != null )
+        {
+            return getParent().getResource( name );
+        }
+
+        return null;
+    }
+
+    // Resources
+
+    public Enumeration loadResourcesFromImport( String name )
+    {
+        ClassRealm importRealm = getImportRealm( name );
+
+        if ( importRealm != null )
+        {
+            try
+            {
+                return importRealm.findResources( name );
+            }
+            catch ( IOException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    public Enumeration loadResourcesFromSelf( String name )
+    {
+        try
+        {
+            return super.findResources( name );
+        }
+        catch ( IOException e )
+        {
+            return null;
+        }
+    }
+
+    public Enumeration loadResourcesFromParent( String name )
+    {
+        if ( getParent() != null )
+        {
+            try
+            {
+                return getParent().getResources( name );
+            }
+            catch ( IOException e )
+            {
+                return null;
+            }
+        }
+
+        return null;
+    }    
 }

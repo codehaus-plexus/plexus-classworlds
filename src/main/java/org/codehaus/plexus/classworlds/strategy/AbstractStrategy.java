@@ -25,7 +25,7 @@ import org.codehaus.plexus.classworlds.UrlUtils;
 public abstract class AbstractStrategy
     implements Strategy    
 {
-    private ClassRealm realm;
+    protected ClassRealm realm;
 
     public AbstractStrategy( ClassRealm realm )
     {
