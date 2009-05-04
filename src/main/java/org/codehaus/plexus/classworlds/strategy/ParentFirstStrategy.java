@@ -25,10 +25,10 @@ import java.util.Vector;
 /**
  * @author Jason van Zyl
  */
-public class SelfFirstStrategy
+public class ParentFirstStrategy
     extends AbstractStrategy
 {
-    public SelfFirstStrategy( ClassRealm realm )
+    public ParentFirstStrategy( ClassRealm realm )
     {
         super( realm );
     }
@@ -40,12 +40,12 @@ public class SelfFirstStrategy
 
         if ( clazz == null )
         {
-            clazz = realm.loadClassFromSelf( name );
+            clazz = realm.loadClassFromParent( name );
         }
-
+        
         if ( clazz == null )
         {
-            clazz = realm.loadClassFromParent( name );
+            clazz = realm.loadClassFromSelf( name );
         }
 
         if ( clazz == null )
@@ -62,14 +62,14 @@ public class SelfFirstStrategy
 
         if ( resource == null )
         {
-            resource = realm.loadResourceFromSelf( name );
+            resource = realm.loadResourceFromParent( name );
         }
 
         if ( resource == null )
         {
-            resource = realm.loadResourceFromParent( name );
+            resource = realm.loadResourceFromSelf( name );
         }
-
+        
         return resource;
     }
 
