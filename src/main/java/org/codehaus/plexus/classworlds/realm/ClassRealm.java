@@ -79,7 +79,7 @@ public class ClassRealm
 
         strategy = StrategyFactory.getStrategy( this, foreignClassLoader );
 
-        if ( foreignClassLoader != null && foreignClassLoader instanceof ClassRealm )
+        if ( foreignClassLoader instanceof ClassRealm )
         {
             this.parent = (ClassRealm) foreignClassLoader;
         }

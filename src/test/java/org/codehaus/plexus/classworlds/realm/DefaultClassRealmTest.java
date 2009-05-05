@@ -88,7 +88,7 @@ public class DefaultClassRealmTest
 
         assertSame( childRealm, cls.getClassLoader() );
         assertEquals( 1, cls.getMethods().length );
-        assertEquals( "getNew", cls.getMethods()[0].getName() );
+        assertEquals( "printNew", cls.getMethods()[0].getName() );
     }
     */
 
