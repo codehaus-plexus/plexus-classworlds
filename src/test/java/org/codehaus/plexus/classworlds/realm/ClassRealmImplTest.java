@@ -67,7 +67,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_SimpleImport()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = this.world.newRealm( "main" );
 
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
 
@@ -87,7 +87,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_MultipleImport()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = this.world.newRealm( "main" );
 
         ClassRealm werkflowRealm = this.world.newRealm( "werkflow" );
 
@@ -113,7 +113,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_Hierachy()
         throws Exception
     {
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = this.world.newRealm( "main" );
 
         ClassRealm fooRealm = this.world.newRealm( "foo" );
 
@@ -153,7 +153,7 @@ public class ClassRealmImplTest
 
         ClassRealm fooRealm = this.world.newRealm( "foo" );
 
-        ClassRealm mainRealm = (ClassRealm) this.world.newRealm( "main" );
+        ClassRealm mainRealm = this.world.newRealm( "main" );
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
 

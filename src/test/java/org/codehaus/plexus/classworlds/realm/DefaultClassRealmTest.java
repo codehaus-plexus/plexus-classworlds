@@ -72,6 +72,26 @@ public class DefaultClassRealmTest
         loadClass( grandchildRealm, "org.codehaus.plexus.Component0" );
     }
 
+    /* FIXME: We want the child realm to be searched before the parent realm such that duplicate classes from the child win
+    public void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "parent" );
+
+        mainRealm.addURL( getJarUrl( "component5-1.0.jar" ) );
+
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+
+        childRealm.addURL( getJarUrl( "component5-2.0.jar" ) );
+
+        Class cls = loadClass( childRealm, "test.Component5" );
+
+        assertSame( childRealm, cls.getClassLoader() );
+        assertEquals( 1, cls.getMethods().length );
+        assertEquals( "getNew", cls.getMethods()[0].getName() );
+    }
+    */
+
     public void testLoadNonExistentClass()
         throws Exception
     {
@@ -133,9 +153,11 @@ public class DefaultClassRealmTest
         return jarFile.toURI().toURL();
     }
 
-    private void loadClass( ClassRealm realm, String name )
+    private Class loadClass( ClassRealm realm, String name )
         throws Exception
     {
+        Class cls = realm.loadClass( name );
+
         /*
          * NOTE: Load the class both directly from the realm and indirectly from an (ordinary) child class loader which
          * uses the specified class realm for parent delegation. The child class loader itself has no additional class
@@ -144,7 +166,9 @@ public class DefaultClassRealmTest
          * test that class realms properly integrate into the standard Java class loader hierarchy.
          */
         ClassLoader childLoader = new URLClassLoader( new URL[0], realm );
-        assertEquals( realm.loadClass( name ), childLoader.loadClass( name ) );
+        assertEquals( cls, childLoader.loadClass( name ) );
+
+        return cls;
     }
 
     private void getResource( ClassRealm realm, String name )

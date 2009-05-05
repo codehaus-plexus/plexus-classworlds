@@ -41,7 +41,7 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        ClassRealm r = (ClassRealm) cw.newRealm( "test1" );
+        ClassRealm r = cw.newRealm( "test1" );
 
         Entry entry1 = new Entry( r, "org.test" );
         Entry entry2 = new Entry( r, "org.test.impl" );
@@ -58,8 +58,8 @@ public class EntryTest
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
-        ClassRealm r1 = (ClassRealm) cw.newRealm( "test1" );
-        ClassRealm r2 = (ClassRealm) cw.newRealm( "test2" );
+        ClassRealm r1 = cw.newRealm( "test1" );
+        ClassRealm r2 = cw.newRealm( "test2" );
 
         Entry entry1 = new Entry( r1, "org.test" );
         Entry entry2 = new Entry( r2, "org.test" );
