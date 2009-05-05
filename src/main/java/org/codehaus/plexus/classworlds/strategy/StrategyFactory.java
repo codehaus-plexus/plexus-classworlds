@@ -51,7 +51,7 @@ public class StrategyFactory
     {
         if ( foreign != null )
         {
-            return new ForeignStrategy( realm, foreign );
+            return new SelfFirstStrategy( realm );
         }
 
         // Here we shall check hint to load non-default strategies

@@ -72,7 +72,6 @@ public class DefaultClassRealmTest
         loadClass( grandchildRealm, "org.codehaus.plexus.Component0" );
     }
 
-    /* FIXME: We want the child realm to be searched before the parent realm such that duplicate classes from the child win
     public void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
         throws Exception
     {
@@ -90,7 +89,6 @@ public class DefaultClassRealmTest
         assertEquals( 1, cls.getMethods().length );
         assertEquals( "printNew", cls.getMethods()[0].getName() );
     }
-    */
 
     public void testLoadNonExistentClass()
         throws Exception
