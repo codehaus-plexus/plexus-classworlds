@@ -26,7 +26,7 @@
 
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-classworlds</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
 
   <name>Plexus Classworlds</name>
   <description>A class loader framework</description>
