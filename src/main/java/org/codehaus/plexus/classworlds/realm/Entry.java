@@ -61,16 +61,80 @@ public class Entry
     }
 
     /**
-     * Determine if the classname matches the package
+     * Determine if the class/resource name matches the package
      * described by this entry.
      *
-     * @param classname The class name to test.
+     * @param name The class or resource name to test, must not be <code>null</code>.
      * @return <code>true</code> if this entry matches the
      *         classname, otherwise <code>false</code>.
      */
-    boolean matches( String classname )
+    boolean matches( String name )
     {
-        return classname.startsWith( getPackageName() );
+        String pkg = getPackageName();
+
+        if ( pkg.length() > 0 )
+        {
+            if ( name.indexOf( '/' ) < 0 )
+            {
+                // a binary class name, e.g. java.lang.Object
+
+                if ( name.startsWith( pkg ) )
+                {
+                    if ( name.length() == pkg.length() )
+                    {
+                        // exact match of class name
+                        return true;
+                    }
+                    else if ( name.charAt( pkg.length() ) == '.' )
+                    {
+                        // prefix match of package name
+                        return true;
+                    }
+                    else if ( name.charAt( pkg.length() ) == '$' )
+                    {
+                        // prefix match of enclosing type
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                // a resource name, e.g. java/lang/Object.class
+
+                if ( name.equals( pkg ) )
+                {
+                    // exact match of resource name
+                    return true;
+                }
+
+                pkg = pkg.replace( '.', '/' );
+
+                if ( name.startsWith( pkg ) && name.length() > pkg.length() )
+                {
+                    if ( name.charAt( pkg.length() ) == '/' )
+                    {
+                        // prefix match of package directory
+                        return true;
+                    }
+                    else if ( name.charAt( pkg.length() ) == '$' )
+                    {
+                        // prefix match of nested class file
+                        return true;
+                    }
+                    else if ( name.length() == pkg.length() + 6 && name.endsWith( ".class" ) )
+                    {
+                        // exact match of class file
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -101,7 +165,7 @@ public class Entry
         //     com.werken.foo
         //     com.werken
 
-        return ( getPackageName().compareTo( that.getPackageName() ) ) * -1;
+        return - ( getPackageName().compareTo( that.getPackageName() ) );
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

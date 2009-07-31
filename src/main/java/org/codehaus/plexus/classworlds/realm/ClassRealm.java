@@ -99,22 +99,12 @@ public class ClassRealm
         throws NoSuchRealmException
     {
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
-        imports.add( new Entry( getWorld().getRealm( realmId ), packageName.replace( '.', '/' ) ) );
     }
 
     public ClassRealm locateSourceRealm( String classname )
     {
-        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
-        {
-            Entry entry = (Entry) iterator.next();
-
-            if ( entry.matches( classname ) )
-            {
-                return entry.getRealm();
-            }
-        }
-
-        return this;
+        ClassRealm sourceRealm = getImportRealm( classname );
+        return ( sourceRealm != null ) ? sourceRealm : this;
     }
 
     public Strategy getStrategy()
@@ -282,13 +272,13 @@ public class ClassRealm
     // Search methods that can be ordered by strategies
     //---------------------------------------------------------------------------------------------
 
-    public ClassRealm getImportRealm( String classname )
+    public ClassRealm getImportRealm( String name )
     {
         for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
         {
             Entry entry = (Entry) iterator.next();
 
-            if ( entry.matches( classname ) || entry.matches( classname.replace(  '.', '/' ) ) )
+            if ( entry.matches( name ) )
             {
                 return entry.getRealm();
             }
