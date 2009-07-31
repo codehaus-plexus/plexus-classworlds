@@ -75,6 +75,8 @@ public class ClassRealmImplTest
 
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
 
+        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.WerkflowEngine" ) );
+
         assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.process.ProcessManager" ) );
 
         assertSame( mainRealm, mainRealm.locateSourceRealm( "com.werken.blissed.Process" ) );
