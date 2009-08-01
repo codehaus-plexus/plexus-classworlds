@@ -238,7 +238,7 @@ public class ClassRealm
         System.out.println( "-----------------------------------------------------" );
     }
 
-    private void showUrls( ClassRealm classRealm )
+    private static void showUrls( ClassRealm classRealm )
     {
         URL[] urls = classRealm.getURLs();
 
@@ -247,9 +247,9 @@ public class ClassRealm
             System.out.println( "urls[" + i + "] = " + urls[i] );
         }
 
-        System.out.println( "Number of imports: " + imports.size() );
+        System.out.println( "Number of imports: " + classRealm.imports.size() );
 
-        for ( Iterator i = imports.iterator(); i.hasNext(); )
+        for ( Iterator i = classRealm.imports.iterator(); i.hasNext(); )
         {
             System.out.println( "import: " + i.next() );
         }
