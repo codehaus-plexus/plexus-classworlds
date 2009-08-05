@@ -17,15 +17,11 @@ package org.codehaus.plexus.classworlds.realm;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -95,10 +91,19 @@ public class ClassRealm
         imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
     }
 
-    public ClassRealm locateSourceRealm( String classname )
+    public ClassRealm getImportRealm( String name )
     {
-        ClassRealm sourceRealm = getImportRealm( classname );
-        return ( sourceRealm != null ) ? sourceRealm : this;
+        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
+        {
+            Entry entry = (Entry) iterator.next();
+
+            if ( entry.matches( name ) )
+            {
+                return entry.getRealm();
+            }
+        }
+
+        return null;
     }
 
     public Strategy getStrategy()
@@ -155,33 +160,6 @@ public class ClassRealm
         }
 
         super.addURL( url );
-    }
-
-    // ----------------------------------------------------------------------------
-    // These are the methods that the Strategy must use to get direct access
-    // the contents of the ClassRealm.
-    // ----------------------------------------------------------------------------
-
-    public Class loadRealmClass( String name )
-        throws ClassNotFoundException
-    {
-        return super.loadClass( name, false );
-    }
-
-    public URL getRealmResource( String name )
-    {
-        return super.getResource( name );
-    }
-
-    public InputStream getRealmResourceAsStream( String name )
-    {
-        return super.getResourceAsStream( name );
-    }
-
-    public Enumeration findRealmResources( String name )
-        throws IOException
-    {
-        return super.findResources( name );
     }
 
     // ----------------------------------------------------------------------
@@ -305,23 +283,8 @@ public class ClassRealm
     }
     
     //---------------------------------------------------------------------------------------------
-    // Search methods that can be ordered by strategies
+    // Search methods that can be ordered by strategies to load a class
     //---------------------------------------------------------------------------------------------
-
-    public ClassRealm getImportRealm( String name )
-    {
-        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
-        {
-            Entry entry = (Entry) iterator.next();
-
-            if ( entry.matches( name ) )
-            {
-                return entry.getRealm();
-            }
-        }
-
-        return null;
-    }
     
     public Class loadClassFromImport( String name )
     {
@@ -384,7 +347,7 @@ public class ClassRealm
     }
 
     //---------------------------------------------------------------------------------------------
-    // Resources
+    // Search methods that can be ordered by strategies to get a resource
     //---------------------------------------------------------------------------------------------
 
     public URL loadResourceFromImport( String name )
@@ -420,7 +383,9 @@ public class ClassRealm
         }
     }
 
-    // Resources
+    //---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies to get resources
+    //---------------------------------------------------------------------------------------------
 
     public Enumeration loadResourcesFromImport( String name )
     {

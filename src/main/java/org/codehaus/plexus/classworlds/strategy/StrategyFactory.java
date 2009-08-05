@@ -30,34 +30,14 @@ public class StrategyFactory
 
     public static Strategy getStrategy( ClassRealm realm )
     {
-        return getStrategy( realm, "default", null );
+        return getStrategy( realm, "default" );
     }
 
-    public static Strategy getStrategy( ClassRealm realm,
-                                        ClassLoader foreign )
+    public static Strategy getStrategy( ClassRealm realm, String hint )
     {
-        return getStrategy( realm, "default", foreign );
-    }
-
-    public static Strategy getStrategy( ClassRealm realm,
-                                        String hint )
-    {
-        return getStrategy( realm, hint, null );
-    }
-
-    public static Strategy getStrategy( ClassRealm realm,
-                                        String hint,
-                                        ClassLoader foreign )
-    {
-        if ( foreign != null )
-        {
-            return new SelfFirstStrategy( realm );
-        }
-
         // Here we shall check hint to load non-default strategies
 
-        Strategy ret = new DefaultStrategy( realm );
-        
-        return ret;
+        return new SelfFirstStrategy( realm );
     }
+
 }
