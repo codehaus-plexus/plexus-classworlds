@@ -16,14 +16,13 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.UrlUtils;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
+
+import org.codehaus.plexus.classworlds.UrlUtils;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * Load classes directly from the Realm first before attempting to get from the parent.
@@ -43,7 +42,7 @@ public class DefaultStrategy
     public Class loadClass( String name )
         throws ClassNotFoundException
     {
-        if ( name.startsWith( "org.codehaus.plexus.classworlds." ) || name.startsWith( "org.codehaus.classworlds." ) )
+        if ( false && name.startsWith( "org.codehaus.plexus.classworlds." ) || name.startsWith( "org.codehaus.classworlds." ) )
         {
             return getRealm().getWorld().getClass().getClassLoader().loadClass( name );
         }
@@ -102,28 +101,7 @@ public class DefaultStrategy
         return resource;
     }
 
-    public InputStream getResourceAsStream( String name )
-    {
-        URL url = getResource( name );
-
-        InputStream is = null;
-
-        if ( url != null )
-        {
-            try
-            {
-                is = url.openStream();
-            }
-            catch ( IOException e )
-            {
-                // do nothing
-            }
-        }
-
-        return is;
-    }
-
-    public Enumeration findResources( String name )
+    public Enumeration getResources( String name )
         throws IOException
     {
         name = UrlUtils.normalizeUrlPath( name );

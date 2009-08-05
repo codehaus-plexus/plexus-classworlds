@@ -1,9 +1,9 @@
 package org.codehaus.plexus.classworlds;
 
-import junit.framework.TestCase;
-
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+
+import junit.framework.TestCase;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.

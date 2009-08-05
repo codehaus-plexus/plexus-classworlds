@@ -16,18 +16,22 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
-import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
-import org.codehaus.plexus.classworlds.ClassWorld;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 
 /**
@@ -48,27 +52,20 @@ import java.util.TreeSet;
 public class ClassRealm
     extends URLClassLoader
 {
+
     private ClassWorld world;
 
     private String id;
 
-    private TreeSet imports;
+    private SortedSet imports;
 
     private Strategy strategy;
 
-    private ClassRealm parent;
+    private ClassLoader parentClassLoader;
 
-    public ClassRealm( ClassWorld world,
-                       String id )
+    public ClassRealm( ClassWorld world, String id, ClassLoader parentClassLoader )
     {
-        this( world, id, null );
-    }
-
-    public ClassRealm( ClassWorld world,
-                       String id,
-                       ClassLoader foreignClassLoader )
-    {
-        super( new URL[]{}, foreignClassLoader );
+        super( new URL[0], null );
 
         this.world = world;
 
@@ -76,12 +73,9 @@ public class ClassRealm
 
         imports = new TreeSet();
 
-        strategy = StrategyFactory.getStrategy( this, foreignClassLoader );
+        strategy = new SelfFirstStrategy( this );
 
-        if ( foreignClassLoader instanceof ClassRealm )
-        {
-            this.parent = (ClassRealm) foreignClassLoader;
-        }
+        this.parentClassLoader = parentClassLoader;
     }
 
     public String getId()
@@ -112,14 +106,24 @@ public class ClassRealm
         return strategy;
     }
 
+    public void setParentClassLoader( ClassLoader parentClassLoader )
+    {
+        this.parentClassLoader = parentClassLoader;
+    }
+
+    public ClassLoader getParentClassLoader()
+    {
+        return parentClassLoader;
+    }
+
     public void setParentRealm( ClassRealm realm )
     {
-        this.parent = realm;
+        this.parentClassLoader = realm;
     }
 
     public ClassRealm getParentRealm()
     {
-        return parent;
+        return ( parentClassLoader instanceof ClassRealm ) ? (ClassRealm) parentClassLoader : null;
     }
 
     public ClassRealm createChildRealm( String id )
@@ -194,23 +198,63 @@ public class ClassRealm
     protected Class loadClass( String name, boolean resolve )
         throws ClassNotFoundException
     {
-        return strategy.loadClass( name );
+        try
+        {
+            // first, try loading bootstrap classes
+            return super.loadClass( name, resolve );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            // next, try loading via imports, self and parent as controlled by strategy 
+            return strategy.loadClass( name );
+        }
     }
 
-    public URL getResource( String name )
+    protected Class findClass( String name )
+        throws ClassNotFoundException
     {
-        return strategy.getResource( name );
+        /*
+         * NOTE: This gets only called from ClassLoader.loadClass(Class, boolean) while we try to check for bootstrap
+         * stuff. Don't scan our class path yet, loadClassFromSelf() will do this later when called by the strategy.
+         */
+        throw new ClassNotFoundException( name );
     }
 
-    public InputStream getResourceAsStream( String name )
+    public URL findResource( String name )
     {
-        return strategy.getResourceAsStream( name );
+        /*
+         * NOTE: If this gets called from ClassLoader.getResource(String), delegate to the strategy. If this got called
+         * directly by other code, only scan our class path as usual for an URLClassLoader.
+         */
+        StackTraceElement caller = new Exception().getStackTrace()[1];
+
+        if ( "java.lang.ClassLoader".equals( caller.getClassName() ) )
+        {
+            return strategy.getResource( name );
+        }
+        else
+        {
+            return super.findResource( name );
+        }
     }
 
     public Enumeration findResources( String name )
         throws IOException
     {
-        return strategy.findResources( name );
+        /*
+         * NOTE: If this gets called from ClassLoader.getResources(String), delegate to the strategy. If this got called
+         * directly by other code, only scan our class path as usual for an URLClassLoader.
+         */
+        StackTraceElement caller = new Exception().getStackTrace()[1];
+
+        if ( "java.lang.ClassLoader".equals( caller.getClassName() ) )
+        {
+            return strategy.getResources( name );
+        }
+        else
+        {
+            return super.findResources( name );
+        }
     }
 
     // ----------------------------------------------------------------------------
@@ -307,7 +351,7 @@ public class ClassRealm
 
             if ( clazz == null )
             {
-                clazz = findClass( name );
+                clazz = super.findClass( name );
             }
         }
         catch ( ClassNotFoundException e )
@@ -322,15 +366,17 @@ public class ClassRealm
 
     public Class loadClassFromParent( String name )
     {
-        if ( getParent() != null )
+        ClassLoader parent = getParentClassLoader();
+
+        if ( parent != null )
         {
             try
             {
-                return getParent().loadClass( name );
+                return parent.loadClass( name );
             }
             catch ( ClassNotFoundException e )
             {
-                return null;
+                // eat it
             }
         }
 
@@ -347,7 +393,7 @@ public class ClassRealm
 
         if ( importRealm != null )
         {
-            return importRealm.findResource( name );
+            return importRealm.getResource( name );
         }
 
         return null;
@@ -355,19 +401,23 @@ public class ClassRealm
 
     public URL loadResourceFromSelf( String name )
     {
-        URL url = findResource( name );
+        URL url = super.findResource( name );
 
         return url;
     }
 
     public URL loadResourceFromParent( String name )
     {
-        if ( getParent() != null )
-        {
-            return getParent().getResource( name );
-        }
+        ClassLoader parent = getParentClassLoader();
 
-        return null;
+        if ( parent != null )
+        {
+            return parent.getResource( name );
+        }
+        else
+        {
+            return null;
+        }
     }
 
     // Resources
@@ -380,7 +430,7 @@ public class ClassRealm
         {
             try
             {
-                return importRealm.findResources( name );
+                return importRealm.getResources( name );
             }
             catch ( IOException e )
             {
@@ -405,18 +455,21 @@ public class ClassRealm
 
     public Enumeration loadResourcesFromParent( String name )
     {
-        if ( getParent() != null )
+        ClassLoader parent = getParentClassLoader();
+
+        if ( parent != null )
         {
             try
             {
-                return getParent().getResources( name );
+                return parent.getResources( name );
             }
             catch ( IOException e )
             {
-                return null;
+                // eat it
             }
         }
 
         return null;
-    }    
+    }
+
 }

@@ -20,9 +20,10 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 public class ClassWorldTest
     extends AbstractClassWorldsTestCase
@@ -129,7 +130,7 @@ public class ClassWorldTest
         ClassRealm plexus = world.newRealm( "plexus" );
         plexus.importFrom( "netbeans", "META-INF/plexus" );
         plexus.importFrom( "netbeans", "org.codehaus.plexus" );
-        Enumeration e = plexus.findResources( "META-INF/plexus/components.xml" );
+        Enumeration e = plexus.getResources( "META-INF/plexus/components.xml" );
         assertNotNull( e );
         int resourceCount = 0;
         for ( Enumeration resources = e; resources.hasMoreElements(); )

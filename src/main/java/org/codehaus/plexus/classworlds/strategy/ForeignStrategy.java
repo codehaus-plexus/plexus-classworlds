@@ -1,11 +1,11 @@
 package org.codehaus.plexus.classworlds.strategy;
 
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,7 +56,7 @@ public class ForeignStrategy
         return resource;
     }
 
-    public Enumeration findResources( String name )
+    public Enumeration getResources( String name )
         throws IOException
     {
         name = getNormalizedResource( name );
@@ -64,7 +64,7 @@ public class ForeignStrategy
         Vector resources = new Vector();
 
         // Load from DefaultStrategy
-        for ( Enumeration direct = super.findResources( name ); direct.hasMoreElements(); )
+        for ( Enumeration direct = super.getResources( name ); direct.hasMoreElements(); )
         {
             resources.addElement( direct.nextElement() );
         }

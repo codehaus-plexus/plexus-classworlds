@@ -1,7 +1,6 @@
 package org.codehaus.plexus.classworlds.strategy;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -64,28 +63,7 @@ public class OsgiBundleStrategy
         return resource;
     }
 
-    public InputStream getResourceAsStream( String name )
-    {
-        URL url = getResource( name );
-
-        InputStream is = null;
-
-        if ( url != null )
-        {
-            try
-            {
-                is = url.openStream();
-            }
-            catch ( IOException e )
-            {
-                // do nothing
-            }
-        }
-
-        return is;
-    }
-
-    public Enumeration findResources( String name )
+    public Enumeration getResources( String name )
         throws IOException
     {
         Vector resources = new Vector();

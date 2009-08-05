@@ -17,8 +17,10 @@ package org.codehaus.plexus.classworlds.realm;
  */
 
 import java.net.MalformedURLException;
-
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
@@ -59,7 +61,7 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_NoImports()
         throws Exception
     {
-        ClassRealm realm = new ClassRealm( this.world, "foo" );
+        ClassRealm realm = new ClassRealm( this.world, "foo", null );
 
         assertSame( realm, realm.locateSourceRealm( "com.werken.Stuff" ) );
     }
@@ -433,4 +435,27 @@ public class ClassRealmImplTest
             assertSame( ClassWorld.class, cls );
         }
     }
+
+    public void testGetResources()
+        throws Exception
+    {
+        String resource = "common.properties";
+
+        ClassRealm parent = this.world.newRealm( "realmA" );
+        parent.addURL( getJarUrl( "a.jar" ) );
+
+        URL parentUrl = parent.getResource( resource );
+        assertNotNull( parentUrl );
+
+        ClassRealm child = this.world.newRealm( "realmB", parent );
+        child.addURL( getJarUrl( "b.jar" ) );
+
+        URL childUrl = child.getResource( resource );
+        assertNotNull( childUrl );
+
+        List urls = Collections.list( child.getResources( resource ) );
+        assertNotNull( urls );
+        assertEquals( Arrays.asList( new URL[] { childUrl, parentUrl } ), urls );
+    }
+
 }

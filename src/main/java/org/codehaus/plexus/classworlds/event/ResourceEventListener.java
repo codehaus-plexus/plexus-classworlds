@@ -1,8 +1,8 @@
 package org.codehaus.plexus.classworlds.event;
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
-
 import java.net.URL;
+
+import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 /**
  * Created by IntelliJ IDEA.

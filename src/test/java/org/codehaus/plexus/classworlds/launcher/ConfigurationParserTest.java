@@ -1,8 +1,6 @@
 package org.codehaus.plexus.classworlds.launcher;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.plexus.classworlds.launcher.ConfigurationException;
-import org.codehaus.plexus.classworlds.launcher.ConfigurationParser;
 
 public class ConfigurationParserTest
     extends AbstractClassWorldsTestCase

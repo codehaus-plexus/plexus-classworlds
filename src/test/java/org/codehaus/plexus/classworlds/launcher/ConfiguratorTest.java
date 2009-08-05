@@ -22,12 +22,12 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 public class ConfiguratorTest
     extends AbstractClassWorldsTestCase

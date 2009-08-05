@@ -17,14 +17,14 @@ package org.codehaus.plexus.classworlds;
  */
 
 import java.util.ArrayList;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-
-import java.util.Map;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
  * A collection of <code>ClassRealm</code>s, indexed by id.
@@ -59,7 +59,7 @@ public class ClassWorld
     public ClassRealm newRealm( String id )
         throws DuplicateRealmException
     {
-        return newRealm( id, null );
+        return newRealm( id, getClass().getClassLoader() );
     }
 
     public synchronized ClassRealm newRealm( String id,
@@ -73,14 +73,7 @@ public class ClassWorld
 
         ClassRealm realm;
 
-        if ( classLoader != null )
-        {
-            realm = new ClassRealm( this, id, classLoader );
-        }
-        else
-        {
-            realm = new ClassRealm( this, id );
-        }
+        realm = new ClassRealm( this, id, classLoader );
 
         realms.put( id, realm );
 
