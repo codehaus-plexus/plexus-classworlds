@@ -17,7 +17,6 @@ package org.codehaus.plexus.classworlds.strategy;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Vector;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
@@ -27,6 +26,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 public class SelfFirstStrategy
     extends AbstractStrategy
 {
+
     public SelfFirstStrategy( ClassRealm realm )
     {
         super( realm );
@@ -40,16 +40,16 @@ public class SelfFirstStrategy
         if ( clazz == null )
         {
             clazz = realm.loadClassFromSelf( name );
-        }
 
-        if ( clazz == null )
-        {
-            clazz = realm.loadClassFromParent( name );
-        }
+            if ( clazz == null )
+            {
+                clazz = realm.loadClassFromParent( name );
 
-        if ( clazz == null )
-        {
-            throw new ClassNotFoundException( name );
+                if ( clazz == null )
+                {
+                    throw new ClassNotFoundException( name );
+                }
+            }
         }
 
         return clazz;
@@ -62,11 +62,11 @@ public class SelfFirstStrategy
         if ( resource == null )
         {
             resource = realm.loadResourceFromSelf( name );
-        }
 
-        if ( resource == null )
-        {
-            resource = realm.loadResourceFromParent( name );
+            if ( resource == null )
+            {
+                resource = realm.loadResourceFromParent( name );
+            }
         }
 
         return resource;
@@ -75,23 +75,11 @@ public class SelfFirstStrategy
     public Enumeration getResources( String name )
         throws IOException
     {
-        Vector resources = new Vector();
+        Enumeration imports = realm.loadResourcesFromImport( name );
+        Enumeration self = realm.loadResourcesFromSelf( name );
+        Enumeration parent = realm.loadResourcesFromParent( name );
 
-        loadResourcesFromRealm( resources, realm.loadResourcesFromImport( name ) );
-        loadResourcesFromRealm( resources, realm.loadResourcesFromSelf( name ) );
-        loadResourcesFromRealm( resources, realm.loadResourcesFromParent( name ) );
-                
-        return resources.elements();
+        return combineResources( imports, self, parent );
     }
 
-    private void loadResourcesFromRealm( Vector v, Enumeration e )
-    {
-        if ( e != null )
-        {
-            for ( Enumeration a = e; a.hasMoreElements(); )
-            {
-                v.addElement( a.nextElement() );
-            }
-        }
-    }
 }
