@@ -63,7 +63,7 @@ public class ClassRealmImplTest
     {
         ClassRealm realm = new ClassRealm( this.world, "foo", null );
 
-        assertSame( null, realm.getImportRealm( "com.werken.Stuff" ) );
+        assertSame( null, realm.getImportClassLoader( "com.werken.Stuff" ) );
     }
 
     public void testLocateSourceRealm_SimpleImport()
@@ -75,17 +75,17 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.WerkflowEngine" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.WerkflowEngine" ) );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com/werken/werkflow/some.properties" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com/werken/werkflow/some.properties" ) );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.process.ProcessManager" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.process.ProcessManager" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "com.werken.blissed.Process" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "com.werken.blissed.Process" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_MultipleImport()
@@ -101,17 +101,17 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "blissed", "com.werken.blissed" );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.WerkflowEngine" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.WerkflowEngine" ) );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.process.ProcessManager" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.process.ProcessManager" ) );
 
-        assertSame( blissedRealm, mainRealm.getImportRealm( "com.werken.blissed.Process" ) );
+        assertSame( blissedRealm, mainRealm.getImportClassLoader( "com.werken.blissed.Process" ) );
 
-        assertSame( blissedRealm, mainRealm.getImportRealm( "com.werken.blissed.guard.BooleanGuard" ) );
+        assertSame( blissedRealm, mainRealm.getImportClassLoader( "com.werken.blissed.guard.BooleanGuard" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_Hierachy()
@@ -131,21 +131,21 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
 
-        assertSame( fooRealm, mainRealm.getImportRealm( "foo.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.Goober" ) );
 
-        assertSame( fooRealm, mainRealm.getImportRealm( "foo.cheese.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.cheese.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.getImportRealm( "foo.bar.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.getImportRealm( "foo.bar.cheese.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.cheese.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.getImportRealm( "foo.bar.baz.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.getImportRealm( "foo.bar.baz.cheese.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.cheese.Goober" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_Hierachy_Reverse()
@@ -165,21 +165,21 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "foo", "foo" );
 
-        assertSame( fooRealm, mainRealm.getImportRealm( "foo.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.Goober" ) );
 
-        assertSame( fooRealm, mainRealm.getImportRealm( "foo.cheese.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.cheese.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.getImportRealm( "foo.bar.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.getImportRealm( "foo.bar.cheese.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.cheese.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.getImportRealm( "foo.bar.baz.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.getImportRealm( "foo.bar.baz.cheese.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.cheese.Goober" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( null, mainRealm.getImportRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLoadClass_SystemClass()

@@ -155,13 +155,13 @@ public class ConfiguratorTest
         ClassRealm xmlRealm = world.getRealm( "xml" );
         ClassRealm globRealm = world.getRealm( "glob" );
 
-        assertSame( null, antRealm.getImportRealm( "org.apache.tools.Ant" ) );
+        assertSame( null, antRealm.getImportClassLoader( "org.apache.tools.Ant" ) );
 
-        assertSame( xmlRealm, antRealm.getImportRealm( "org.xml.sax.SAXException" ) );
+        assertSame( xmlRealm, antRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
 
-        assertSame( null, mavenRealm.getImportRealm( "org.apache.maven.app.App" ) );
+        assertSame( null, mavenRealm.getImportClassLoader( "org.apache.maven.app.App" ) );
 
-        assertSame( xmlRealm, mavenRealm.getImportRealm( "org.xml.sax.SAXException" ) );
+        assertSame( xmlRealm, mavenRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
 
         URL[] urls = globRealm.getURLs();
 
@@ -219,7 +219,7 @@ public class ConfiguratorTest
 
         assertEquals( "one url", 1, urls.length );
 
-        assertSame( null, optRealm.getImportRealm( "org.xml.sax.SAXException" ) );
+        assertSame( null, optRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
     }
 
     public void testConfigure_Unhandled()

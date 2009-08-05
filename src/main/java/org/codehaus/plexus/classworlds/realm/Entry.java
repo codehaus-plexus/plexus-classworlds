@@ -21,17 +21,17 @@ package org.codehaus.plexus.classworlds.realm;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class Entry
+class Entry
     implements Comparable
 {
-    final ClassRealm realm;
+
+    final ClassLoader classLoader;
 
     final String pkgName;
 
-    Entry( ClassRealm realm,
-           String pkgName )
+    Entry( ClassLoader realm, String pkgName )
     {
-        this.realm = realm;
+        this.classLoader = realm;
 
         this.pkgName = pkgName;
     }
@@ -41,13 +41,13 @@ public class Entry
     // ------------------------------------------------------------
 
     /**
-     * Retrieve the realm.
+     * Retrieve the class loader.
      *
-     * @return The realm.
+     * @return The class loader.
      */
-    ClassRealm getRealm()
+    ClassLoader getClassLoader()
     {
-        return this.realm;
+        return this.classLoader;
     }
 
     /**
@@ -204,6 +204,6 @@ public class Entry
 
     public String toString()
     {
-         return "Entry[import " + getPackageName() + " from realm " + getRealm() + "]";
+         return "Entry[import " + getPackageName() + " from realm " + getClassLoader() + "]";
     }
 }

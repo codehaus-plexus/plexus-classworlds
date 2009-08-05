@@ -84,14 +84,19 @@ public class ClassRealm
         return this.world;
     }
 
-    public void importFrom( String realmId,
-                            String packageName )
+    public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
-        imports.add( new Entry( getWorld().getRealm( realmId ), packageName ) );
+        importFrom( getWorld().getRealm( realmId ), packageName );
     }
 
-    public ClassRealm getImportRealm( String name )
+    public void importFrom( ClassLoader classLoader, String packageName )
+        throws NoSuchRealmException
+    {
+        imports.add( new Entry( classLoader, packageName ) );
+    }
+
+    public ClassLoader getImportClassLoader( String name )
     {
         for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
         {
@@ -99,7 +104,7 @@ public class ClassRealm
 
             if ( entry.matches( name ) )
             {
-                return entry.getRealm();
+                return entry.getClassLoader();
             }
         }
 
@@ -285,23 +290,24 @@ public class ClassRealm
     //---------------------------------------------------------------------------------------------
     // Search methods that can be ordered by strategies to load a class
     //---------------------------------------------------------------------------------------------
-    
+
     public Class loadClassFromImport( String name )
     {
-        ClassRealm importRealm = getImportRealm( name );
-        Class clazz = null;
-        if ( importRealm != null )
+        ClassLoader importClassLoader = getImportClassLoader( name );
+
+        if ( importClassLoader != null )
         {
             try
             {
-                clazz = importRealm.loadClass( name );
+                return importClassLoader.loadClass( name );
             }
             catch ( ClassNotFoundException e )
             {
                 return null;
             }
         }
-        return clazz;
+
+        return null;
     }
 
     public Class loadClassFromSelf( String name )
@@ -339,7 +345,7 @@ public class ClassRealm
             }
             catch ( ClassNotFoundException e )
             {
-                // eat it
+                return null;
             }
         }
 
@@ -352,11 +358,11 @@ public class ClassRealm
 
     public URL loadResourceFromImport( String name )
     {
-        ClassRealm importRealm = getImportRealm( name );
+        ClassLoader importClassLoader = getImportClassLoader( name );
 
-        if ( importRealm != null )
+        if ( importClassLoader != null )
         {
-            return importRealm.getResource( name );
+            return importClassLoader.getResource( name );
         }
 
         return null;
@@ -389,13 +395,13 @@ public class ClassRealm
 
     public Enumeration loadResourcesFromImport( String name )
     {
-        ClassRealm importRealm = getImportRealm( name );
+        ClassLoader importClassLoader = getImportClassLoader( name );
 
-        if ( importRealm != null )
+        if ( importClassLoader != null )
         {
             try
             {
-                return importRealm.getResources( name );
+                return importClassLoader.getResources( name );
             }
             catch ( IOException e )
             {
