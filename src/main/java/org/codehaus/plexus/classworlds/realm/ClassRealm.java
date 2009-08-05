@@ -255,14 +255,6 @@ public class ClassRealm
         }
     }
 
-    public boolean equals(Object o)
-    {
-        if ( !( o instanceof ClassRealm ) )
-            return false;
-
-        return getId().equals( ( (ClassRealm) o ).getId() );
-    }
-
     public String toString()
     {
          return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";

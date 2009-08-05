@@ -85,7 +85,7 @@ public class DefaultStrategy
 
         ClassRealm sourceRealm = getRealm().locateSourceRealm( name );
 
-        if ( !sourceRealm.equals( getRealm() ) )
+        if ( sourceRealm != getRealm() )
         {
             resource = sourceRealm.getResource( name );
         }
