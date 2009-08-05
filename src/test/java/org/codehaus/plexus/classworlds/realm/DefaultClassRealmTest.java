@@ -163,6 +163,31 @@ public class DefaultClassRealmTest
         getResource( mainRealm, "META-INF/plexus/components.xml" );
     }
 
+    public void testMalformedResource()
+        throws Exception
+    {
+        URL jarUrl = getJarUrl( "component0-1.0.jar" );
+
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( jarUrl );
+
+        ClassLoader officialClassLoader = new URLClassLoader( new URL[] { jarUrl } );
+
+        String resource = "META-INF/plexus/components.xml";
+
+        assertNotNull( mainRealm.getResource( resource ) );
+        assertNotNull( officialClassLoader.getResource( resource ) );
+
+        /*
+         * NOTE: Resource names with a leading slash are invalid when passed to a class loader and must not be found!
+         * One can use a leading slash in Class.getResource() but not in ClassLoader.getResource().
+         */
+
+        assertSame( null, mainRealm.getResource( "/" + resource ) );
+        assertSame( null, officialClassLoader.getResource( "/" + resource ) );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
