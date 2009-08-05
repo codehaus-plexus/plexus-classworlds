@@ -29,18 +29,12 @@ import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 
-
 /**
- * Implementation of <code>ClassRealm</code>.  The realm is the class loading gateway.
- * The search is proceded as follows:
- * <ol>
- * <li>Search the parent class loader (passed via the constructor) if there
- * is one.</li>
- * <li>Search the imports.</li>
- * <li>Search this realm's constituents.</li>
- * <li>Search the parent realm.</li>
- * </ol>
- *
+ * The class loading gateway. Each class realm has access to the bootstrap class loader, imports form other other class
+ * loaders, an optional parent class loader and of course its own class path. When queried for a class/resource, a class
+ * realm will always query the bootstrap class loader first before it delegates to a pluggable strategy. The strategy in
+ * turn controls the order in which imported class loaders, the parent class loader and the realm itself are searched.
+ * 
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  * @version $Id$
