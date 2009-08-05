@@ -53,7 +53,9 @@ public class ClassRealm
 
     private String id;
 
-    private SortedSet imports;
+    private SortedSet foreignImports;
+
+    private SortedSet parentImports;
 
     private Strategy strategy;
 
@@ -67,7 +69,7 @@ public class ClassRealm
 
         this.id = id;
 
-        imports = new TreeSet();
+        foreignImports = new TreeSet();
 
         strategy = new SelfFirstStrategy( this );
 
@@ -84,6 +86,36 @@ public class ClassRealm
         return this.world;
     }
 
+    public void importFromParent( String packageName )
+    {
+        if ( parentImports == null )
+        {
+            parentImports = new TreeSet();
+        }
+
+        parentImports.add( new Entry( null, packageName ) );
+    }
+
+    boolean isImportedFromParent( String name )
+    {
+        if ( parentImports != null && !parentImports.isEmpty() )
+        {
+            for ( Iterator iterator = parentImports.iterator(); iterator.hasNext(); )
+            {
+                Entry entry = (Entry) iterator.next();
+
+                if ( entry.matches( name ) )
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
     public void importFrom( String realmId, String packageName )
         throws NoSuchRealmException
     {
@@ -91,14 +123,13 @@ public class ClassRealm
     }
 
     public void importFrom( ClassLoader classLoader, String packageName )
-        throws NoSuchRealmException
     {
-        imports.add( new Entry( classLoader, packageName ) );
+        foreignImports.add( new Entry( classLoader, packageName ) );
     }
 
     public ClassLoader getImportClassLoader( String name )
     {
-        for ( Iterator iterator = imports.iterator(); iterator.hasNext(); )
+        for ( Iterator iterator = foreignImports.iterator(); iterator.hasNext(); )
         {
             Entry entry = (Entry) iterator.next();
 
@@ -140,8 +171,6 @@ public class ClassRealm
         throws DuplicateRealmException
     {        
         ClassRealm childRealm = getWorld().newRealm( id, this );
-
-        childRealm.setParentRealm( this );
 
         return childRealm;
     }
@@ -274,11 +303,21 @@ public class ClassRealm
             System.out.println( "urls[" + i + "] = " + urls[i] );
         }
 
-        System.out.println( "Number of imports: " + classRealm.imports.size() );
+        System.out.println( "Number of foreign imports: " + classRealm.foreignImports.size() );
 
-        for ( Iterator i = classRealm.imports.iterator(); i.hasNext(); )
+        for ( Iterator i = classRealm.foreignImports.iterator(); i.hasNext(); )
         {
             System.out.println( "import: " + i.next() );
+        }
+
+        if ( classRealm.parentImports != null )
+        {
+            System.out.println( "Number of parent imports: " + classRealm.parentImports.size() );
+
+            for ( Iterator i = classRealm.parentImports.iterator(); i.hasNext(); )
+            {
+                System.out.println( "import: " + i.next() );
+            }
         }
     }
 
@@ -337,7 +376,7 @@ public class ClassRealm
     {
         ClassLoader parent = getParentClassLoader();
 
-        if ( parent != null )
+        if ( parent != null && isImportedFromParent( name ) )
         {
             try
             {
@@ -379,7 +418,7 @@ public class ClassRealm
     {
         ClassLoader parent = getParentClassLoader();
 
-        if ( parent != null )
+        if ( parent != null && isImportedFromParent( name ) )
         {
             return parent.getResource( name );
         }
@@ -428,7 +467,7 @@ public class ClassRealm
     {
         ClassLoader parent = getParentClassLoader();
 
-        if ( parent != null )
+        if ( parent != null && isImportedFromParent( name ) )
         {
             try
             {

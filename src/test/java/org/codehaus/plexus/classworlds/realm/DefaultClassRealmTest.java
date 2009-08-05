@@ -125,6 +125,30 @@ public class DefaultClassRealmTest
         loadClass( r1, "org.codehaus.plexus.Component0" );
     }
 
+    public void testParentImport()
+        throws Exception
+    {
+        ClassWorld world = new ClassWorld();
+
+        ClassRealm parent = world.newRealm( "parent" );
+
+        ClassRealm child = world.newRealm( "child" );
+
+        parent.addURL( getJarUrl( "component0-1.0.jar" ) );
+
+        child.setParentRealm( parent );
+
+        Class type = loadClass( child, "org.codehaus.plexus.Component0" );
+
+        child.importFromParent( "non-existing" );
+
+        assertSame( null, loadClassOrNull( child, "org.codehaus.plexus.Component0" ) );
+
+        child.importFromParent( "org.codehaus.plexus" );
+
+        assertSame( type, loadClass( child, "org.codehaus.plexus.Component0" ) );
+    }
+
     // ----------------------------------------------------------------------
     // Resource testing
     // ----------------------------------------------------------------------
@@ -151,8 +175,20 @@ public class DefaultClassRealmTest
         return jarFile.toURI().toURL();
     }
 
+    private Class loadClassOrNull( ClassRealm realm, String name )
+    {
+        try
+        {
+            return loadClass( realm, name );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return null;
+        }
+    }
+
     private Class loadClass( ClassRealm realm, String name )
-        throws Exception
+        throws ClassNotFoundException
     {
         Class cls = realm.loadClass( name );
 
