@@ -26,8 +26,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
+import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 
 /**
  * The class loading gateway. Each class realm has access to the bootstrap class loader, imports form other other class
@@ -65,7 +65,7 @@ public class ClassRealm
 
         foreignImports = new TreeSet();
 
-        strategy = new SelfFirstStrategy( this );
+        strategy = StrategyFactory.getStrategy( this );
 
         this.parentClassLoader = parentClassLoader;
     }
@@ -403,9 +403,7 @@ public class ClassRealm
 
     public URL loadResourceFromSelf( String name )
     {
-        URL url = super.findResource( name );
-
-        return url;
+        return super.findResource( name );
     }
 
     public URL loadResourceFromParent( String name )

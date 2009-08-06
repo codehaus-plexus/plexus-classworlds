@@ -35,7 +35,7 @@ public class StrategyFactory
 
     public static Strategy getStrategy( ClassRealm realm, String hint )
     {
-        // Here we shall check hint to load non-default strategies
+        // TODO: Here we shall check hint to load non-default strategies
 
         return new SelfFirstStrategy( realm );
     }
