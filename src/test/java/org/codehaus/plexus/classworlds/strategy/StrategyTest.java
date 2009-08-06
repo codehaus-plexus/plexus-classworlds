@@ -16,28 +16,30 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
-import junit.framework.TestCase;
-
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.TestUtil;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 // jars within jars
 // hierarchy vs graph
 
 public class StrategyTest
-        extends TestCase
+    extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
     
     private ClassRealm realm;
 
     private Strategy strategy;
+
+    public StrategyTest( String name )
+    {
+        super( name );
+    }
 
     public void setUp()
         throws Exception
@@ -137,15 +139,6 @@ public class StrategyTest
         }
 
         assertEquals( 2, resourceCount );
-    }
-
-
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
-
-        return jarFile.toURI().toURL();
     }
 
     protected String getContent( InputStream in )

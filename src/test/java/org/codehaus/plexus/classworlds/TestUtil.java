@@ -26,8 +26,8 @@ import java.net.URL;
  */
 public class TestUtil
 {
+
     public static URL getTestResourceUrl( String resourceName )
-        throws MalformedURLException
     {
         File baseDir = new File( getBasedir() );
 
@@ -35,7 +35,14 @@ public class TestUtil
 
         File resourceFile = new File( testDir, resourceName );
 
-        return resourceFile.toURI().toURL();
+        try
+        {
+            return resourceFile.toURI().toURL();
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new RuntimeException( e );
+        }
     }
 
     public static String getBasedir()
@@ -43,10 +50,12 @@ public class TestUtil
         String basedir = System.getProperty( "basedir" );
 
         /* do our best if we are not running from surefire */
-        if ( basedir == null || basedir.equals( "" ) )
+        if ( basedir == null || basedir.length() <= 0 )
         {
             basedir = ( new File( "" ) ).getAbsolutePath();
         }
+
         return basedir;
     }
+
 }

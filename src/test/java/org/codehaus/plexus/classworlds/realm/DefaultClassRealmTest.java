@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -191,14 +190,6 @@ public class DefaultClassRealmTest
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
-
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
-
-        return jarFile.toURI().toURL();
-    }
 
     private Class loadClassOrNull( ClassRealm realm, String name )
     {

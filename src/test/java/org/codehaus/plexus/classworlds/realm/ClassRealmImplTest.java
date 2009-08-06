@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.TestUtil;
 
 public class ClassRealmImplTest
     extends AbstractClassWorldsTestCase
@@ -409,12 +407,6 @@ public class ClassRealmImplTest
         {
             // expected and correct
         }
-    }
-
-    protected URL getJarUrl( String jarName )
-        throws MalformedURLException
-    {
-        return TestUtil.getTestResourceUrl( jarName );
     }
 
     public void testLoadClass_ClassWorldsClassRepeatedly()
