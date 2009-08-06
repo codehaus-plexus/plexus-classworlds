@@ -187,6 +187,44 @@ public class DefaultClassRealmTest
         assertSame( null, officialClassLoader.getResource( "/" + resource ) );
     }
 
+    public void testFindResourceOnlyScansSelf()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
+
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+
+        childRealm.addURL( getJarUrl( "b.jar" ) );
+
+        assertNotNull( childRealm.getResource( "a.properties" ) );
+        assertNotNull( childRealm.getResource( "b.properties" ) );
+
+        assertNull( childRealm.findResource( "a.properties" ) );
+
+        assertNotNull( childRealm.findResource( "b.properties" ) );
+    }
+
+    public void testFindResourcesOnlyScansSelf()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
+
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+
+        childRealm.addURL( getJarUrl( "b.jar" ) );
+
+        assertTrue( childRealm.getResources( "a.properties" ).hasMoreElements() );
+        assertTrue( childRealm.getResources( "b.properties" ).hasMoreElements() );
+
+        assertFalse( childRealm.findResources( "a.properties" ).hasMoreElements() );
+
+        assertTrue( childRealm.findResources( "b.properties" ).hasMoreElements() );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
