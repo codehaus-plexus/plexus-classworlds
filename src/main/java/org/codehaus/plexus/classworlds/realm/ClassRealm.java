@@ -219,20 +219,16 @@ public class ClassRealm
 
     public void display()
     {
-        ClassRealm cr = this;
-
         System.out.println( "-----------------------------------------------------" );
 
-        while ( cr != null )
+        for ( ClassRealm cr = this; cr != null; cr = cr.getParentRealm() )
         {
             System.out.println( "this realm =    " + cr.getId() );
-            System.out.println( "this strategy = " + this.getStrategy().getClass().getName() );
+            System.out.println( "this strategy = " + cr.getStrategy().getClass().getName() );
 
             showUrls( cr );
 
-            System.out.println( "\n" );
-
-            cr = cr.getParentRealm();
+            System.out.println();
         }
 
         System.out.println( "-----------------------------------------------------" );
