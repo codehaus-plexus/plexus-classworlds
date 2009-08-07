@@ -278,7 +278,7 @@ public class ClassRealm
 
             showUrls( cr );
 
-            System.out.println( "\n" );
+            System.out.println();
         }
 
         System.out.println( "-----------------------------------------------------" );
