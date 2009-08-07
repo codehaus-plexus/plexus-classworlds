@@ -14,13 +14,11 @@ package org.codehaus.plexus.classworlds.strategy;
  * the License.
  */
 
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Vector;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * @author Jason van Zyl
@@ -28,6 +26,7 @@ import java.util.Vector;
 public class ParentFirstStrategy
     extends AbstractStrategy
 {
+
     public ParentFirstStrategy( ClassRealm realm )
     {
         super( realm );
@@ -41,16 +40,16 @@ public class ParentFirstStrategy
         if ( clazz == null )
         {
             clazz = realm.loadClassFromParent( name );
-        }
-        
-        if ( clazz == null )
-        {
-            clazz = realm.loadClassFromSelf( name );
-        }
 
-        if ( clazz == null )
-        {
-            throw new ClassNotFoundException( name );
+            if ( clazz == null )
+            {
+                clazz = realm.loadClassFromSelf( name );
+
+                if ( clazz == null )
+                {
+                    throw new ClassNotFoundException( name );
+                }
+            }
         }
 
         return clazz;
@@ -63,57 +62,24 @@ public class ParentFirstStrategy
         if ( resource == null )
         {
             resource = realm.loadResourceFromParent( name );
+
+            if ( resource == null )
+            {
+                resource = realm.loadResourceFromSelf( name );
+            }
         }
 
-        if ( resource == null )
-        {
-            resource = realm.loadResourceFromSelf( name );
-        }
-        
         return resource;
     }
 
-    public InputStream getResourceAsStream( String name )
-    {
-        URL url = getResource( name );
-
-        InputStream is = null;
-
-        if ( url != null )
-        {
-            try
-            {
-                is = url.openStream();
-            }
-            catch ( IOException e )
-            {
-                // do nothing
-            }
-        }
-
-        return is;
-    }
-
-    public Enumeration findResources( String name )
+    public Enumeration getResources( String name )
         throws IOException
     {
-        Vector resources = new Vector();
+        Enumeration imports = realm.loadResourcesFromImport( name );
+        Enumeration parent = realm.loadResourcesFromParent( name );
+        Enumeration self = realm.loadResourcesFromSelf( name );
 
-        loadResourcesFromRealm( resources, realm.loadResourcesFromImport( name ) );
-        loadResourcesFromRealm( resources, realm.loadResourcesFromSelf( name ) );
-        loadResourcesFromRealm( resources, realm.loadResourcesFromParent( name ) );
-                
-        return resources.elements();
+        return combineResources( imports, parent, self );
     }
 
-    private void loadResourcesFromRealm( Vector v, Enumeration e )
-    {
-        if ( e != null )
-        {
-            for ( Enumeration a = e; a.hasMoreElements(); )
-            {
-                v.addElement( a.nextElement() );
-            }
-        }
-    }
 }

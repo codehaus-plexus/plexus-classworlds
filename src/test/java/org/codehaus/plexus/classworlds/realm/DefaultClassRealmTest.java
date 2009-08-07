@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -39,7 +38,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromRealm()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -49,7 +48,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -61,7 +60,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -75,7 +74,7 @@ public class DefaultClassRealmTest
     public void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "parent" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "parent", null );
 
         mainRealm.addURL( getJarUrl( "component5-1.0.jar" ) );
 
@@ -93,7 +92,7 @@ public class DefaultClassRealmTest
     public void testLoadNonExistentClass()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
@@ -125,6 +124,30 @@ public class DefaultClassRealmTest
         loadClass( r1, "org.codehaus.plexus.Component0" );
     }
 
+    public void testParentImport()
+        throws Exception
+    {
+        ClassWorld world = new ClassWorld();
+
+        ClassRealm parent = world.newRealm( "parent" );
+
+        ClassRealm child = world.newRealm( "child" );
+
+        parent.addURL( getJarUrl( "component0-1.0.jar" ) );
+
+        child.setParentRealm( parent );
+
+        Class type = loadClass( child, "org.codehaus.plexus.Component0" );
+
+        child.importFromParent( "non-existing" );
+
+        assertSame( null, loadClassOrNull( child, "org.codehaus.plexus.Component0" ) );
+
+        child.importFromParent( "org.codehaus.plexus" );
+
+        assertSame( type, loadClass( child, "org.codehaus.plexus.Component0" ) );
+    }
+
     // ----------------------------------------------------------------------
     // Resource testing
     // ----------------------------------------------------------------------
@@ -132,27 +155,94 @@ public class DefaultClassRealmTest
     public void testResource()
         throws Exception
     {
-        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main" );
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
         mainRealm.addURL( getJarUrl( "component0-1.0.jar" ) );
 
         getResource( mainRealm, "META-INF/plexus/components.xml" );
     }
 
+    public void testMalformedResource()
+        throws Exception
+    {
+        URL jarUrl = getJarUrl( "component0-1.0.jar" );
+
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( jarUrl );
+
+        ClassLoader officialClassLoader = new URLClassLoader( new URL[] { jarUrl } );
+
+        String resource = "META-INF/plexus/components.xml";
+
+        assertNotNull( mainRealm.getResource( resource ) );
+        assertNotNull( officialClassLoader.getResource( resource ) );
+
+        /*
+         * NOTE: Resource names with a leading slash are invalid when passed to a class loader and must not be found!
+         * One can use a leading slash in Class.getResource() but not in ClassLoader.getResource().
+         */
+
+        assertSame( null, mainRealm.getResource( "/" + resource ) );
+        assertSame( null, officialClassLoader.getResource( "/" + resource ) );
+    }
+
+    public void testFindResourceOnlyScansSelf()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
+
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+
+        childRealm.addURL( getJarUrl( "b.jar" ) );
+
+        assertNotNull( childRealm.getResource( "a.properties" ) );
+        assertNotNull( childRealm.getResource( "b.properties" ) );
+
+        assertNull( childRealm.findResource( "a.properties" ) );
+
+        assertNotNull( childRealm.findResource( "b.properties" ) );
+    }
+
+    public void testFindResourcesOnlyScansSelf()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
+
+        ClassRealm childRealm = mainRealm.createChildRealm( "child" );
+
+        childRealm.addURL( getJarUrl( "b.jar" ) );
+
+        assertTrue( childRealm.getResources( "a.properties" ).hasMoreElements() );
+        assertTrue( childRealm.getResources( "b.properties" ).hasMoreElements() );
+
+        assertFalse( childRealm.findResources( "a.properties" ).hasMoreElements() );
+
+        assertTrue( childRealm.findResources( "b.properties" ).hasMoreElements() );
+    }
+
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
-    protected URL getJarUrl( String jarName )
-        throws Exception
+    private Class loadClassOrNull( ClassRealm realm, String name )
     {
-        File jarFile = new File( System.getProperty( "basedir" ), "src/test-jars/" + jarName );
-
-        return jarFile.toURI().toURL();
+        try
+        {
+            return loadClass( realm, name );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return null;
+        }
     }
 
     private Class loadClass( ClassRealm realm, String name )
-        throws Exception
+        throws ClassNotFoundException
     {
         Class cls = realm.loadClass( name );
 

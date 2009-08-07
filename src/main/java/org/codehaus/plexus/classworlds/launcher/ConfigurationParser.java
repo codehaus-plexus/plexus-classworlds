@@ -311,7 +311,6 @@ public class ConfigurationParser
      * Load a glob into the specified classloader.
      *
      * @param line       The path configuration line.
-     * @param realm      The realm to populate
      * @param optionally Whether the path is optional or required
      * @throws MalformedURLException If the line does not represent
      *                               a valid path element.

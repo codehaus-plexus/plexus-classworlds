@@ -16,9 +16,9 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-import java.util.Set;
-import java.util.HashSet;
 import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>

@@ -1,7 +1,7 @@
 package org.codehaus.plexus.classworlds.realm;
 
-import org.codehaus.plexus.classworlds.ClassWorldException;
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.ClassWorldException;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.

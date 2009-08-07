@@ -16,13 +16,13 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import java.net.MalformedURLException;
-
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.TestUtil;
 
 public class ClassRealmImplTest
     extends AbstractClassWorldsTestCase
@@ -59,9 +59,9 @@ public class ClassRealmImplTest
     public void testLocateSourceRealm_NoImports()
         throws Exception
     {
-        ClassRealm realm = new ClassRealm( this.world, "foo" );
+        ClassRealm realm = new ClassRealm( this.world, "foo", null );
 
-        assertSame( realm, realm.locateSourceRealm( "com.werken.Stuff" ) );
+        assertSame( null, realm.getImportClassLoader( "com.werken.Stuff" ) );
     }
 
     public void testLocateSourceRealm_SimpleImport()
@@ -73,21 +73,17 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "werkflow", "com.werken.werkflow" );
 
-        assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.WerkflowEngine" ) );
 
-        assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com/werken/werkflow/some.properties" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com/werken/werkflow/some.properties" ) );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com.werken.werkflow.WerkflowEngine" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.process.ProcessManager" ) );
 
-        assertSame( werkflowRealm, mainRealm.getImportRealm( "com/werken/werkflow/some.properties" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "com.werken.blissed.Process" ) );
 
-        assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.process.ProcessManager" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "com.werken.blissed.Process" ) );
-
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
-
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_MultipleImport()
@@ -103,17 +99,17 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "blissed", "com.werken.blissed" );
 
-        assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.WerkflowEngine" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.WerkflowEngine" ) );
 
-        assertSame( werkflowRealm, mainRealm.locateSourceRealm( "com.werken.werkflow.process.ProcessManager" ) );
+        assertSame( werkflowRealm, mainRealm.getImportClassLoader( "com.werken.werkflow.process.ProcessManager" ) );
 
-        assertSame( blissedRealm, mainRealm.locateSourceRealm( "com.werken.blissed.Process" ) );
+        assertSame( blissedRealm, mainRealm.getImportClassLoader( "com.werken.blissed.Process" ) );
 
-        assertSame( blissedRealm, mainRealm.locateSourceRealm( "com.werken.blissed.guard.BooleanGuard" ) );
+        assertSame( blissedRealm, mainRealm.getImportClassLoader( "com.werken.blissed.guard.BooleanGuard" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_Hierachy()
@@ -133,21 +129,21 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "fooBarBaz", "foo.bar.baz" );
 
-        assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.Goober" ) );
 
-        assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.cheese.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.cheese.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.cheese.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.cheese.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.cheese.Goober" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLocateSourceRealm_Hierachy_Reverse()
@@ -167,21 +163,21 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "foo", "foo" );
 
-        assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.Goober" ) );
 
-        assertSame( fooRealm, mainRealm.locateSourceRealm( "foo.cheese.Goober" ) );
+        assertSame( fooRealm, mainRealm.getImportClassLoader( "foo.cheese.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.Goober" ) );
 
-        assertSame( fooBarRealm, mainRealm.locateSourceRealm( "foo.bar.cheese.Goober" ) );
+        assertSame( fooBarRealm, mainRealm.getImportClassLoader( "foo.bar.cheese.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.Goober" ) );
 
-        assertSame( fooBarBazRealm, mainRealm.locateSourceRealm( "foo.bar.baz.cheese.Goober" ) );
+        assertSame( fooBarBazRealm, mainRealm.getImportClassLoader( "foo.bar.baz.cheese.Goober" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "java.lang.Object" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "java.lang.Object" ) );
 
-        assertSame( mainRealm, mainRealm.locateSourceRealm( "NoviceProgrammerClass" ) );
+        assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
     public void testLoadClass_SystemClass()
@@ -413,12 +409,6 @@ public class ClassRealmImplTest
         }
     }
 
-    protected URL getJarUrl( String jarName )
-        throws MalformedURLException
-    {
-        return TestUtil.getTestResourceUrl( jarName );
-    }
-
     public void testLoadClass_ClassWorldsClassRepeatedly()
         throws Exception
     {
@@ -433,4 +423,27 @@ public class ClassRealmImplTest
             assertSame( ClassWorld.class, cls );
         }
     }
+
+    public void testGetResources()
+        throws Exception
+    {
+        String resource = "common.properties";
+
+        ClassRealm parent = this.world.newRealm( "realmA" );
+        parent.addURL( getJarUrl( "a.jar" ) );
+
+        URL parentUrl = parent.getResource( resource );
+        assertNotNull( parentUrl );
+
+        ClassRealm child = this.world.newRealm( "realmB", parent );
+        child.addURL( getJarUrl( "b.jar" ) );
+
+        URL childUrl = child.getResource( resource );
+        assertNotNull( childUrl );
+
+        List urls = Collections.list( child.getResources( resource ) );
+        assertNotNull( urls );
+        assertEquals( Arrays.asList( new URL[] { childUrl, parentUrl } ), urls );
+    }
+
 }

@@ -37,6 +37,8 @@ public class LauncherTest
         System.setProperty( "java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol" );
 
         this.launcher = new Launcher();
+
+        this.launcher.setSystemClassLoader( Thread.currentThread().getContextClassLoader() );
     }
 
     public void tearDown()

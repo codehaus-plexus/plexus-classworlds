@@ -26,7 +26,7 @@
 
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-classworlds</artifactId>
-  <version>1.5.1-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
 
   <name>Plexus Classworlds</name>
   <description>A class loader framework</description>
@@ -105,34 +105,6 @@
   </build>
 
   <profiles>
-    <profile>
-      <id>debug</id>
-      <dependencies>
-        <dependency>
-          <groupId>aspectj</groupId>
-          <artifactId>aspectjrt</artifactId>
-          <version>1.5.0</version>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>aspectj-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>compile</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <complianceLevel>1.4</complianceLevel>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile><!-- TODO: remove when upgrading parent to 2.0.3 -->
       <id>reporting</id>
       <reporting>

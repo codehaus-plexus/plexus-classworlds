@@ -1,9 +1,8 @@
 package org.codehaus.plexus.classworlds;
 
-import junit.framework.TestCase;
-
 import java.net.URL;
-import java.net.MalformedURLException;
+
+import junit.framework.TestCase;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -27,14 +26,15 @@ import java.net.MalformedURLException;
 public abstract class AbstractClassWorldsTestCase
     extends TestCase
 {
+
     public AbstractClassWorldsTestCase( String string )
     {
         super( string );
     }
 
-    public static URL getTestResourceUrl( String resourceName )
-        throws MalformedURLException
+    protected URL getJarUrl( String jarName )
     {
-        return TestUtil.getTestResourceUrl( resourceName );
+        return TestUtil.getTestResourceUrl( jarName );
     }
+
 }

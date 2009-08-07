@@ -16,27 +16,30 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.TestUtil;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+
+import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 // jars within jars
 // hierarchy vs graph
 
 public class StrategyTest
-        extends TestCase
+    extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
     
     private ClassRealm realm;
 
     private Strategy strategy;
+
+    public StrategyTest( String name )
+    {
+        super( name );
+    }
 
     public void setUp()
         throws Exception
@@ -76,7 +79,7 @@ public class StrategyTest
     public void testLoadingOfSystemClass()
         throws Exception
     {
-        Class c = strategy.loadClass( "java.lang.Object" );
+        Class c = strategy.getRealm().loadClass( "java.lang.Object" );
 
         assertNotNull( c );
     }
@@ -111,7 +114,7 @@ public class StrategyTest
     public void testGetSystemResource()
         throws Exception
     {
-        URL resource = strategy.getResource( "java/lang/Object.class" );
+        URL resource = strategy.getRealm().getResource( "java/lang/Object.class" );
 
         assertNotNull( resource );
     }
@@ -122,7 +125,7 @@ public class StrategyTest
     {
         realm.addURL( getJarUrl( "component1-1.0.jar" ) );
 
-        Enumeration e = strategy.findResources( "META-INF/plexus/components.xml" );
+        Enumeration e = strategy.getResources( "META-INF/plexus/components.xml" );
 
         assertNotNull( e );
 
@@ -136,28 +139,6 @@ public class StrategyTest
         }
 
         assertEquals( 2, resourceCount );
-    }
-
-
-    public void testGetResourceAsStream()
-        throws Exception
-    {
-        InputStream is = strategy.getResourceAsStream( "META-INF/plexus/components.xml" );
-
-        assertNotNull( is );
-
-        String content = getContent( is );
-
-        assertTrue( content.startsWith( "<component-set>" ) );
-    }
-
-
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
-
-        return jarFile.toURI().toURL();
     }
 
     protected String getContent( InputStream in )

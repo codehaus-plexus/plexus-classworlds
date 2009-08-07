@@ -22,12 +22,11 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Collection;
 
-import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 
 public class ConfiguratorTest
     extends AbstractClassWorldsTestCase
@@ -156,16 +155,13 @@ public class ConfiguratorTest
         ClassRealm xmlRealm = world.getRealm( "xml" );
         ClassRealm globRealm = world.getRealm( "glob" );
 
-        assertSame( antRealm, antRealm.locateSourceRealm( "org.apache.tools.Ant" ) );
+        assertSame( null, antRealm.getImportClassLoader( "org.apache.tools.Ant" ) );
 
-        assertSame( xmlRealm, antRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
+        assertSame( xmlRealm, antRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
 
-        assertSame( mavenRealm, mavenRealm.locateSourceRealm( "org.apache.maven.app.App" ) );
+        assertSame( null, mavenRealm.getImportClassLoader( "org.apache.maven.app.App" ) );
 
-        assertSame( xmlRealm, mavenRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
-
-        // Test the glob support
-        Strategy strat = globRealm.getStrategy();
+        assertSame( xmlRealm, mavenRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
 
         URL[] urls = globRealm.getURLs();
 
@@ -195,8 +191,6 @@ public class ConfiguratorTest
 
         ClassRealm optRealm = world.getRealm( "opt" );
 
-        Strategy strat = optRealm.getStrategy();
-
         URL[] urls = optRealm.getURLs();
 
         assertEquals( "no urls", 0, urls.length );
@@ -221,13 +215,11 @@ public class ConfiguratorTest
 
         ClassRealm optRealm = world.getRealm( "opt" );
 
-        Strategy strat = optRealm.getStrategy();
-
         URL[] urls = optRealm.getURLs();
 
         assertEquals( "one url", 1, urls.length );
 
-        assertSame( optRealm, optRealm.locateSourceRealm( "org.xml.sax.SAXException" ) );
+        assertSame( null, optRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
     }
 
     public void testConfigure_Unhandled()

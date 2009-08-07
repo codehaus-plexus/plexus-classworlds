@@ -16,12 +16,11 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.io.IOException;
-import java.io.InputStream;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * A strategy is a class for defining how classes and resources are located
@@ -33,15 +32,15 @@ import java.io.InputStream;
  */
 public interface Strategy
 {
+
     Class loadClass( String name )
         throws ClassNotFoundException;
 
     URL getResource( String name );
 
-    InputStream getResourceAsStream( String name );
-
-    Enumeration findResources( String name )
+    Enumeration getResources( String name )
         throws IOException;
 
     ClassRealm getRealm();
+
 }

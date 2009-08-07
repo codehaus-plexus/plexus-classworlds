@@ -16,19 +16,19 @@ package org.codehaus.plexus.classworlds.launcher;
  * limitations under the License.
  */
 
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
  * Command-line invokable application launcher.
@@ -66,6 +66,7 @@ public class Launcher
 
     public Launcher()
     {
+        this.systemClassLoader = Thread.currentThread().getContextClassLoader();
     }
 
     public void setSystemClassLoader( ClassLoader loader )

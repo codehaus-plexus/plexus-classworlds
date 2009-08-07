@@ -1,7 +1,12 @@
 package org.codehaus.plexus.classworlds.strategy;
 
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
+
 import org.codehaus.plexus.classworlds.UrlUtils;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /*
  * Copyright 2001-2006 Codehaus Foundation.
@@ -25,6 +30,7 @@ import org.codehaus.plexus.classworlds.UrlUtils;
 public abstract class AbstractStrategy
     implements Strategy    
 {
+
     protected ClassRealm realm;
 
     public AbstractStrategy( ClassRealm realm )
@@ -32,13 +38,36 @@ public abstract class AbstractStrategy
         this.realm = realm;
     }
 
-    protected String getNormalizedResource( String name  )
+    protected String getNormalizedResource( String name )
     {
         return UrlUtils.normalizeUrlPath( name );
+    }
+
+    protected Enumeration combineResources( Enumeration en1, Enumeration en2, Enumeration en3 )
+    {
+        Collection urls = new LinkedHashSet();
+
+        addAll( urls, en1 );
+        addAll( urls, en2 );
+        addAll( urls, en3 );
+
+        return Collections.enumeration( urls );
+    }
+
+    private void addAll( Collection target, Enumeration en )
+    {
+        if ( en != null )
+        {
+            while ( en.hasMoreElements() )
+            {
+                target.add( en.nextElement() );
+            }
+        }
     }
 
     public ClassRealm getRealm()
     {
         return realm;
     }
+
 }

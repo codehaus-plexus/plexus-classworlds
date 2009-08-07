@@ -16,13 +16,13 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 public class ClassWorldTest
     extends AbstractClassWorldsTestCase
@@ -125,17 +125,17 @@ public class ClassWorldTest
         throws Exception 
     {
         ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl( "component1-1.0.jar" ) } );
-        ClassRealm nb = world.newRealm( "netbeans", loader );
+        world.newRealm( "netbeans", loader );
         ClassRealm plexus = world.newRealm( "plexus" );
         plexus.importFrom( "netbeans", "META-INF/plexus" );
         plexus.importFrom( "netbeans", "org.codehaus.plexus" );
-        Enumeration e = plexus.findResources( "META-INF/plexus/components.xml" );
+        Enumeration e = plexus.getResources( "META-INF/plexus/components.xml" );
         assertNotNull( e );
         int resourceCount = 0;
         for ( Enumeration resources = e; resources.hasMoreElements(); )
         {
             URL obj = (URL) resources.nextElement();
-            assertTrue(obj.getPath().indexOf( "src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            assertTrue(obj.getPath().indexOf( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
 //        assertEquals( 2, resourceCount );
@@ -150,12 +150,5 @@ public class ClassWorldTest
         assertNotNull( c );
         
     }
-    
-    protected URL getJarUrl( String jarName )
-        throws Exception
-    {
-        File jarFile = new File( TestUtil.getBasedir(), "src/test-jars/" + jarName );
-        return jarFile.toURI().toURL();
-    }
-    
+
 }
