@@ -17,6 +17,7 @@ package org.codehaus.plexus.classworlds.realm;
  */
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -269,44 +270,49 @@ public class ClassRealm
 
     public void display()
     {
-        System.out.println( "-----------------------------------------------------" );
+        display( System.out );
+    }
+
+    public void display( PrintStream out )
+    {
+        out.println( "-----------------------------------------------------" );
 
         for ( ClassRealm cr = this; cr != null; cr = cr.getParentRealm() )
         {
-            System.out.println( "this realm =    " + cr.getId() );
-            System.out.println( "this strategy = " + cr.getStrategy().getClass().getName() );
+            out.println( "realm =    " + cr.getId() );
+            out.println( "strategy = " + cr.getStrategy().getClass().getName() );
 
-            showUrls( cr );
+            showUrls( cr, out );
 
-            System.out.println();
+            out.println();
         }
 
-        System.out.println( "-----------------------------------------------------" );
+        out.println( "-----------------------------------------------------" );
     }
 
-    private static void showUrls( ClassRealm classRealm )
+    private static void showUrls( ClassRealm classRealm, PrintStream out )
     {
         URL[] urls = classRealm.getURLs();
 
         for ( int i = 0; i < urls.length; i++ )
         {
-            System.out.println( "urls[" + i + "] = " + urls[i] );
+            out.println( "urls[" + i + "] = " + urls[i] );
         }
 
-        System.out.println( "Number of foreign imports: " + classRealm.foreignImports.size() );
+        out.println( "Number of foreign imports: " + classRealm.foreignImports.size() );
 
         for ( Iterator i = classRealm.foreignImports.iterator(); i.hasNext(); )
         {
-            System.out.println( "import: " + i.next() );
+            out.println( "import: " + i.next() );
         }
 
         if ( classRealm.parentImports != null )
         {
-            System.out.println( "Number of parent imports: " + classRealm.parentImports.size() );
+            out.println( "Number of parent imports: " + classRealm.parentImports.size() );
 
             for ( Iterator i = classRealm.parentImports.iterator(); i.hasNext(); )
             {
-                System.out.println( "import: " + i.next() );
+                out.println( "import: " + i.next() );
             }
         }
     }
