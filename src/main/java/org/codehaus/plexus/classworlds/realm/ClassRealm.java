@@ -31,10 +31,11 @@ import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 
 /**
- * The class loading gateway. Each class realm has access to the bootstrap class loader, imports form other other class
+ * The class loading gateway. Each class realm has access to a base class loader, imports form zero or more other class
  * loaders, an optional parent class loader and of course its own class path. When queried for a class/resource, a class
- * realm will always query the bootstrap class loader first before it delegates to a pluggable strategy. The strategy in
- * turn controls the order in which imported class loaders, the parent class loader and the realm itself are searched.
+ * realm will always query its base class loader first before it delegates to a pluggable strategy. The strategy in turn
+ * controls the order in which imported class loaders, the parent class loader and the realm itself are searched. The
+ * base class loader is assumed to be capable of loading of the bootstrap classes.
  * 
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
@@ -56,9 +57,17 @@ public class ClassRealm
 
     private ClassLoader parentClassLoader;
 
-    public ClassRealm( ClassWorld world, String id, ClassLoader parentClassLoader )
+    /**
+     * Creates a new class realm.
+     * 
+     * @param world The class world this realm belongs to, must not be <code>null</code>.
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
+     *            loader.
+     */
+    public ClassRealm( ClassWorld world, String id, ClassLoader baseClassLoader )
     {
-        super( new URL[0], null );
+        super( new URL[0], baseClassLoader );
 
         this.world = world;
 
@@ -67,8 +76,6 @@ public class ClassRealm
         foreignImports = new TreeSet();
 
         strategy = StrategyFactory.getStrategy( this );
-
-        this.parentClassLoader = parentClassLoader;
     }
 
     public String getId()
@@ -164,8 +171,10 @@ public class ClassRealm
 
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
-    {        
-        ClassRealm childRealm = getWorld().newRealm( id, this );
+    {
+        ClassRealm childRealm = getWorld().newRealm( id, null );
+
+        childRealm.setParentRealm( this );
 
         return childRealm;
     }

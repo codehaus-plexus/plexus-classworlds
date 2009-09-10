@@ -17,8 +17,10 @@ package org.codehaus.plexus.classworlds.realm;
  */
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
@@ -424,7 +426,36 @@ public class ClassRealmImplTest
         }
     }
 
-    public void testGetResources()
+    public void testGetResources_BaseBeforeSelf()
+        throws Exception
+    {
+        String resource = "common.properties";
+
+        ClassRealm base = this.world.newRealm( "realmA" );
+        base.addURL( getJarUrl( "a.jar" ) );
+
+        URL baseUrl = base.getResource( resource );
+        assertNotNull( baseUrl );
+
+        ClassRealm sub = this.world.newRealm( "realmB", base );
+        sub.addURL( getJarUrl( "b.jar" ) );
+
+        URL subUrl = sub.getResource( resource );
+        assertNotNull( subUrl );
+
+        assertEquals( baseUrl, subUrl );
+
+        List urls = new ArrayList();
+        for ( Iterator it = Collections.list( sub.getResources( resource ) ).iterator(); it.hasNext(); )
+        {
+            String path = it.next().toString();
+            path = path.substring( path.lastIndexOf( '/', path.lastIndexOf( ".jar!" ) ) );
+            urls.add( path );
+        }
+        assertEquals( Arrays.asList( new String[] { "/a.jar!/common.properties", "/b.jar!/common.properties" } ), urls );
+    }
+
+    public void testGetResources_SelfBeforeParent()
         throws Exception
     {
         String resource = "common.properties";
@@ -435,7 +466,7 @@ public class ClassRealmImplTest
         URL parentUrl = parent.getResource( resource );
         assertNotNull( parentUrl );
 
-        ClassRealm child = this.world.newRealm( "realmB", parent );
+        ClassRealm child = parent.createChildRealm( "realmB" );
         child.addURL( getJarUrl( "b.jar" ) );
 
         URL childUrl = child.getResource( resource );

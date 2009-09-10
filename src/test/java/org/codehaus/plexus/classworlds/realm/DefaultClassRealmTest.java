@@ -148,6 +148,27 @@ public class DefaultClassRealmTest
         assertSame( type, loadClass( child, "org.codehaus.plexus.Component0" ) );
     }
 
+    public void testLoadClassFromBaseClassLoaderBeforeSelf()
+        throws Exception
+    {
+        ClassWorld world = new ClassWorld();
+
+        ClassRealm base = world.newRealm( "base" );
+
+        base.addURL( getJarUrl( "a.jar" ) );
+
+        ClassRealm child = world.newRealm( "child", base );
+
+        child.addURL( getJarUrl( "a.jar" ) );
+
+        Class baseClass = loadClass( base, "a.A" );
+        Class childClass = loadClass( child, "a.A" );
+
+        assertSame( base, baseClass.getClassLoader() );
+        assertSame( base, childClass.getClassLoader() );
+        assertSame( baseClass, childClass );
+    }
+
     // ----------------------------------------------------------------------
     // Resource testing
     // ----------------------------------------------------------------------

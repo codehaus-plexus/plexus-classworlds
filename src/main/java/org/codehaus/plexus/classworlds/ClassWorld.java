@@ -62,8 +62,7 @@ public class ClassWorld
         return newRealm( id, getClass().getClassLoader() );
     }
 
-    public synchronized ClassRealm newRealm( String id,
-                                ClassLoader classLoader )
+    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader )
         throws DuplicateRealmException
     {
         if ( realms.containsKey( id ) )
