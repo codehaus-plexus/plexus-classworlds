@@ -21,7 +21,9 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -142,6 +144,23 @@ public class ClassRealm
         }
 
         return null;
+    }
+
+    public Collection getImportRealms()
+    {
+        Collection importRealms = new HashSet();
+
+        for ( Iterator iterator = foreignImports.iterator(); iterator.hasNext(); )
+        {
+            Entry entry = (Entry) iterator.next();
+
+            if ( entry.getClassLoader() instanceof ClassRealm )
+            {
+                importRealms.add( entry.getClassLoader() );
+            }
+        }
+
+        return importRealms;
     }
 
     public Strategy getStrategy()
