@@ -121,18 +121,18 @@ public class ClassRealmAdapter
 
     public URL getResource( String name )
     {
-        return realm.getResource( name );
+        return realm.getResource( trimLeadingSlash( name ) );
     }
 
     public Enumeration findResources( String name )
         throws IOException
     {
-        return realm.findResources( name );
+        return realm.findResources( trimLeadingSlash( name ) );
     }
 
     public InputStream getResourceAsStream( String name )
     {
-        return realm.getResourceAsStream( name );
+        return realm.getResourceAsStream( trimLeadingSlash( name ) );
     }
 
     public void display()
@@ -147,4 +147,20 @@ public class ClassRealmAdapter
 
         return getId().equals( ( (ClassRealm) o ).getId() );
     }
+
+    /**
+     * Provides backward-compat with the old classworlds which accepted resource names with leading slashes.
+     */
+    private String trimLeadingSlash( String resource )
+    {
+        if ( resource != null && resource.startsWith( "/" ) )
+        {
+            return resource.substring( 1 );
+        }
+        else
+        {
+            return resource;
+        }
+    }
+
 }
