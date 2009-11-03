@@ -391,8 +391,6 @@ public class ClassRealm
             return null;
         }
 
-        resolveClass( clazz );
-
         return clazz;
     }
 

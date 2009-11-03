@@ -170,6 +170,20 @@ public class DefaultClassRealmTest
         assertSame( baseClass, childClass );
     }
 
+    public void testLoadClassFromRealmWithCircularClassReferences()
+        throws Exception
+    {
+        ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
+
+        mainRealm.addURL( getJarUrl( "circular-0.1.jar" ) );
+
+        /*
+         * This was reported to fail with a ClassCircularityError in IBM JDK 1.5.0-SR2, 1.5.0-SR7 and 1.6.0-SR2. It
+         * works in IBM JDK 1.5.0-SR10 and 1.6.0-SR6.
+         */
+        loadClass( mainRealm, "A$C" );
+    }
+
     // ----------------------------------------------------------------------
     // Resource testing
     // ----------------------------------------------------------------------
