@@ -45,7 +45,10 @@ public class UrlUtils
         {
             int j = name.lastIndexOf( "/", i - 1 );
 
-            name = name.substring( 0, j ) + name.substring( i + 3 );
+            if ( j >= 0 )
+            {
+                name = name.substring( 0, j ) + name.substring( i + 3 );
+            }
         }
 
         return name;
