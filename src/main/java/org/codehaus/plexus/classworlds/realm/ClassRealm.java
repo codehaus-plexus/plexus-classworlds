@@ -230,7 +230,7 @@ public class ClassRealm
         return loadClass( name, false );
     }
 
-    protected Class loadClass( String name, boolean resolve )
+    protected synchronized Class loadClass( String name, boolean resolve )
         throws ClassNotFoundException
     {
         try
