@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -35,6 +36,8 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 public class ClassWorld
 {
     private Map realms;
+
+    private final List listeners = new ArrayList();
 
     public ClassWorld( String realmId,
                        ClassLoader classLoader )
@@ -76,13 +79,28 @@ public class ClassWorld
 
         realms.put( id, realm );
 
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
+            listener.realmCreated( realm );
+        }
+
         return realm;
     }
 
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
-        realms.remove( id );
+        ClassRealm realm = (ClassRealm) realms.remove( id );
+
+        if ( realm != null )
+        {
+            for ( int i = 0; i < listeners.size(); i++ )
+            {
+                ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
+                listener.realmDisposed( realm );
+            }
+        }
     }
 
     public synchronized ClassRealm getRealm( String id )
@@ -92,7 +110,7 @@ public class ClassWorld
         {
             return (ClassRealm) realms.get( id );
         }
-
+        
         throw new NoSuchRealmException( this, id );
     }
 
@@ -111,4 +129,18 @@ public class ClassWorld
                                                                                                                                                                    
         return null;                                                                                                                                               
     }         
+
+    public synchronized void addListener( ClassWorldListener listener )
+    {
+        // TODO ideally, use object identity, not equals
+        if ( !listeners.contains( listener ) )
+        {
+            listeners.add( listener );
+        }
+    }
+    
+    public synchronized void removeListener( ClassWorldListener listener )
+    {
+        listeners.remove( listener );
+    }
 }
