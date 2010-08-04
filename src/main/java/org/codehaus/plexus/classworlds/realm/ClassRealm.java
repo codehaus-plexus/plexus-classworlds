@@ -347,7 +347,7 @@ public class ClassRealm
 
     public String toString()
     {
-         return "ClassRealm[" + getId() + ", parent: " + getParentRealm() + "]";
+         return "ClassRealm[" + getId() + ", parent: " + getParentClassLoader() + "]";
     }
     
     //---------------------------------------------------------------------------------------------
