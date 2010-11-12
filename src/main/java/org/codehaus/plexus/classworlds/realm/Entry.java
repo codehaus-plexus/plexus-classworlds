@@ -72,7 +72,28 @@ class Entry
     {
         String pkg = getPackageName();
 
-        if ( pkg.length() > 0 )
+        if ( pkg.endsWith( ".*" ) )
+        {
+            String pkgName;
+
+            if ( name.indexOf( '/' ) < 0 )
+            {
+                // a binary class name, e.g. java.lang.Object
+
+                int index = name.lastIndexOf( '.' );
+                pkgName = ( index < 0 ) ? "" : name.substring( 0, index );
+            }
+            else
+            {
+                // a resource name, e.g. java/lang/Object.class
+
+                int index = name.lastIndexOf( '/' );
+                pkgName = ( index < 0 ) ? "" : name.substring( 0, index ).replace( '/', '.' );
+            }
+
+            return pkgName.length() == pkg.length() - 2 && pkg.regionMatches( 0, pkgName, 0, pkgName.length() );
+        }
+        else if ( pkg.length() > 0 )
         {
             if ( name.indexOf( '/' ) < 0 )
             {

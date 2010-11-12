@@ -157,4 +157,34 @@ public class EntryTest
         assertFalse( entry2.matches( "org/test/other.properties" ) );
     }
 
+    public void testMatchesClassByExactPackageImport()
+        throws Exception
+    {
+        ClassWorld cw = new ClassWorld();
+        ClassRealm r = cw.newRealm( "test1" );
+
+        Entry entry = new Entry( r, "org.test.*" );
+
+        assertTrue( entry.matches( "org.test.MyClass" ) );
+        assertTrue( entry.matches( "org.test.MyClass$NestedClass" ) );
+        assertTrue( entry.matches( "org.test.MyClassUtils" ) );
+        assertFalse( entry.matches( "org.test.impl.MyClass" ) );
+        assertFalse( entry.matches( "org.tests.AnotherClass" ) );
+    }
+
+    public void testMatchesResourceByExactPackageImport()
+        throws Exception
+    {
+        ClassWorld cw = new ClassWorld();
+        ClassRealm r = cw.newRealm( "test1" );
+
+        Entry entry = new Entry( r, "org.test.*" );
+
+        assertTrue( entry.matches( "org/test/MyClass.class" ) );
+        assertTrue( entry.matches( "org/test/MyClass$NestedClass.class" ) );
+        assertTrue( entry.matches( "org/test/MyClasses.properties" ) );
+        assertFalse( entry.matches( "org/test/impl/MyClass.class" ) );
+        assertFalse( entry.matches( "org/tests/AnotherClass.class" ) );
+    }
+
 }
