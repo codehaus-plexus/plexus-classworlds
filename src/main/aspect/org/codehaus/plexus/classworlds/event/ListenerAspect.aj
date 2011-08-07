@@ -5,7 +5,7 @@ import java.net.URL;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 
 /**
- * A simlple aspect to hook event code in when compiling with debug enabled
+ * A simple aspect to hook event code in when compiling with debug enabled
  *
  * @uthor: Andrew Williams
  * @since: 1.2-alpha-15
@@ -53,8 +53,12 @@ aspect ListenerAspect
         getResource( name, strategy )
     {
         if ( result == null )
+        {
             resourceDebugger.failed( name, strategy );
+        }
         else
+        {
             resourceDebugger.found( name, strategy, result );
+        }
     }
 }
