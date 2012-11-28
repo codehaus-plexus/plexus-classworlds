@@ -16,6 +16,8 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,8 +43,7 @@ public class ClassWorld
 
     private final List listeners = new ArrayList();
 
-    public ClassWorld( String realmId,
-                       ClassLoader classLoader )
+    public ClassWorld( String realmId, ClassLoader classLoader )
     {
         this();
 
@@ -97,7 +98,7 @@ public class ClassWorld
 
         if ( realm != null )
         {
-            closeIfJava7( realm);
+            closeIfJava7( realm );
             for ( int i = 0; i < listeners.size(); i++ )
             {
                 ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
@@ -106,19 +107,18 @@ public class ClassWorld
         }
     }
 
-    private void closeIfJava7(ClassRealm realm){
+    private void closeIfJava7( ClassRealm realm )
+    {
         try
         {
-            Method close = realm.getClass().getMethod("close");
-            close.invoke(realm);
+            //noinspection ConstantConditions
+            if ( realm instanceof Closeable )
+            {
+                //noinspection RedundantCast
+                ( (Closeable) realm ).close();
+            }
         }
-        catch (NoSuchMethodException ignore)
-        {
-        }
-        catch (InvocationTargetException ignore)
-        {
-        }
-        catch (IllegalAccessException ignore)
+        catch ( IOException ignore )
         {
         }
     }
@@ -130,25 +130,25 @@ public class ClassWorld
         {
             return (ClassRealm) realms.get( id );
         }
-        
+
         throw new NoSuchRealmException( this, id );
     }
 
     public synchronized Collection getRealms()
     {
-        return Collections.unmodifiableList( new ArrayList(realms.values()) );
+        return Collections.unmodifiableList( new ArrayList( realms.values() ) );
     }
-    
+
     // from exports branch
-    public synchronized ClassRealm getClassRealm( String id )                                                                                                      
-    {                                                                                                                                                              
-        if ( realms.containsKey( id ) )                                                                                                                            
-        {                                                                                                                                                          
-            return (ClassRealm) realms.get( id );                                                                                                                  
-        }                                                                                                                                                          
-                                                                                                                                                                   
-        return null;                                                                                                                                               
-    }         
+    public synchronized ClassRealm getClassRealm( String id )
+    {
+        if ( realms.containsKey( id ) )
+        {
+            return (ClassRealm) realms.get( id );
+        }
+
+        return null;
+    }
 
     public synchronized void addListener( ClassWorldListener listener )
     {
@@ -158,7 +158,7 @@ public class ClassWorld
             listeners.add( listener );
         }
     }
-    
+
     public synchronized void removeListener( ClassWorldListener listener )
     {
         listeners.remove( listener );
