@@ -16,6 +16,8 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -95,11 +97,29 @@ public class ClassWorld
 
         if ( realm != null )
         {
+            closeIfJava7( realm);
             for ( int i = 0; i < listeners.size(); i++ )
             {
                 ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
                 listener.realmDisposed( realm );
             }
+        }
+    }
+
+    private void closeIfJava7(ClassRealm realm){
+        try
+        {
+            Method close = realm.getClass().getMethod("close");
+            close.invoke(realm);
+        }
+        catch (NoSuchMethodException ignore)
+        {
+        }
+        catch (InvocationTargetException ignore)
+        {
+        }
+        catch (IllegalAccessException ignore)
+        {
         }
     }
 
