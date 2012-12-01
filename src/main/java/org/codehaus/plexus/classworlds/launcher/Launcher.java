@@ -293,6 +293,8 @@ public class Launcher
         {
             exitCode = ( (Integer) ret ).intValue();
         }
+
+        Thread.currentThread().setContextClassLoader( systemClassLoader );
     }
 
     /**
@@ -332,6 +334,9 @@ public class Launcher
         {
             exitCode = ( (Integer) ret ).intValue();
         }
+
+        Thread.currentThread().setContextClassLoader( systemClassLoader );
+
     }
 
     // ------------------------------------------------------------
