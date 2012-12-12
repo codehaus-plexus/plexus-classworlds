@@ -31,7 +31,6 @@ import java.util.Properties;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
-
 /**
  * Event based launcher configuration parser.
  *
@@ -69,7 +68,8 @@ public class ConfigurationParser
     /**
      * Parse launcher configuration file and send events to the handler.
      */
-    public void parse( InputStream is ) throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
+    public void parse( InputStream is )
+        throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
         BufferedReader reader = new BufferedReader( new InputStreamReader( is, "UTF-8" ) );
 
@@ -364,9 +364,9 @@ public class ConfigurationParser
             }
         } );
 
-        for ( int i = 0; i < matches.length; ++i )
+        for ( File match : matches )
         {
-            handler.addLoadFile( matches[i] );
+            handler.addLoadFile( match );
         }
     }
 

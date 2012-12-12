@@ -129,13 +129,13 @@ public class ClassWorldTest
         ClassRealm plexus = world.newRealm( "plexus" );
         plexus.importFrom( "netbeans", "META-INF/plexus" );
         plexus.importFrom( "netbeans", "org.codehaus.plexus" );
-        Enumeration e = plexus.getResources( "META-INF/plexus/components.xml" );
+        Enumeration<URL> e = plexus.getResources( "META-INF/plexus/components.xml" );
         assertNotNull( e );
         int resourceCount = 0;
-        for ( Enumeration resources = e; resources.hasMoreElements(); )
+        for ( Enumeration<URL> resources = e; resources.hasMoreElements(); )
         {
-            URL obj = (URL) resources.nextElement();
-            assertTrue(obj.getPath().indexOf( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            URL obj = resources.nextElement();
+            assertTrue( obj.getPath().indexOf( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
             resourceCount++;
         }
 //        assertEquals( 2, resourceCount );
@@ -146,7 +146,7 @@ public class ClassWorldTest
 //    However only 1 is correct, which is actually returned by the 2.4 surefire-plugin
         
         assertEquals( 1, resourceCount );
-        Class c = plexus.loadClass( "org.codehaus.plexus.Component1" );
+        Class<?> c = plexus.loadClass( "org.codehaus.plexus.Component1" );
         assertNotNull( c );
         
     }

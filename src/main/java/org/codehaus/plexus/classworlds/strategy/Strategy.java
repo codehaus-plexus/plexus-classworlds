@@ -33,12 +33,12 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 public interface Strategy
 {
 
-    Class loadClass( String name )
+    Class<?> loadClass( String name )
         throws ClassNotFoundException;
 
     URL getResource( String name );
 
-    Enumeration getResources( String name )
+    Enumeration<URL> getResources( String name )
         throws IOException;
 
     ClassRealm getRealm();

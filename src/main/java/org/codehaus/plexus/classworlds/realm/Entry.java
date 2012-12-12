@@ -22,7 +22,7 @@ package org.codehaus.plexus.classworlds.realm;
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
 class Entry
-    implements Comparable
+    implements Comparable<Entry>
 {
 
     final ClassLoader classLoader;
@@ -175,10 +175,8 @@ class Entry
      *         if they are equal, or 1 if this object sorts
      *         after that object.
      */
-    public int compareTo( Object thatObj )
+    public int compareTo( Entry that )
     {
-        Entry that = (Entry) thatObj;
-
         // We are reverse sorting this list, so that
         // we get longer matches first:
         //

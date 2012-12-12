@@ -1,5 +1,6 @@
 package org.codehaus.plexus.classworlds.strategy;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -43,9 +44,9 @@ public abstract class AbstractStrategy
         return UrlUtils.normalizeUrlPath( name );
     }
 
-    protected Enumeration combineResources( Enumeration en1, Enumeration en2, Enumeration en3 )
+    protected Enumeration<URL> combineResources( Enumeration<URL> en1, Enumeration<URL> en2, Enumeration<URL> en3 )
     {
-        Collection urls = new LinkedHashSet();
+        Collection<URL> urls = new LinkedHashSet<URL>();
 
         addAll( urls, en1 );
         addAll( urls, en2 );
@@ -54,7 +55,7 @@ public abstract class AbstractStrategy
         return Collections.enumeration( urls );
     }
 
-    private void addAll( Collection target, Enumeration en )
+    private void addAll( Collection<URL> target, Enumeration<URL> en )
     {
         if ( en != null )
         {

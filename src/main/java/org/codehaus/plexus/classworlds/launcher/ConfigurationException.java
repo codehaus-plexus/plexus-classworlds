@@ -42,9 +42,7 @@ public class ConfigurationException
      * @param lineNo The number of configuraton line where the problem occured.
      * @param line   The configuration line where the problem occured.
      */
-    public ConfigurationException( String msg,
-                                   int lineNo,
-                                   String line )
+    public ConfigurationException( String msg, int lineNo, String line )
     {
         super( msg + " (" + lineNo + "): " + line );
     }

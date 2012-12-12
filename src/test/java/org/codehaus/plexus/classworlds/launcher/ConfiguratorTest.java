@@ -142,7 +142,7 @@ public class ConfiguratorTest
 
         ClassWorld world = this.launcher.getWorld();
 
-        Collection realms = world.getRealms();
+        Collection<ClassRealm> realms = world.getRealms();
 
         assertEquals( 4, realms.size() );
 
@@ -183,7 +183,7 @@ public class ConfiguratorTest
 
         ClassWorld world = this.launcher.getWorld();
 
-        Collection realms = world.getRealms();
+        Collection<ClassRealm> realms = world.getRealms();
 
         assertEquals( 1, realms.size() );
 
@@ -207,7 +207,7 @@ public class ConfiguratorTest
 
         ClassWorld world = this.launcher.getWorld();
 
-        Collection realms = world.getRealms();
+        Collection<ClassRealm> realms = world.getRealms();
 
         assertEquals( 1, realms.size() );
 

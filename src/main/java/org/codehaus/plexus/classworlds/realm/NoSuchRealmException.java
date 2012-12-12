@@ -48,8 +48,7 @@ public class NoSuchRealmException
      * @param world The world.
      * @param id    The realm id.
      */
-    public NoSuchRealmException( ClassWorld world,
-                                 String id )
+    public NoSuchRealmException( ClassWorld world, String id )
     {
         super( world, id );
         this.id = id;

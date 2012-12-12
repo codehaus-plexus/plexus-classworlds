@@ -187,7 +187,7 @@ public class ClassRealmImplTest
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
-        Class cls = mainRealm.loadClass( "java.lang.Object" );
+        Class<?> cls = mainRealm.loadClass( "java.lang.Object" );
 
         assertNotNull( cls );
     }
@@ -199,7 +199,7 @@ public class ClassRealmImplTest
 
         try
         {
-            Class c = mainRealm.loadClass( "com.werken.projectz.UberThing" );
+            Class<?> c = mainRealm.loadClass( "com.werken.projectz.UberThing" );
 
             System.out.println( "c = " + c );
 
@@ -216,7 +216,7 @@ public class ClassRealmImplTest
     {
         ClassRealm mainRealm = this.world.newRealm( "main" );
 
-        Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
+        Class<?> cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
 
         assertNotNull( cls );
 
@@ -239,7 +239,7 @@ public class ClassRealmImplTest
 
         mainRealm.addURL( getJarUrl( "a.jar" ) );
 
-        Class classA = mainRealm.loadClass( "a.A" );
+        Class<?> classA = mainRealm.loadClass( "a.A" );
 
         assertNotNull( classA );
 
@@ -288,13 +288,13 @@ public class ClassRealmImplTest
 
         mainRealm.importFrom( "realmA", "a" );
 
-        Class classA = realmA.loadClass( "a.A" );
+        Class<?> classA = realmA.loadClass( "a.A" );
 
         assertNotNull( classA );
 
         assertEquals( realmA, classA.getClassLoader() );
 
-        Class classMain = mainRealm.loadClass( "a.A" );
+        Class<?> classMain = mainRealm.loadClass( "a.A" );
 
         assertNotNull( classMain );
 
@@ -309,7 +309,7 @@ public class ClassRealmImplTest
         ClassRealm realmA = this.world.newRealm( "realmA" );
         realmA.addURL( getJarUrl( "a.jar" ) );
 
-        Class clazz = realmA.loadClass( "a.A" );
+        Class<?> clazz = realmA.loadClass( "a.A" );
         assertNotNull( clazz );
         assertEquals( "a.A", clazz.getName() );
 
@@ -336,9 +336,9 @@ public class ClassRealmImplTest
 
         realmA.importFrom( "realmC", "c" );
 
-        Class classA_A = realmA.loadClass( "a.A" );
-        Class classB_B = realmB.loadClass( "b.B" );
-        Class classC_C = realmC.loadClass( "c.C" );
+        Class<?> classA_A = realmA.loadClass( "a.A" );
+        Class<?> classB_B = realmB.loadClass( "b.B" );
+        Class<?> classC_C = realmC.loadClass( "c.C" );
 
         assertNotNull( classA_A );
         assertNotNull( classB_B );
@@ -352,7 +352,7 @@ public class ClassRealmImplTest
 
         // load from C
 
-        Class classA_C = realmC.loadClass( "a.A" );
+        Class<?> classA_C = realmC.loadClass( "a.A" );
 
         assertNotNull( classA_C );
 
@@ -360,7 +360,7 @@ public class ClassRealmImplTest
 
         assertEquals( realmA, classA_C.getClassLoader() );
 
-        Class classB_C = realmC.loadClass( "b.B" );
+        Class<?> classB_C = realmC.loadClass( "b.B" );
 
         assertNotNull( classB_C );
 
@@ -370,7 +370,7 @@ public class ClassRealmImplTest
 
         // load from A
 
-        Class classC_A = realmA.loadClass( "c.C" );
+        Class<?> classC_A = realmA.loadClass( "c.C" );
 
         assertNotNull( classC_A );
 
@@ -418,7 +418,7 @@ public class ClassRealmImplTest
 
         for ( int i = 0; i < 100; i++ )
         {
-            Class cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
+            Class<?> cls = mainRealm.loadClass( "org.codehaus.plexus.classworlds.ClassWorld" );
 
             assertNotNull( cls );
 
@@ -445,8 +445,8 @@ public class ClassRealmImplTest
 
         assertEquals( baseUrl, subUrl );
 
-        List urls = new ArrayList();
-        for ( Iterator it = Collections.list( sub.getResources( resource ) ).iterator(); it.hasNext(); )
+        List<String> urls = new ArrayList<String>();
+        for ( Iterator<URL> it = Collections.list( sub.getResources( resource ) ).iterator(); it.hasNext(); )
         {
             String path = it.next().toString();
             path = path.substring( path.lastIndexOf( '/', path.lastIndexOf( ".jar!" ) ) );
@@ -472,7 +472,7 @@ public class ClassRealmImplTest
         URL childUrl = child.getResource( resource );
         assertNotNull( childUrl );
 
-        List urls = Collections.list( child.getResources( resource ) );
+        List<URL> urls = Collections.list( child.getResources( resource ) );
         assertNotNull( urls );
         assertEquals( Arrays.asList( new URL[] { childUrl, parentUrl } ), urls );
     }

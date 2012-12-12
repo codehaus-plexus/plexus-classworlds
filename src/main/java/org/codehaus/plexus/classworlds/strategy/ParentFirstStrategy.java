@@ -32,10 +32,10 @@ public class ParentFirstStrategy
         super( realm );
     }
 
-    public Class loadClass( String name )
+    public Class<?> loadClass( String name )
         throws ClassNotFoundException
     {
-        Class clazz = realm.loadClassFromImport( name );
+        Class<?> clazz = realm.loadClassFromImport( name );
 
         if ( clazz == null )
         {
@@ -72,12 +72,12 @@ public class ParentFirstStrategy
         return resource;
     }
 
-    public Enumeration getResources( String name )
+    public Enumeration<URL> getResources( String name )
         throws IOException
     {
-        Enumeration imports = realm.loadResourcesFromImport( name );
-        Enumeration parent = realm.loadResourcesFromParent( name );
-        Enumeration self = realm.loadResourcesFromSelf( name );
+        Enumeration<URL> imports = realm.loadResourcesFromImport( name );
+        Enumeration<URL> parent = realm.loadResourcesFromParent( name );
+        Enumeration<URL> self = realm.loadResourcesFromSelf( name );
 
         return combineResources( imports, parent, self );
     }

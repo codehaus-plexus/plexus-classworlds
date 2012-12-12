@@ -51,7 +51,7 @@ public class LauncherTest
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
 
-        Class mainClass = launcher.getMainClass();
+        Class<?> mainClass = launcher.getMainClass();
 
         assertNotNull( mainClass );
 

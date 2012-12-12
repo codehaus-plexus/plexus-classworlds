@@ -16,6 +16,7 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,13 +55,13 @@ public class UrlUtils
         return name;
     }
 
-    public static Set getURLs( URLClassLoader loader )
+    public static Set<URL> getURLs( URLClassLoader loader )
     {
-        Set ret = new HashSet();
+        Set<URL> ret = new HashSet<URL>();
 
-        for ( int i = 0; i < loader.getURLs().length; i++ )
+        for ( URL url : loader.getURLs() )
         {
-            ret.add( loader.getURLs()[i] );
+            ret.add( url );
         }
 
         return ret;

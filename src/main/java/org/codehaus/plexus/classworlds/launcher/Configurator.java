@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ public class Configurator implements ConfigurationHandler
     /**
      * Processed Realms.
      */
-    private Map configuredRealms;
+    private Map<String, ClassRealm> configuredRealms;
 
     /**
      * Current Realm.
@@ -71,7 +70,7 @@ public class Configurator implements ConfigurationHandler
     {
         this.launcher = launcher;
 
-        configuredRealms = new HashMap();
+        configuredRealms = new HashMap<String, ClassRealm>();
 
         if ( launcher != null )
         {
@@ -99,7 +98,7 @@ public class Configurator implements ConfigurationHandler
     {
         this.world = world;
 
-        configuredRealms = new HashMap();
+        configuredRealms = new HashMap<String, ClassRealm>();
     }
 
     /**
@@ -150,16 +149,14 @@ public class Configurator implements ConfigurationHandler
      */
     public void associateRealms()
     {
-        List sortRealmNames = new ArrayList( configuredRealms.keySet() );
+        List<String> sortRealmNames = new ArrayList<String>( configuredRealms.keySet() );
 
         // sort by name
-        Comparator comparator = new Comparator()
+        Comparator<String> comparator = new Comparator<String>()
         {
-            public int compare( Object o1,
-                                Object o2 )
+            public int compare( String g1,
+                                String g2 )
             {
-                String g1 = (String) o1;
-                String g2 = (String) o2;
                 return g1.compareTo( g2 );
             }
         };
@@ -176,21 +173,19 @@ public class Configurator implements ConfigurationHandler
         // Now if the name of a realm is a superset of an existing realm
         // the we want to make child/parent associations.
 
-        for ( Iterator i = sortRealmNames.iterator(); i.hasNext(); )
+        for ( String realmName : sortRealmNames )
         {
-            String realmName = (String) i.next();
-
             int j = realmName.lastIndexOf( '.' );
 
             if ( j > 0 )
             {
                 String parentRealmName = realmName.substring( 0, j );
 
-                ClassRealm parentRealm = (ClassRealm) configuredRealms.get( parentRealmName );
+                ClassRealm parentRealm = configuredRealms.get( parentRealmName );
 
                 if ( parentRealm != null )
                 {
-                    ClassRealm realm = (ClassRealm) configuredRealms.get( realmName );
+                    ClassRealm realm = configuredRealms.get( realmName );
 
                     realm.setParentRealm( parentRealm );
                 }
@@ -198,7 +193,8 @@ public class Configurator implements ConfigurationHandler
         }
     }
 
-    public void addImportFrom( String relamName, String importSpec ) throws NoSuchRealmException
+    public void addImportFrom( String relamName, String importSpec )
+        throws NoSuchRealmException
     {
         curRealm.importFrom( relamName, importSpec );
     }
@@ -220,7 +216,8 @@ public class Configurator implements ConfigurationHandler
         curRealm.addURL( url );
     }
 
-    public void addRealm( String realmName ) throws DuplicateRealmException
+    public void addRealm( String realmName )
+        throws DuplicateRealmException
     {
         curRealm = world.newRealm( realmName, foreignClassLoader );
 

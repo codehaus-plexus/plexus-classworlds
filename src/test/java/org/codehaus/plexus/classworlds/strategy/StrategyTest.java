@@ -56,7 +56,7 @@ public class StrategyTest
     public void testLoadingOfApplicationClass()
         throws Exception
     {
-        Class c = strategy.loadClass( "org.codehaus.plexus.Component0" );
+        Class<?> c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
     }
@@ -64,9 +64,7 @@ public class StrategyTest
     public void testLoadingOfApplicationClassThenDoingItAgain()
         throws Exception
     {
-        Class c;
-
-        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
+        Class<?> c = strategy.loadClass( "org.codehaus.plexus.Component0" );
 
         assertNotNull( c );
 
@@ -79,7 +77,7 @@ public class StrategyTest
     public void testLoadingOfSystemClass()
         throws Exception
     {
-        Class c = strategy.getRealm().loadClass( "java.lang.Object" );
+        Class<?> c = strategy.getRealm().loadClass( "java.lang.Object" );
 
         assertNotNull( c );
     }
@@ -125,13 +123,13 @@ public class StrategyTest
     {
         realm.addURL( getJarUrl( "component1-1.0.jar" ) );
 
-        Enumeration e = strategy.getResources( "META-INF/plexus/components.xml" );
+        Enumeration<URL> e = strategy.getResources( "META-INF/plexus/components.xml" );
 
         assertNotNull( e );
 
         int resourceCount = 0;
 
-        for ( Enumeration resources = e; resources.hasMoreElements(); )
+        for ( Enumeration<URL> resources = e; resources.hasMoreElements(); )
         {
             resources.nextElement();
 

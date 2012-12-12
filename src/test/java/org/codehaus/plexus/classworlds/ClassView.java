@@ -25,7 +25,7 @@ public class ClassView
      * *
      * * @return a String describing the Class in detail
      */
-    public static String toString( Class clz )
+    public static String toString( Class<?> clz )
     {
         if ( clz.isPrimitive() )
         {
@@ -53,8 +53,7 @@ public class ClassView
      * *
      * * @return a String describing the Class in detail
      */
-    private static String toClassString( Class clz,
-                                         String sIndent )
+    private static String toClassString( Class<?> clz, String sIndent )
     {
         StringBuffer sb = new StringBuffer();
         sb.append( sIndent )
@@ -66,7 +65,7 @@ public class ClassView
 
         sIndent += "  ";
 
-        Class[] aclz = clz.getInterfaces();
+        Class<?>[] aclz = clz.getInterfaces();
         for ( int i = 0, c = aclz.length; i < c; ++i )
         {
             sb.append( '\n' )
@@ -91,8 +90,7 @@ public class ClassView
      * *
      * * @return a String describing the interface Class in detail
      */
-    private static String toInterfaceString( Class clz,
-                                             String sIndent )
+    private static String toInterfaceString( Class<?> clz, String sIndent )
     {
         StringBuffer sb = new StringBuffer();
         sb.append( sIndent )
@@ -102,7 +100,7 @@ public class ClassView
             .append( toString( clz.getClassLoader() ) )
             .append( ')' );
 
-        Class[] aclz = clz.getInterfaces();
+        Class<?>[] aclz = clz.getInterfaces();
         for ( int i = 0, c = aclz.length; i < c; ++i )
         {
             clz = aclz[i];

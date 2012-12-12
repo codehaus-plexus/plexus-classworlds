@@ -24,7 +24,6 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -51,9 +50,9 @@ public class ClassRealm
 
     private String id;
 
-    private SortedSet foreignImports;
+    private SortedSet<Entry> foreignImports;
 
-    private SortedSet parentImports;
+    private SortedSet<Entry> parentImports;
 
     private Strategy strategy;
 
@@ -75,7 +74,7 @@ public class ClassRealm
 
         this.id = id;
 
-        foreignImports = new TreeSet();
+        foreignImports = new TreeSet<Entry>();
 
         strategy = StrategyFactory.getStrategy( this );
     }
@@ -94,7 +93,7 @@ public class ClassRealm
     {
         if ( parentImports == null )
         {
-            parentImports = new TreeSet();
+            parentImports = new TreeSet<Entry>();
         }
 
         parentImports.add( new Entry( null, packageName ) );
@@ -104,10 +103,8 @@ public class ClassRealm
     {
         if ( parentImports != null && !parentImports.isEmpty() )
         {
-            for ( Iterator iterator = parentImports.iterator(); iterator.hasNext(); )
+            for ( Entry entry : parentImports )
             {
-                Entry entry = (Entry) iterator.next();
-
                 if ( entry.matches( name ) )
                 {
                     return true;
@@ -133,10 +130,8 @@ public class ClassRealm
 
     public ClassLoader getImportClassLoader( String name )
     {
-        for ( Iterator iterator = foreignImports.iterator(); iterator.hasNext(); )
+        for ( Entry entry : foreignImports )
         {
-            Entry entry = (Entry) iterator.next();
-
             if ( entry.matches( name ) )
             {
                 return entry.getClassLoader();
@@ -146,17 +141,15 @@ public class ClassRealm
         return null;
     }
 
-    public Collection getImportRealms()
+    public Collection<ClassRealm> getImportRealms()
     {
-        Collection importRealms = new HashSet();
+        Collection<ClassRealm> importRealms = new HashSet<ClassRealm>();
 
-        for ( Iterator iterator = foreignImports.iterator(); iterator.hasNext(); )
+        for ( Entry entry : foreignImports )
         {
-            Entry entry = (Entry) iterator.next();
-
             if ( entry.getClassLoader() instanceof ClassRealm )
             {
-                importRealms.add( entry.getClassLoader() );
+                importRealms.add( (ClassRealm) entry.getClassLoader() );
             }
         }
 
@@ -224,13 +217,13 @@ public class ClassRealm
     // of any existing ClassRealm.
     // ----------------------------------------------------------------------
 
-    public Class loadClass( String name )
+    public Class<?> loadClass( String name )
         throws ClassNotFoundException
     {
         return loadClass( name, false );
     }
 
-    protected synchronized Class loadClass( String name, boolean resolve )
+    protected synchronized Class<?> loadClass( String name, boolean resolve )
         throws ClassNotFoundException
     {
         try
@@ -245,7 +238,7 @@ public class ClassRealm
         }
     }
 
-    protected Class findClass( String name )
+    protected Class<?> findClass( String name )
         throws ClassNotFoundException
     {
         /*
@@ -273,7 +266,7 @@ public class ClassRealm
         }
     }
 
-    public Enumeration findResources( String name )
+    public Enumeration<URL> findResources( String name )
         throws IOException
     {
         /*
@@ -329,18 +322,18 @@ public class ClassRealm
 
         out.println( "Number of foreign imports: " + classRealm.foreignImports.size() );
 
-        for ( Iterator i = classRealm.foreignImports.iterator(); i.hasNext(); )
+        for ( Entry entry : classRealm.foreignImports )
         {
-            out.println( "import: " + i.next() );
+            out.println( "import: " + entry );
         }
 
         if ( classRealm.parentImports != null )
         {
             out.println( "Number of parent imports: " + classRealm.parentImports.size() );
 
-            for ( Iterator i = classRealm.parentImports.iterator(); i.hasNext(); )
+            for ( Entry entry : classRealm.parentImports )
             {
-                out.println( "import: " + i.next() );
+                out.println( "import: " + entry );
             }
         }
     }
@@ -354,7 +347,7 @@ public class ClassRealm
     // Search methods that can be ordered by strategies to load a class
     //---------------------------------------------------------------------------------------------
 
-    public Class loadClassFromImport( String name )
+    public Class<?> loadClassFromImport( String name )
     {
         ClassLoader importClassLoader = getImportClassLoader( name );
 
@@ -373,28 +366,26 @@ public class ClassRealm
         return null;
     }
 
-    public Class loadClassFromSelf( String name )
+    public Class<?> loadClassFromSelf( String name )
     {
-        Class clazz;
-
         try
         {
-            clazz = findLoadedClass( name );
+            Class<?> clazz = findLoadedClass( name );
 
             if ( clazz == null )
             {
                 clazz = super.findClass( name );
             }
+
+            return clazz;
         }
         catch ( ClassNotFoundException e )
         {
             return null;
         }
-
-        return clazz;
     }
 
-    public Class loadClassFromParent( String name )
+    public Class<?> loadClassFromParent( String name )
     {
         ClassLoader parent = getParentClassLoader();
 
@@ -452,7 +443,7 @@ public class ClassRealm
     // Search methods that can be ordered by strategies to get resources
     //---------------------------------------------------------------------------------------------
 
-    public Enumeration loadResourcesFromImport( String name )
+    public Enumeration<URL> loadResourcesFromImport( String name )
     {
         ClassLoader importClassLoader = getImportClassLoader( name );
 
@@ -471,7 +462,7 @@ public class ClassRealm
         return null;
     }
 
-    public Enumeration loadResourcesFromSelf( String name )
+    public Enumeration<URL> loadResourcesFromSelf( String name )
     {
         try
         {
@@ -483,7 +474,7 @@ public class ClassRealm
         }
     }
 
-    public Enumeration loadResourcesFromParent( String name )
+    public Enumeration<URL> loadResourcesFromParent( String name )
     {
         ClassLoader parent = getParentClassLoader();
 

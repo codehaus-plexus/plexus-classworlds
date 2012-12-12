@@ -54,8 +54,7 @@ public class ClassWorldException
      * @param world The world.
      * @param msg   The detail message.
      */
-    public ClassWorldException( final ClassWorld world,
-                                final String msg )
+    public ClassWorldException( final ClassWorld world, final String msg )
     {
         super( msg );
         this.world = world;

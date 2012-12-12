@@ -16,29 +16,30 @@ package org.codehaus.plexus.classworlds.launcher;
  * limitations under the License.
  */
 
-
 import java.io.File;
 import java.net.URL;
 
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
-
 /**
  * Receive notification of the logical content of launcher configuration.
  *
  * @author Igor Fedorenko
  */
-public interface ConfigurationHandler {
+public interface ConfigurationHandler
+{
 
-  void setAppMain(String mainClassName, String mainRealmName);
+    void setAppMain( String mainClassName, String mainRealmName );
 
-  void addRealm(String realmName) throws DuplicateRealmException;
+    void addRealm( String realmName )
+        throws DuplicateRealmException;
 
-  void addImportFrom(String relamName, String importSpec) throws NoSuchRealmException;
+    void addImportFrom( String relamName, String importSpec )
+        throws NoSuchRealmException;
 
-  void addLoadFile(File file);
+    void addLoadFile( File file );
 
-  void addLoadURL(URL url);
+    void addLoadURL( URL url );
 
 }

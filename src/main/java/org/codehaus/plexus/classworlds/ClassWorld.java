@@ -37,9 +37,9 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  */
 public class ClassWorld
 {
-    private Map realms;
+    private Map<String, ClassRealm> realms;
 
-    private final List listeners = new ArrayList();
+    private final List<ClassWorldListener> listeners = new ArrayList<ClassWorldListener>();
 
     public ClassWorld( String realmId, ClassLoader classLoader )
     {
@@ -57,7 +57,7 @@ public class ClassWorld
 
     public ClassWorld()
     {
-        this.realms = new LinkedHashMap();
+        this.realms = new LinkedHashMap<String, ClassRealm>();
     }
 
     public ClassRealm newRealm( String id )
@@ -80,9 +80,8 @@ public class ClassWorld
 
         realms.put( id, realm );
 
-        for ( int i = 0; i < listeners.size(); i++ )
+        for ( ClassWorldListener listener : listeners )
         {
-            ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
             listener.realmCreated( realm );
         }
 
@@ -97,9 +96,8 @@ public class ClassWorld
         if ( realm != null )
         {
             closeIfJava7( realm );
-            for ( int i = 0; i < listeners.size(); i++ )
+            for ( ClassWorldListener listener : listeners )
             {
-                ClassWorldListener listener = (ClassWorldListener) listeners.get( i );
                 listener.realmDisposed( realm );
             }
         }
@@ -132,9 +130,9 @@ public class ClassWorld
         throw new NoSuchRealmException( this, id );
     }
 
-    public synchronized Collection getRealms()
+    public synchronized Collection<ClassRealm> getRealms()
     {
-        return Collections.unmodifiableList( new ArrayList( realms.values() ) );
+        return Collections.unmodifiableList( new ArrayList<ClassRealm>( realms.values() ) );
     }
 
     // from exports branch
@@ -142,7 +140,7 @@ public class ClassWorld
     {
         if ( realms.containsKey( id ) )
         {
-            return (ClassRealm) realms.get( id );
+            return realms.get( id );
         }
 
         return null;

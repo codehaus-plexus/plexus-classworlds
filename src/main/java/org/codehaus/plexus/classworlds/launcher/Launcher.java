@@ -139,7 +139,7 @@ public class Launcher
      * @throws ClassNotFoundException If the class cannot be found.
      * @throws NoSuchRealmException   If the specified main entry realm does not exist.
      */
-    public Class getMainClass()
+    public Class<?> getMainClass()
         throws ClassNotFoundException, NoSuchRealmException
     {
         return getMainRealm().loadClass( getMainClassName() );
@@ -168,7 +168,7 @@ public class Launcher
     protected Method getEnhancedMainMethod()
         throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException
     {
-        Class cwClass = getMainRealm().loadClass( ClassWorld.class.getName() );
+        Class<?> cwClass = getMainRealm().loadClass( ClassWorld.class.getName() );
 
         Method m = getMainClass().getMethod( "main", new Class[]{String[].class, cwClass} );
 
@@ -264,7 +264,7 @@ public class Launcher
     {
         ClassRealm mainRealm = getMainRealm();
 
-        Class mainClass = getMainClass();
+        Class<?> mainClass = getMainClass();
 
         Method mainMethod = getEnhancedMainMethod();
 
@@ -322,7 +322,7 @@ public class Launcher
     {
         ClassRealm mainRealm = getMainRealm();
 
-        Class mainClass = getMainClass();
+        Class<?> mainClass = getMainClass();
 
         Method mainMethod = getMainMethod();
 

@@ -83,7 +83,7 @@ public class DefaultClassRealmTest
 
         childRealm.addURL( getJarUrl( "component5-2.0.jar" ) );
 
-        Class cls = loadClass( childRealm, "test.Component5" );
+        Class<?> cls = loadClass( childRealm, "test.Component5" );
 
         assertSame( childRealm, cls.getClassLoader() );
         assertEquals( 1, cls.getMethods().length );
@@ -138,7 +138,7 @@ public class DefaultClassRealmTest
 
         child.setParentRealm( parent );
 
-        Class type = loadClass( child, "org.codehaus.plexus.Component0" );
+        Class<?> type = loadClass( child, "org.codehaus.plexus.Component0" );
 
         child.importFromParent( "non-existing" );
 
@@ -162,8 +162,8 @@ public class DefaultClassRealmTest
 
         child.addURL( getJarUrl( "a.jar" ) );
 
-        Class baseClass = loadClass( base, "a.A" );
-        Class childClass = loadClass( child, "a.A" );
+        Class<?> baseClass = loadClass( base, "a.A" );
+        Class<?> childClass = loadClass( child, "a.A" );
 
         assertSame( base, baseClass.getClassLoader() );
         assertSame( base, childClass.getClassLoader() );
@@ -274,7 +274,7 @@ public class DefaultClassRealmTest
     //
     // ----------------------------------------------------------------------
 
-    private Class loadClassOrNull( ClassRealm realm, String name )
+    private Class<?> loadClassOrNull( ClassRealm realm, String name )
     {
         try
         {
@@ -286,10 +286,10 @@ public class DefaultClassRealmTest
         }
     }
 
-    private Class loadClass( ClassRealm realm, String name )
+    private Class<?> loadClass( ClassRealm realm, String name )
         throws ClassNotFoundException
     {
-        Class cls = realm.loadClass( name );
+        Class<?> cls = realm.loadClass( name );
 
         /*
          * NOTE: Load the class both directly from the realm and indirectly from an (ordinary) child class loader which

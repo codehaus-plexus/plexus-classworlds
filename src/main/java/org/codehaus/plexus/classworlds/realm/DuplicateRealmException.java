@@ -48,8 +48,7 @@ public class DuplicateRealmException
      * @param world The world.
      * @param id    The realm id.
      */
-    public DuplicateRealmException( ClassWorld world,
-                                    String id )
+    public DuplicateRealmException( ClassWorld world, String id )
     {
         super( world, id );
         this.id = id;
