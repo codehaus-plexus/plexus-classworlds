@@ -32,11 +32,12 @@ import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
- * Event based launcher configuration parser.
+ * Event based launcher configuration parser, delegating effective configuration handling to ConfigurationHandler.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  * @author Igor Fedorenko
+ * @see ConfigurationHandler
  */
 public class ConfigurationParser
 {
