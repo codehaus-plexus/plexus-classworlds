@@ -46,7 +46,6 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  * </p>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class Launcher
 {

@@ -1,7 +1,6 @@
 package org.codehaus.classworlds;
 
 /*
- $Id$
 
  Copyright 2002 (C) The Werken Company. All Rights Reserved.
 
@@ -62,7 +61,6 @@ import java.util.Enumeration;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>
- * @version $Id$
  */
 public interface ClassRealm
 {

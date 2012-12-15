@@ -23,7 +23,6 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  *
  * @uthor: Andrew Williams
  * @since: Nov 19, 2006
- * @version: $Id$
  */
 public class StrategyFactory
 {

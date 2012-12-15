@@ -1,7 +1,6 @@
 package org.codehaus.classworlds;
 
 /*
- $Id$
 
  Copyright 2002 (C) The Werken Company. All Rights Reserved.
 
@@ -51,7 +50,6 @@ package org.codehaus.classworlds;
  * <code>ClassWorld</code> with a duplicate id.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class DuplicateRealmException extends ClassWorldException
 {

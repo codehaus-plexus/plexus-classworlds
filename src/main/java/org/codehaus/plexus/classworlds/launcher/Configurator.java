@@ -38,7 +38,6 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
- * @version $Id$
  */
 public class Configurator implements ConfigurationHandler
 {

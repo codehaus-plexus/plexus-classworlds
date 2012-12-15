@@ -23,7 +23,6 @@ import java.util.Collection;
  * provided for legacy code
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class ClassWorld
 {

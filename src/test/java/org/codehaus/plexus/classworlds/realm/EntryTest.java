@@ -21,7 +21,6 @@ import org.codehaus.plexus.classworlds.ClassWorld;
 
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
- * @version $Id$
  */
 public class EntryTest
     extends AbstractClassWorldsTestCase

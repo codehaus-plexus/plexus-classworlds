@@ -20,7 +20,6 @@ package org.codehaus.plexus.classworlds.launcher;
  * Indicates an error during <code>Launcher</code> configuration.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class ConfigurationException
     extends Exception

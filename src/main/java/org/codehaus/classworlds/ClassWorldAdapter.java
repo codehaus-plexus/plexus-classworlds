@@ -24,7 +24,6 @@ import java.util.Iterator;
  * An adapter for ClassWorlds
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class ClassWorldAdapter
     extends ClassWorld

@@ -25,7 +25,6 @@ import java.util.Iterator;
  * A reverse adapter for ClassWorlds
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class ClassWorldReverseAdapter
     extends org.codehaus.plexus.classworlds.ClassWorld

@@ -24,7 +24,6 @@ import org.codehaus.plexus.classworlds.ClassWorldException;
  * <code>ClassWorld</code> with a duplicate id.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class DuplicateRealmException
     extends ClassWorldException

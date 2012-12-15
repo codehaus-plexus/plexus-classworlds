@@ -1,7 +1,6 @@
 package org.codehaus.classworlds;
 
 /*
- $Id$
 
  Copyright 2002 (C) The Werken Company. All Rights Reserved.
 
@@ -50,7 +49,6 @@ package org.codehaus.classworlds;
  * Base exception for <code>ClassWorld</code> errors.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class ClassWorldException extends Exception
 {

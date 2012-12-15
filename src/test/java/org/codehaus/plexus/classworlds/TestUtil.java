@@ -22,7 +22,6 @@ import java.net.URL;
 
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
- * @version $Id$
  */
 public class TestUtil
 {

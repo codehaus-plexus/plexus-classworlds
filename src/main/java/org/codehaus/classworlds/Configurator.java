@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
  * provided for legacy code
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class Configurator
 {

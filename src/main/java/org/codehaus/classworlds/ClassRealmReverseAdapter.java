@@ -25,7 +25,6 @@ import java.io.InputStream;
  * A reverse adapter for ClassRealms
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class ClassRealmReverseAdapter
     extends org.codehaus.plexus.classworlds.realm.ClassRealm

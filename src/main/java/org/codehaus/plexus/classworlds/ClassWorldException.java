@@ -20,7 +20,6 @@ package org.codehaus.plexus.classworlds;
  * Base exception for <code>ClassWorld</code> errors.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class ClassWorldException
     extends Exception

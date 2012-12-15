@@ -1,7 +1,6 @@
 package org.codehaus.classworlds;
 
 /*
- $Id$
 
  Copyright 2002 (C) The Werken Company. All Rights Reserved.
 
@@ -50,7 +49,6 @@ package org.codehaus.classworlds;
  * Indicates an error during <code>Launcher</code> configuration.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class ConfigurationException extends Exception
 {

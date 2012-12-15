@@ -33,7 +33,6 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  * A collection of <code>ClassRealm</code>s, indexed by id.
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
- * @version $Id$
  */
 public class ClassWorld
 {

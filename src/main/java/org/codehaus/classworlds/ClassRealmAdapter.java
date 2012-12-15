@@ -25,7 +25,6 @@ import java.io.InputStream;
  * An adapter for ClassRealms
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class ClassRealmAdapter
     implements ClassRealm

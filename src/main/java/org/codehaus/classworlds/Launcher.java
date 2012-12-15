@@ -21,7 +21,6 @@ package org.codehaus.classworlds;
  * provided for legacy code
  *
  * @author Andrew Williams
- * @version $Id$
  */
 public class Launcher
     extends org.codehaus.plexus.classworlds.launcher.Launcher
