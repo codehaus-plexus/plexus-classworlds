@@ -408,6 +408,8 @@ public class Launcher
 
         launcher.configure( is );
 
+        is.close();
+
         try
         {
             launcher.launch( args );
