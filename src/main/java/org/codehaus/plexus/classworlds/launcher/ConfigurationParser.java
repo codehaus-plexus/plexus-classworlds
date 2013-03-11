@@ -113,9 +113,9 @@ public class ConfigurationParser
                     throw new ConfigurationException( "Missing from clause", lineNo, line );
                 }
 
-                String mainClassName = conf.substring( 0, fromLoc ).trim();
+                String mainClassName = filter( conf.substring( 0, fromLoc ).trim() );
 
-                String mainRealmName = conf.substring( fromLoc + 4 ).trim();
+                String mainRealmName = filter( conf.substring( fromLoc + 4 ).trim() );
 
                 this.handler.setAppMain( mainClassName, mainRealmName );
 
@@ -146,7 +146,7 @@ public class ConfigurationParser
 
                 if ( defaultLoc > 0 )
                 {
-                    defaultValue = conf.substring( defaultLoc + 7 ).trim();
+                    defaultValue = filter( conf.substring( defaultLoc + 7 ).trim() );
 
                     if ( property == null )
                     {
