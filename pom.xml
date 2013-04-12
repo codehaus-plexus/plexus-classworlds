@@ -81,9 +81,9 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>ant</groupId>
+                  <groupId>org.apache.ant</groupId>
                   <artifactId>ant</artifactId>
-                  <version>1.6.5</version>
+                  <version>1.9.0</version>
                 </artifactItem>
                 <artifactItem>
                   <groupId>commons-logging</groupId>
