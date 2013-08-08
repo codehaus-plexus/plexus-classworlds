@@ -16,8 +16,11 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -28,6 +31,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.strategy.ParentFirstStrategy;
 import org.codehaus.plexus.classworlds.strategy.Strategy;
 import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 
@@ -37,7 +41,7 @@ import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
  * realm will always query its base class loader first before it delegates to a pluggable strategy. The strategy in turn
  * controls the order in which imported class loaders, the parent class loader and the realm itself are searched. The
  * base class loader is assumed to be capable of loading of the bootstrap classes.
- * 
+ *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  */
@@ -57,13 +61,15 @@ public class ClassRealm
 
     private ClassLoader parentClassLoader;
 
+    private final boolean isParallelCapable;
+
     /**
      * Creates a new class realm.
-     * 
-     * @param world The class world this realm belongs to, must not be <code>null</code>.
-     * @param id The identifier for this realm, must not be <code>null</code>.
+     *
+     * @param world           The class world this realm belongs to, must not be <code>null</code>.
+     * @param id              The identifier for this realm, must not be <code>null</code>.
      * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
-     *            loader.
+     *                        loader.
      */
     public ClassRealm( ClassWorld world, String id, ClassLoader baseClassLoader )
     {
@@ -76,6 +82,10 @@ public class ClassRealm
         foreignImports = new TreeSet<Entry>();
 
         strategy = StrategyFactory.getStrategy( this );
+
+        //noinspection ConstantConditions
+        isParallelCapable = this instanceof Closeable;
+
     }
 
     public String getId()
@@ -222,7 +232,25 @@ public class ClassRealm
         return loadClass( name, false );
     }
 
-    protected synchronized Class<?> loadClass( String name, boolean resolve )
+    protected Class<?> loadClass( String name, boolean resolve )
+        throws ClassNotFoundException
+    {
+        if ( isParallelCapable )
+        {
+            return unsynchronizedLoadClass( name, resolve );
+
+        }
+        else
+        {
+            synchronized ( this )
+            {
+                return unsynchronizedLoadClass( name, resolve );
+            }
+
+        }
+    }
+
+    private Class<?> unsynchronizedLoadClass( String name, boolean resolve )
         throws ClassNotFoundException
     {
         try
@@ -232,7 +260,7 @@ public class ClassRealm
         }
         catch ( ClassNotFoundException e )
         {
-            // next, try loading via imports, self and parent as controlled by strategy 
+            // next, try loading via imports, self and parent as controlled by strategy
             return strategy.loadClass( name );
         }
     }
@@ -341,7 +369,7 @@ public class ClassRealm
     {
          return "ClassRealm[" + getId() + ", parent: " + getParentClassLoader() + "]";
     }
-    
+
     //---------------------------------------------------------------------------------------------
     // Search methods that can be ordered by strategies to load a class
     //---------------------------------------------------------------------------------------------
@@ -490,6 +518,27 @@ public class ClassRealm
         }
 
         return null;
+    }
+
+    static {
+        try
+        {
+            Method registerAsParallelCapable = ClassLoader.class.getDeclaredMethod( "registerAsParallelCapable" );
+            registerAsParallelCapable.setAccessible( true );
+            registerAsParallelCapable.invoke( null );
+            registerAsParallelCapable.setAccessible( false );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new RuntimeException( e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new RuntimeException( e );
+        }
+        catch ( NoSuchMethodException ignore )
+        {
+        }
     }
 
 }
