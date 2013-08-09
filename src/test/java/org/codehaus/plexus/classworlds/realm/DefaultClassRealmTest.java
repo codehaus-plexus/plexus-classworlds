@@ -19,6 +19,7 @@ package org.codehaus.plexus.classworlds.realm;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.classworlds.ClassRealmAdapter;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
@@ -268,6 +269,76 @@ public class DefaultClassRealmTest
         assertFalse( childRealm.findResources( "a.properties" ).hasMoreElements() );
 
         assertTrue( childRealm.findResources( "b.properties" ).hasMoreElements() );
+    }
+
+    /** Should never deadlock. Ever */
+    public void testParallelDeadlockClassRealm()
+        throws InterruptedException
+    {
+        for (int i = 0; i < 100; i++){
+           doOneDeadlockAttempt();
+        }
+
+    }
+
+    private void doOneDeadlockAttempt()
+        throws InterruptedException
+    {
+        // Deadlock sample graciously ripped from http://docs.oracle.com/javase/7/docs/technotes/guides/lang/cl-mt.html
+        final ClassRealm cl1 = new ClassRealm( new ClassWorld(), "cl1", null );
+        final ClassRealm cl2 = new ClassRealm( new ClassWorld(), "cl2", cl1 );
+        cl1.setParentRealm( cl2 );
+        cl1.addURL( getJarUrl( "deadlock.jar" ) );
+        cl2.addURL( getJarUrl( "deadlock.jar" ) );
+        final CountDownLatch latch = new CountDownLatch( 1 );
+
+        Runnable r1 = new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    latch.await();
+                    cl1.loadClass( "deadlock.A" );
+                }
+                catch ( ClassNotFoundException e )
+                {
+                    throw new RuntimeException( e );
+                }
+                catch ( InterruptedException e )
+                {
+                    throw new RuntimeException( e );
+                }
+            }
+        };
+
+        Runnable r2 = new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    latch.await();
+                    cl1.loadClass( "deadlock.C" );
+                }
+                catch ( ClassNotFoundException e )
+                {
+                    throw new RuntimeException( e );
+                }
+                catch ( InterruptedException e )
+                {
+                    throw new RuntimeException( e );
+                }
+            }
+        };
+
+        Thread thread = new Thread( r1 );
+        thread.start();
+        Thread thread1 = new Thread( r2 );
+        thread1.start();
+        latch.countDown();
+        thread.join();
+        thread1.join();
     }
 
     // ----------------------------------------------------------------------
