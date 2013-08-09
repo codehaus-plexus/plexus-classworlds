@@ -60,7 +60,7 @@ public class ClassRealm
 
     private ClassLoader parentClassLoader;
 
-    private final boolean isParallelCapable;
+    private static final boolean isParallelCapable = Closeable.class.isAssignableFrom( URLClassLoader.class );
 
     /**
      * Creates a new class realm.
@@ -81,10 +81,6 @@ public class ClassRealm
         foreignImports = new TreeSet<Entry>();
 
         strategy = StrategyFactory.getStrategy( this );
-
-        //noinspection ConstantConditions
-        isParallelCapable = this instanceof Closeable;
-
     }
 
     public String getId()
@@ -536,23 +532,9 @@ public class ClassRealm
 
     static
     {
-        try
+        if  (isParallelCapable) // Avoid running this method on older jdks
         {
-            Method registerAsParallelCapable = ClassLoader.class.getDeclaredMethod( "registerAsParallelCapable" );
-            registerAsParallelCapable.setAccessible( true );
-            registerAsParallelCapable.invoke( null );
-            registerAsParallelCapable.setAccessible( false );
-        }
-        catch ( IllegalAccessException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch ( NoSuchMethodException ignore )
-        {
+            registerAsParallelCapable();
         }
     }
 
