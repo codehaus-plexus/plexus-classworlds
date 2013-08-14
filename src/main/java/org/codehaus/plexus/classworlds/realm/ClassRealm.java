@@ -276,12 +276,23 @@ public class ClassRealm
         return resource != null ? resource : strategy.getResource( name );
     }
 
+    public URL findResource( String name )
+    {
+        return super.findResource( name );
+    }
+
     public Enumeration<URL> getResources( String name )
         throws IOException
     {
         Collection<URL> resources = new LinkedHashSet<URL>( Collections.list( super.getResources( name ) ) );
         resources.addAll( Collections.list( strategy.getResources( name ) ) );
         return Collections.enumeration( resources );
+    }
+
+    public Enumeration<URL> findResources( String name )
+        throws IOException
+    {
+        return super.findResources( name );
     }
 
     // ----------------------------------------------------------------------------
