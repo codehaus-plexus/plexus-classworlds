@@ -23,14 +23,14 @@ import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -270,41 +270,29 @@ public class ClassRealm
         throw new ClassNotFoundException( name );
     }
 
+    public URL getResource( String name )
+    {
+        URL resource = super.getResource( name );
+        return resource != null ? resource : strategy.getResource( name );
+    }
+
     public URL findResource( String name )
     {
-        /*
-         * NOTE: If this gets called from ClassLoader.getResource(String), delegate to the strategy. If this got called
-         * directly by other code, only scan our class path as usual for an URLClassLoader.
-         */
-        StackTraceElement caller = new Exception().getStackTrace()[1];
+        return super.findResource( name );
+    }
 
-        if ( "java.lang.ClassLoader".equals( caller.getClassName() ) )
-        {
-            return strategy.getResource( name );
-        }
-        else
-        {
-            return super.findResource( name );
-        }
+    public Enumeration<URL> getResources( String name )
+        throws IOException
+    {
+        Collection<URL> resources = new LinkedHashSet<URL>( Collections.list( super.getResources( name ) ) );
+        resources.addAll( Collections.list( strategy.getResources( name ) ) );
+        return Collections.enumeration( resources );
     }
 
     public Enumeration<URL> findResources( String name )
         throws IOException
     {
-        /*
-         * NOTE: If this gets called from ClassLoader.getResources(String), delegate to the strategy. If this got called
-         * directly by other code, only scan our class path as usual for an URLClassLoader.
-         */
-        StackTraceElement caller = new Exception().getStackTrace()[1];
-
-        if ( "java.lang.ClassLoader".equals( caller.getClassName() ) )
-        {
-            return strategy.getResources( name );
-        }
-        else
-        {
-            return super.findResources( name );
-        }
+        return super.findResources( name );
     }
 
     // ----------------------------------------------------------------------------
