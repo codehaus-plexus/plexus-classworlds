@@ -5,4 +5,4 @@ target/
 bin
 .idea
 *.iml
-
+.java-version
