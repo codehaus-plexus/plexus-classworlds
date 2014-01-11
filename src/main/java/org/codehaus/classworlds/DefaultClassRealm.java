@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
+@Deprecated
 public class DefaultClassRealm
     implements ClassRealm
 {

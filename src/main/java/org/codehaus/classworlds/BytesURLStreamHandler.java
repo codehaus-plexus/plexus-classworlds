@@ -25,6 +25,7 @@ import java.net.URL;
  *         Date: Oct 20, 2003
  *         Time: 12:45:18 AM
  */
+@Deprecated
 public class BytesURLStreamHandler extends URLStreamHandler
 {
     byte[] content;

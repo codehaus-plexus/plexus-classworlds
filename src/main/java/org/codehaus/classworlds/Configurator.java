@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class Configurator
 {
     private ConfiguratorAdapter config;

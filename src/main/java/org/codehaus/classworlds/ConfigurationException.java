@@ -50,6 +50,7 @@ package org.codehaus.classworlds;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
+@Deprecated
 public class ConfigurationException extends Exception
 {
     /**

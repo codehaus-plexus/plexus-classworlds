@@ -26,6 +26,7 @@ import java.util.Iterator;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class ClassWorldReverseAdapter
     extends org.codehaus.plexus.classworlds.ClassWorld
 {

@@ -22,6 +22,7 @@ package org.codehaus.classworlds;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class Launcher
     extends org.codehaus.plexus.classworlds.launcher.Launcher
 {

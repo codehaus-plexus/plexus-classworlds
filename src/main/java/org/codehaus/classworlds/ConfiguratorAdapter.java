@@ -26,6 +26,7 @@ import java.net.MalformedURLException;
  * @uthor: Andrew Williams
  * @since: Nov 25, 2006
  */
+@Deprecated
 public class ConfiguratorAdapter
     extends Configurator
 {

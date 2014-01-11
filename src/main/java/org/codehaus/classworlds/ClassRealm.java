@@ -62,6 +62,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>
  */
+@Deprecated
 public interface ClassRealm
 {
     String getId();

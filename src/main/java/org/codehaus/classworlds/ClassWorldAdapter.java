@@ -25,6 +25,7 @@ import java.util.Iterator;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class ClassWorldAdapter
     extends ClassWorld
 {

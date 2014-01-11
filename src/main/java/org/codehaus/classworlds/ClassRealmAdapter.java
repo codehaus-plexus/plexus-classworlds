@@ -26,6 +26,7 @@ import java.io.InputStream;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class ClassRealmAdapter
     implements ClassRealm
 {

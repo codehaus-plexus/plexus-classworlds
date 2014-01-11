@@ -26,6 +26,7 @@ import java.io.InputStream;
  *
  * @author Andrew Williams
  */
+@Deprecated
 public class ClassRealmReverseAdapter
     extends org.codehaus.plexus.classworlds.realm.ClassRealm
 {
