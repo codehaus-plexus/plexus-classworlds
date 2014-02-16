@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.2.5" timestamp="2014-02-16T14:53:06.230">
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/classworlds/ClassRealmReverseAdapter.java">
+<violation beginline="145" endline="145" begincolumn="20" endcolumn="35" rule="OverrideBothEqualsAndHashcode" ruleset="Basic Rules" package="org.codehaus.classworlds" class="ClassRealmReverseAdapter" method="equals" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#OverrideBothEqualsAndHashcode" priority="3">
+Ensure you override both equals() and hashCode()
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/classworlds/ClassWorld.java">
+<violation beginline="45" endline="48" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.codehaus.classworlds" class="ClassWorld" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'ignore'.
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/ClassWorld.java">
+<violation beginline="51" endline="54" begincolumn="9" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds" class="ClassWorld" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="116" endline="118" begincolumn="9" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds" class="ClassWorld" method="closeIfJava7" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/launcher/ConfigurationParser.java">
+<violation beginline="182" endline="185" begincolumn="25" endcolumn="25" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="ConfigurationParser" method="parse" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+<violation beginline="293" endline="296" begincolumn="25" endcolumn="25" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="ConfigurationParser" method="parse" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/launcher/Configurator.java">
+<violation beginline="207" endline="210" begincolumn="9" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="Configurator" method="addLoadFile" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/launcher/Launcher.java">
+<violation beginline="25" endline="25" begincolumn="1" endcolumn="38" rule="UnusedImports" ruleset="Import Statement Rules" package="org.codehaus.plexus.classworlds.launcher" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#UnusedImports" priority="4">
+Avoid unused imports such as 'java.net.MalformedURLException'
+</violation>
+<violation beginline="178" endline="181" begincolumn="13" endcolumn="13" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="Launcher" method="getEnhancedMainMethod" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="204" endline="207" begincolumn="13" endcolumn="13" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="Launcher" method="getMainMethod" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+<violation beginline="233" endline="236" begincolumn="9" endcolumn="9" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.launcher" class="Launcher" method="launch" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+<file name="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/realm/ClassRealm.java">
+<violation beginline="279" endline="282" begincolumn="12" endcolumn="5" rule="UselessOverridingMethod" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.realm" class="ClassRealm" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#UselessOverridingMethod" priority="3">
+Overriding method merely calls super
+</violation>
+<violation beginline="292" endline="296" begincolumn="12" endcolumn="5" rule="UselessOverridingMethod" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.realm" class="ClassRealm" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#UselessOverridingMethod" priority="3">
+Overriding method merely calls super
+</violation>
+<violation beginline="512" endline="515" begincolumn="13" endcolumn="13" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.codehaus.plexus.classworlds.realm" class="ClassRealm" method="loadResourcesFromParent" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+</pmd>

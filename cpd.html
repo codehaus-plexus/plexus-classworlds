@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Plexus Classworlds - About</title>
+    <title>Plexus Classworlds - CPD Results</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -31,7 +31,7 @@
         &gt;
                               <a href="./" title="Plexus Classworlds">Plexus Classworlds</a>
         &gt;
-    About
+    CPD Results
       </div>
             <div class="xright">        
                     
@@ -49,8 +49,8 @@
                                                     <h5>Overview</h5>
                   <ul>
                   <li class="none">
-            <strong>Introduction</strong>
-          </li>
+                          <a href="index.html" title="Introduction">Introduction</a>
+            </li>
                   <li class="none">
                           <a href="apidocs/index.html" title="JavaDocs">JavaDocs</a>
             </li>
@@ -66,56 +66,38 @@
           </ul>
                                  <h5>Project Documentation</h5>
                   <ul>
-                                                                                                                                                                                                                                                                                                                        <li class="expanded">
+                                                                                                                                                                                                                                                                                                              <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
+                  </li>
+                                                                                                                                                                                                            <li class="expanded">
+                          <a href="project-reports.html" title="Project Reports">Project Reports</a>
                     <ul>
                       <li class="none">
-                          <a href="project-summary.html" title="Project Summary">Project Summary</a>
+                          <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
             </li>
                       <li class="none">
-            <strong>About</strong>
+                          <a href="findbugs.html" title="FindBugs Report">FindBugs Report</a>
+            </li>
+                      <li class="none">
+                          <a href="xref-test/index.html" title="Test Source Xref">Test Source Xref</a>
+            </li>
+                      <li class="none">
+                          <a href="xref/index.html" title="Source Xref">Source Xref</a>
+            </li>
+                      <li class="none">
+                          <a href="pmd.html" title="PMD Report">PMD Report</a>
+            </li>
+                      <li class="none">
+            <strong>CPD Report</strong>
           </li>
                       <li class="none">
-                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
+                          <a href="apidocs/index.html" title="JavaDocs">JavaDocs</a>
             </li>
                       <li class="none">
-                          <a href="issue-tracking.html" title="Issue Tracking">Issue Tracking</a>
-            </li>
-                      <li class="none">
-                          <a href="source-repository.html" title="Source Repository">Source Repository</a>
-            </li>
-                      <li class="none">
-                          <a href="dependency-info.html" title="Dependency Information">Dependency Information</a>
-            </li>
-                      <li class="none">
-                          <a href="license.html" title="Project License">Project License</a>
-            </li>
-                      <li class="none">
-                          <a href="team-list.html" title="Project Team">Project Team</a>
-            </li>
-                      <li class="none">
-                          <a href="mail-lists.html" title="Mailing Lists">Mailing Lists</a>
-            </li>
-                      <li class="none">
-                          <a href="dependency-management.html" title="Dependency Management">Dependency Management</a>
-            </li>
-                      <li class="none">
-                          <a href="integration.html" title="Continuous Integration">Continuous Integration</a>
-            </li>
-                      <li class="none">
-                          <a href="plugin-management.html" title="Plugin Management">Plugin Management</a>
-            </li>
-                      <li class="none">
-                          <a href="plugins.html" title="Project Plugins">Project Plugins</a>
-            </li>
-                      <li class="none">
-                          <a href="distribution-management.html" title="Distribution Management">Distribution Management</a>
+                          <a href="testapidocs/index.html" title="Test JavaDocs">Test JavaDocs</a>
             </li>
               </ul>
         </li>
-                                                                                                                                                                                                  <li class="collapsed">
-                          <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                  </li>
           </ul>
                        <h5>Plexus Projects</h5>
                   <ul>
@@ -142,8 +124,78 @@
     <div id="bodyColumn">
       <div id="contentBox">
         <div class="section">
-<h2>About Plexus Classworlds<a name="About_Plexus_Classworlds"></a></h2><a name="About_Plexus_Classworlds"></a>
-<p>A class loader framework</p></div>
+<h2>CPD Results<a name="CPD_Results"></a></h2>
+<p>The following document contains the results of PMD's  <a class="externalLink" href="http://pmd.sourceforge.net/cpd.html">CPD</a> 4.2.5.</p></div>
+<div class="section">
+<h2>Duplications<a name="Duplications"></a></h2>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>File</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.java</td>
+<td><a href="./xref/org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.html#37">37</a></td></tr>
+<tr class="a">
+<td>org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.java</td>
+<td><a href="./xref/org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.html#30">30</a></td></tr>
+<tr class="b"><td colspan='2'>
+<div>
+<pre>    public SelfFirstStrategy( ClassRealm realm )
+    {
+        super( realm );
+    }
+
+    public Class&lt;?&gt; loadClass( String name )
+        throws ClassNotFoundException
+    {
+        Class&lt;?&gt; clazz = realm.loadClassFromImport( name );
+
+        if ( clazz == null )
+        {
+            clazz = realm.loadClassFromSelf( name );
+
+            if ( clazz == null )
+            {
+                clazz = realm.loadClassFromParent( name );
+
+                if ( clazz == null )
+                {
+                    throw new ClassNotFoundException( name );
+                }
+            }
+        }
+
+        return clazz;
+    }
+
+    public URL getResource( String name )
+    {
+        URL resource = realm.loadResourceFromImport( name );
+
+        if ( resource == null )
+        {
+            resource = realm.loadResourceFromSelf( name );
+
+            if ( resource == null )
+            {
+                resource = realm.loadResourceFromParent( name );
+            }
+        }
+
+        return resource;
+    }
+
+    public Enumeration&lt;URL&gt; getResources( String name )
+        throws IOException
+    {
+        Enumeration&lt;URL&gt; imports = realm.loadResourcesFromImport( name );
+        Enumeration&lt;URL&gt; self = realm.loadResourcesFromSelf( name );
+        Enumeration&lt;URL&gt; parent = realm.loadResourcesFromParent( name );
+
+        return combineResources( imports, self, parent );
+    }
+
+}</pre></div></td></tr></table></div>
       </div>
     </div>
     <div class="clear">
