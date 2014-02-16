@@ -38,6 +38,12 @@
     <url>http://github.com/sonatype/plexus-classworlds</url>
     <tag>HEAD</tag>
   </scm>
+    <distributionManagement>
+        <site>
+            <id>adm-site</id>
+            <url>scm:git:git@github.com:sonatype/plexus-classworlds.git</url>
+        </site>
+    </distributionManagement>
 
   <build>
     <pluginManagement>
