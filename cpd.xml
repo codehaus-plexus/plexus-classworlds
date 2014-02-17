@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
 <duplication lines="56" tokens="196">
-<file line="37" path="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.java"/>
-<file line="30" path="/Users/mcculls/Code/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.java"/>
+<file line="37" path="/Users/olamy/dev/sources/plexus/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.java"/>
+<file line="30" path="/Users/olamy/dev/sources/plexus/plexus-classworlds/src/main/java/org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.java"/>
 <codefragment>
 <![CDATA[
     public SelfFirstStrategy( ClassRealm realm )
