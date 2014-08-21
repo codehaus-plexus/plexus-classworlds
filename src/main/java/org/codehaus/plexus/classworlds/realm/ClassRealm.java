@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The class loading gateway. Each class realm has access to a base class loader, imports form zero or more other class
@@ -62,6 +64,8 @@ public class ClassRealm
 
     private static final boolean isParallelCapable = Closeable.class.isAssignableFrom( URLClassLoader.class );
 
+    private final ConcurrentMap<String, Object> lockMap;
+
     /**
      * Creates a new class realm.
      *
@@ -81,6 +85,14 @@ public class ClassRealm
         foreignImports = new TreeSet<Entry>();
 
         strategy = StrategyFactory.getStrategy( this );
+
+        lockMap = isParallelCapable ? new ConcurrentHashMap<String, Object>() : null;
+
+        if ( isParallelCapable ) {
+        	// We must call super.getClassLoadingLock at least once
+        	// to avoid NPE in super.loadClass.
+        	super.getClassLoadingLock(getClass().getName());
+        }
     }
 
     public String getId()
@@ -408,6 +420,18 @@ public class ClassRealm
         {
             return this;
         }
+    }
+
+    @Override
+    protected Object getClassLoadingLock( String name )
+    {
+        if ( isParallelCapable )
+        {
+            Object newLock = new Object();
+            Object lock = lockMap.putIfAbsent( name, newLock );
+            return ( lock == null ) ? newLock : lock;
+        }
+        return this;
     }
 
     public Class<?> loadClassFromParent( String name )
