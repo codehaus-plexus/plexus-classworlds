@@ -21,7 +21,6 @@ import java.net.URLClassLoader;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
-import org.codehaus.classworlds.ClassRealmAdapter;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
 
@@ -222,15 +221,6 @@ public class DefaultClassRealmTest
 
         assertSame( null, mainRealm.getResource( "/" + resource ) );
         assertSame( null, officialClassLoader.getResource( "/" + resource ) );
-
-        /*
-         * For backward-compat, legacy class realms have to support leading slashes.
-         */
-
-        org.codehaus.classworlds.ClassRealm legacyRealm = ClassRealmAdapter.getInstance( mainRealm );
-        assertNotNull( legacyRealm.getResource( "/" + resource ) );
-        assertNotNull( legacyRealm.getResourceAsStream( "/" + resource ) );
-        assertTrue( legacyRealm.findResources( "/" + resource ).hasMoreElements() );
     }
 
     public void testFindResourceOnlyScansSelf()
