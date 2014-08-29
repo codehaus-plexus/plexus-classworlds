@@ -65,6 +65,18 @@
             <scmBranch>gh-pages</scmBranch>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <localCheckout>true</localCheckout>
+            <pushChanges>false</pushChanges>
+            <useReleaseProfile>false</useReleaseProfile>
+            <goals>deploy</goals>
+            <arguments>-Pplexus-release</arguments>
+          </configuration>
+        </plugin>        
       </plugins>
     </pluginManagement>
     <plugins>
