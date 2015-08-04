@@ -33,16 +33,20 @@
   <inceptionYear>2002</inceptionYear>
 
   <scm>
-    <connection>scm:git:git@github.com:sonatype/plexus-classworlds.git</connection>
-    <developerConnection>scm:git:git@github.com:sonatype/plexus-classworlds.git</developerConnection>
-    <url>http://github.com/sonatype/plexus-classworlds</url>
+    <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
+    <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
+    <url>http://github.com/codehaus-plexus/plexus-classworlds</url>
     <tag>HEAD</tag>
   </scm>
+  <issueManagement>
+    <system>github</system>
+    <url>http://github.com/codehaus-plexus/plexus-classworlds/issues</url>
+  </issueManagement>
 
   <distributionManagement>
     <site>
       <id>adm-site</id>
-      <url>scm:git:git@github.com:sonatype/plexus-classworlds.git</url>
+      <url>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</url>
     </site>
   </distributionManagement>
 
