@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>Plexus Classworlds - Checkstyle report</title>
+    <link>http://codehaus-plexus.github.io/plexus-classworlds/</link>
+    <description>Plexus Classworlds - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2002 - 2015 Codehaus Plexus</copyright>
+    <item>
+      <title>File: 35,
+             Errors: 99,
+             Warnings: 197,
+             Infos: 14
+      </title>
+            <link>http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.realm.ClassRealm.java">org/codehaus/plexus/classworlds/realm/ClassRealm.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  34
+                </td>
+                <td>
+                  10
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealmReverseAdapter.java">org/codehaus/classworlds/ClassRealmReverseAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  17
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.DuplicateRealmException.java">org/codehaus/classworlds/DuplicateRealmException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorldListener.java">org/codehaus/plexus/classworlds/ClassWorldListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  4
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.BytesURLConnection.java">org/codehaus/classworlds/BytesURLConnection.java</a>
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.launcher.ConfigurationParser.java">org/codehaus/plexus/classworlds/launcher/ConfigurationParser.java</a>
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.BytesURLStreamHandler.java">org/codehaus/classworlds/BytesURLStreamHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.realm.NoSuchRealmException.java">org/codehaus/plexus/classworlds/realm/NoSuchRealmException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.DefaultClassRealm.java">org/codehaus/classworlds/DefaultClassRealm.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+                <td>
+                  36
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.launcher.ConfigurationException.java">org/codehaus/plexus/classworlds/launcher/ConfigurationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorldException.java">org/codehaus/plexus/classworlds/ClassWorldException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.realm.Entry.java">org/codehaus/plexus/classworlds/realm/Entry.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.OsgiBundleStrategy.java">org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.ParentFirstStrategy.java">org/codehaus/plexus/classworlds/strategy/ParentFirstStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealm.java">org/codehaus/classworlds/ClassRealm.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  15
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealmAdapter.java">org/codehaus/classworlds/ClassRealmAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.launcher.Launcher.java">org/codehaus/plexus/classworlds/launcher/Launcher.java</a>
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  12
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.Configurator.java">org/codehaus/classworlds/Configurator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.Strategy.java">org/codehaus/plexus/classworlds/strategy/Strategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorldException.java">org/codehaus/classworlds/ClassWorldException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.NoSuchRealmException.java">org/codehaus/classworlds/NoSuchRealmException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ConfiguratorAdapter.java">org/codehaus/classworlds/ConfiguratorAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.realm.DuplicateRealmException.java">org/codehaus/plexus/classworlds/realm/DuplicateRealmException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.launcher.ConfigurationHandler.java">org/codehaus/plexus/classworlds/launcher/ConfigurationHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ConfigurationException.java">org/codehaus/classworlds/ConfigurationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorldAdapter.java">org/codehaus/classworlds/ClassWorldAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorld.java">org/codehaus/plexus/classworlds/ClassWorld.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy.java">org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.StrategyFactory.java">org/codehaus/plexus/classworlds/strategy/StrategyFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.AbstractStrategy.java">org/codehaus/plexus/classworlds/strategy/AbstractStrategy.java</a>
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.UrlUtils.java">org/codehaus/plexus/classworlds/UrlUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.launcher.Configurator.java">org/codehaus/plexus/classworlds/launcher/Configurator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  7
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.Launcher.java">org/codehaus/classworlds/Launcher.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorld.java">org/codehaus/classworlds/ClassWorld.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  8
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorldReverseAdapter.java">org/codehaus/classworlds/ClassWorldReverseAdapter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
