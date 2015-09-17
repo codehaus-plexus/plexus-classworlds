@@ -57,6 +57,7 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
           <configuration>
+            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
             <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
           </configuration>
         </plugin>
