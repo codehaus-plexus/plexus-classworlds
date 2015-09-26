@@ -60,20 +60,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealmReverseAdapter.java">org/codehaus/classworlds/ClassRealmReverseAdapter.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  17
-                </td>
-                <td>
-                  5
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.DuplicateRealmException.java">org/codehaus/classworlds/DuplicateRealmException.java</a>
                 </td>
                 <td>
@@ -88,16 +74,16 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorldListener.java">org/codehaus/plexus/classworlds/ClassWorldListener.java</a>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealmReverseAdapter.java">org/codehaus/classworlds/ClassRealmReverseAdapter.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  2
+                  17
                 </td>
                 <td>
-                  4
+                  5
                 </td>
               </tr>
                           <tr>
@@ -126,6 +112,20 @@ under the License.
                 </td>
                 <td>
                   2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorldListener.java">org/codehaus/plexus/classworlds/ClassWorldListener.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  4
                 </td>
               </tr>
                           <tr>
@@ -214,6 +214,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealm.java">org/codehaus/classworlds/ClassRealm.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  15
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.OsgiBundleStrategy.java">org/codehaus/plexus/classworlds/strategy/OsgiBundleStrategy.java</a>
                 </td>
                 <td>
@@ -235,20 +249,6 @@ under the License.
                 </td>
                 <td>
                   4
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassRealm.java">org/codehaus/classworlds/ClassRealm.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  15
                 </td>
                 <td>
                   1
@@ -298,7 +298,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.Strategy.java">org/codehaus/plexus/classworlds/strategy/Strategy.java</a>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ConfiguratorAdapter.java">org/codehaus/classworlds/ConfiguratorAdapter.java</a>
                 </td>
                 <td>
                   0
@@ -307,18 +307,18 @@ under the License.
                   4
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorldException.java">org/codehaus/classworlds/ClassWorldException.java</a>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.Strategy.java">org/codehaus/plexus/classworlds/strategy/Strategy.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  0
+                  4
                 </td>
                 <td>
                   1
@@ -340,16 +340,16 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ConfiguratorAdapter.java">org/codehaus/classworlds/ConfiguratorAdapter.java</a>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.classworlds.ClassWorldException.java">org/codehaus/classworlds/ClassWorldException.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
               </tr>
                           <tr>
@@ -410,20 +410,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorld.java">org/codehaus/plexus/classworlds/ClassWorld.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  10
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.SelfFirstStrategy.java">org/codehaus/plexus/classworlds/strategy/SelfFirstStrategy.java</a>
                 </td>
                 <td>
@@ -452,6 +438,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.ClassWorld.java">org/codehaus/plexus/classworlds/ClassWorld.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.strategy.AbstractStrategy.java">org/codehaus/plexus/classworlds/strategy/AbstractStrategy.java</a>
                 </td>
                 <td>
@@ -459,20 +459,6 @@ under the License.
                 </td>
                 <td>
                   4
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.UrlUtils.java">org/codehaus/plexus/classworlds/UrlUtils.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
                 </td>
                 <td>
                   1
@@ -490,6 +476,20 @@ under the License.
                 </td>
                 <td>
                   3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://codehaus-plexus.github.io/plexus-classworlds//checkstyle.html#org.codehaus.plexus.classworlds.UrlUtils.java">org/codehaus/plexus/classworlds/UrlUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
                 </td>
               </tr>
                           <tr>
