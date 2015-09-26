@@ -45,8 +45,8 @@
 
   <distributionManagement>
     <site>
-      <id>adm-site</id>
-      <url>scm:git:git@github.com:codehaus-plexus</url>
+      <id>github:gh-pages</id>
+      <url>${project.scm.developerConnection}</url>
     </site>
   </distributionManagement>
 
@@ -57,7 +57,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
           <configuration>
-            <pubScmUrl>${project.scm.developerConnection}</pubScmUrl>
             <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
           </configuration>
         </plugin>
