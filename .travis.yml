@@ -1,8 +1,14 @@
 language: java
+
+# Required to give Java9 a try
+sudo: false
+dist: trusty
+group: edge
+
 jdk:
-  - oraclejdk6
   - oraclejdk7
   - oraclejdk8
+  - oraclejdk9
 
 # No need for preliminary install step.
 install: true
