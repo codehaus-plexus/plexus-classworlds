@@ -16,6 +16,8 @@ package org.codehaus.plexus.classworlds.strategy;
  * limitations under the License.
  */
 
+import static org.junit.Assume.assumeTrue;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -112,6 +114,9 @@ public class StrategyTest
     public void testGetSystemResource()
         throws Exception
     {
+        assumeTrue( "Due to strong encapsulation you cannot get the java/lang/Object.class as resource anymore since Java 9",
+                    getJavaVersion() < 9.0 );
+        
         URL resource = strategy.getRealm().getResource( "java/lang/Object.class" );
 
         assertNotNull( resource );
@@ -154,5 +159,10 @@ public class StrategyTest
         }
 
         return content.toString();
+    }
+    
+    private double getJavaVersion()
+    {
+        return Double.parseDouble( System.getProperty( "java.specification.version" ) );
     }
 }
