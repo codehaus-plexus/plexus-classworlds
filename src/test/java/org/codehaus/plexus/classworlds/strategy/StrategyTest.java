@@ -15,7 +15,10 @@ package org.codehaus.plexus.classworlds.strategy;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.InputStream;
@@ -25,6 +28,8 @@ import java.util.Enumeration;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.junit.Before;
+import org.junit.Test;
 
 // jars within jars
 // hierarchy vs graph
@@ -38,11 +43,7 @@ public class StrategyTest
 
     private Strategy strategy;
 
-    public StrategyTest( String name )
-    {
-        super( name );
-    }
-
+    @Before
     public void setUp()
         throws Exception
     {
@@ -55,6 +56,7 @@ public class StrategyTest
         realm.addURL( getJarUrl( "component0-1.0.jar" ) );
     }
 
+    @Test
     public void testLoadingOfApplicationClass()
         throws Exception
     {
@@ -63,6 +65,7 @@ public class StrategyTest
         assertNotNull( c );
     }
 
+    @Test
     public void testLoadingOfApplicationClassThenDoingItAgain()
         throws Exception
     {
@@ -76,6 +79,7 @@ public class StrategyTest
     }
 
 
+    @Test
     public void testLoadingOfSystemClass()
         throws Exception
     {
@@ -84,6 +88,7 @@ public class StrategyTest
         assertNotNull( c );
     }
 
+    @Test
     public void testLoadingOfNonExistentClass()
         throws Exception
     {
@@ -99,6 +104,7 @@ public class StrategyTest
         }
     }
 
+    @Test
     public void testGetApplicationResource()
         throws Exception
     {
@@ -111,10 +117,11 @@ public class StrategyTest
         assertTrue( content.startsWith( "<component-set>" ) );
     }
 
+    @Test
     public void testGetSystemResource()
         throws Exception
     {
-        assumeTrue( "Due to strong encapsulation you cannot get the java/lang/Object.class as resource anymore since Java 9",
+        assumeTrue( "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9",
                     getJavaVersion() < 9.0 );
         
         URL resource = strategy.getRealm().getResource( "java/lang/Object.class" );
@@ -122,7 +129,7 @@ public class StrategyTest
         assertNotNull( resource );
     }
 
-
+    @Test
     public void testFindResources()
         throws Exception
     {

@@ -1,6 +1,11 @@
 package org.codehaus.plexus.classworlds.launcher;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
+import org.junit.Test;
 
 public class ConfigurationParserTest
     extends AbstractClassWorldsTestCase
@@ -8,11 +13,7 @@ public class ConfigurationParserTest
     
     ConfigurationParser configurator = new ConfigurationParser( null, System.getProperties() );
 
-    public ConfigurationParserTest( String string )
-    {
-        super( string );
-    }
-
+    @Test
     public void testFilter_Unterminated()
         throws Exception
     {
@@ -28,6 +29,7 @@ public class ConfigurationParserTest
         }
     }
 
+    @Test
     public void testFilter_Solitary()
         throws Exception
     {
@@ -38,6 +40,7 @@ public class ConfigurationParserTest
         assertEquals( "test prop value", result );
     }
 
+    @Test
     public void testFilter_AtStart()
         throws Exception
     {
@@ -48,6 +51,7 @@ public class ConfigurationParserTest
         assertEquals( "test prop valuecheese", result );
     }
 
+    @Test
     public void testFilter_AtEnd()
         throws Exception
     {
@@ -58,6 +62,7 @@ public class ConfigurationParserTest
         assertEquals( "cheesetest prop value", result );
     }
 
+    @Test
     public void testFilter_Multiple()
         throws Exception
     {
@@ -71,6 +76,7 @@ public class ConfigurationParserTest
         assertEquals( "I like test prop value one and test prop value two a lot", result );
     }
 
+    @Test
     public void testFilter_NonExistent()
         throws Exception
     {
@@ -86,6 +92,7 @@ public class ConfigurationParserTest
         }
     }
 
+    @Test
     public void testFilter_InMiddle()
         throws Exception
     {

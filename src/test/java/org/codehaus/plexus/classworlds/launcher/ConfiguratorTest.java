@@ -15,6 +15,12 @@ package org.codehaus.plexus.classworlds.launcher;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +33,9 @@ import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ConfiguratorTest
     extends AbstractClassWorldsTestCase
@@ -34,17 +43,14 @@ public class ConfiguratorTest
     private Launcher launcher;
     private Configurator configurator;
 
-    public ConfiguratorTest( String name )
-    {
-        super( name );
-    }
-
+    @Before
     public void setUp()
     {
         this.launcher = new Launcher();
         this.configurator = new Configurator( this.launcher );
     }
 
+    @After
     public void tearDown()
     {
         this.launcher = null;
@@ -57,6 +63,7 @@ public class ConfiguratorTest
         System.getProperties().remove( "set.using.filtered.default" );
     }
 
+    @Test
     public void testConfigure_Nonexistent()
         throws Exception
     {
@@ -71,6 +78,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testConfigure_DuplicateMain()
         throws Exception
     {
@@ -86,6 +94,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testConfigure_DuplicateRealm()
         throws Exception
     {
@@ -101,6 +110,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testConfigure_EarlyImport()
         throws Exception
     {
@@ -116,6 +126,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testConfigure_RealmSyntax()
         throws Exception
     {
@@ -131,6 +142,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testConfigure_Valid()
         throws Exception
     {
@@ -172,6 +184,7 @@ public class ConfiguratorTest
         assertArrayContains( urls, new File( basedir, "src/test/test-data/c.jar" ).toURI().toURL() );
     }
 
+    @Test
     public void testConfigure_Optionally_NonExistent()
         throws Exception
     {
@@ -196,6 +209,7 @@ public class ConfiguratorTest
         assertEquals( "no urls", 0, urls.length );
     }
 
+    @Test
     public void testConfigure_Optionally_Existent()
         throws Exception
     {
@@ -222,6 +236,7 @@ public class ConfiguratorTest
         assertSame( null, optRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
     }
 
+    @Test
     public void testConfigure_Unhandled()
         throws Exception
     {
@@ -237,6 +252,7 @@ public class ConfiguratorTest
         }
     }
 
+    @Test
     public void testSet_Using_Existent()
         throws Exception
     {
@@ -247,6 +263,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_Existent", System.getProperty( "set.using.existent" ) );
     }
 
+    @Test
     public void testSet_Using_NonExistent()
         throws Exception
     {
@@ -257,6 +274,7 @@ public class ConfiguratorTest
         assertNull( System.getProperty( "set.using.nonexistent" ) );
     }
 
+    @Test
     public void testSet_Using_NonExistent_Default()
         throws Exception
     {
@@ -267,6 +285,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_NonExistent_Default", System.getProperty( "set.using.nonexistent.default" ) );
     }
 
+    @Test
     public void testSet_Using_NonExistent_Override()
         throws Exception
     {
@@ -278,6 +297,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_NonExistent_Override", System.getProperty( "set.using.default" ) );
     }
 
+    @Test
     public void testSet_Using_Existent_Override()
         throws Exception
     {
@@ -289,6 +309,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_Existent_Override", System.getProperty( "set.using.existent" ) );
     }
 
+    @Test
     public void testSet_Using_Existent_Default()
         throws Exception
     {
@@ -299,6 +320,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_Existent_Default", System.getProperty( "set.using.default" ) );
     }
 
+    @Test
     public void testSet_Using_Missing_Default()
         throws Exception
     {
@@ -309,6 +331,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_Missing_Default", System.getProperty( "set.using.missing" ) );
     }
 
+    @Test
     public void testSet_Using_Missing_Override()
         throws Exception
     {
@@ -320,6 +343,7 @@ public class ConfiguratorTest
         assertEquals( "testSet_Using_Missing_Override", System.getProperty( "set.using.missing" ) );
     }
 
+    @Test
     public void testSet_Using_Filtered_Default()
         throws Exception
     {

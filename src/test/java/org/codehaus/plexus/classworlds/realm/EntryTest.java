@@ -15,9 +15,12 @@ package org.codehaus.plexus.classworlds.realm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.junit.Test;
 
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
@@ -26,16 +29,7 @@ public class EntryTest
     extends AbstractClassWorldsTestCase
 {
 
-    /**
-     * Constructor for EntryTest.
-     *
-     * @param name
-     */
-    public EntryTest( String name )
-    {
-        super( name );
-    }
-
+    @Test
     public void testCompareTo()
         throws Exception
     {
@@ -53,6 +47,7 @@ public class EntryTest
      *
      * @throws Exception
      */
+    @Test
     public void testEquals()
         throws Exception
     {
@@ -67,6 +62,7 @@ public class EntryTest
         assertTrue( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode() == entry2.hashCode() );
     }
 
+    @Test
     public void testMatchesClassByPackageImport()
         throws Exception
     {
@@ -82,6 +78,7 @@ public class EntryTest
         assertFalse( entry.matches( "org.tests.AnotherClass" ) );
     }
 
+    @Test
     public void testMatchesClassByClassImport()
         throws Exception
     {
@@ -96,6 +93,7 @@ public class EntryTest
         assertFalse( entry.matches( "org.test.AnotherClass" ) );
     }
 
+    @Test
     public void testMatchesResourceByPackageImport()
         throws Exception
     {
@@ -111,6 +109,7 @@ public class EntryTest
         assertFalse( entry.matches( "org/tests/AnotherClass.class" ) );
     }
 
+    @Test
     public void testMatchesResourceByClassImport()
         throws Exception
     {
@@ -125,6 +124,7 @@ public class EntryTest
         assertFalse( entry.matches( "org/test/AnotherClass" ) );
     }
 
+    @Test
     public void testMatchesAllImport()
         throws Exception
     {
@@ -139,6 +139,7 @@ public class EntryTest
         assertTrue( entry.matches( "org/test/MyClass.properties" ) );
     }
 
+    @Test
     public void testMatchesResourceByResourceImport()
         throws Exception
     {
@@ -156,6 +157,7 @@ public class EntryTest
         assertFalse( entry2.matches( "org/test/other.properties" ) );
     }
 
+    @Test
     public void testMatchesClassByExactPackageImport()
         throws Exception
     {
@@ -171,6 +173,7 @@ public class EntryTest
         assertFalse( entry.matches( "org.tests.AnotherClass" ) );
     }
 
+    @Test
     public void testMatchesResourceByExactPackageImport()
         throws Exception
     {

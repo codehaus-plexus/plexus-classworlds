@@ -1,9 +1,5 @@
 package org.codehaus.plexus.classworlds;
 
-import java.net.URL;
-
-import junit.framework.TestCase;
-
 /*
  * Copyright 2001-2006 Codehaus Foundation.
  *
@@ -20,18 +16,13 @@ import junit.framework.TestCase;
  * limitations under the License.
  */
 
+import java.net.URL;
+
 /**
  * @author Jason van Zyl
  */
 public abstract class AbstractClassWorldsTestCase
-    extends TestCase
 {
-
-    public AbstractClassWorldsTestCase( String string )
-    {
-        super( string );
-    }
-
     protected URL getJarUrl( String jarName )
     {
         return TestUtil.getTestResourceUrl( jarName );

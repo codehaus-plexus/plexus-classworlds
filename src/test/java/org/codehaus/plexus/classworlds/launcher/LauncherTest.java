@@ -15,23 +15,25 @@ package org.codehaus.plexus.classworlds.launcher;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.TestUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class LauncherTest
     extends AbstractClassWorldsTestCase
 {
     private Launcher launcher;
 
-    public LauncherTest( String name )
-    {
-        super( name );
-    }
-
+    @Before
     public void setUp()
     {
         System.setProperty( "java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol" );
@@ -41,11 +43,13 @@ public class LauncherTest
         this.launcher.setSystemClassLoader( Thread.currentThread().getContextClassLoader() );
     }
 
+    @After
     public void tearDown()
     {
         this.launcher = null;
     }
 
+    @Test
     public void testConfigure_Valid()
         throws Exception
     {
@@ -60,6 +64,7 @@ public class LauncherTest
         assertEquals( "app", launcher.getMainRealm().getId() );
     }
 
+    @Test
     public void testLaunch_ValidStandard()
         throws Exception
     {
@@ -68,6 +73,7 @@ public class LauncherTest
         launcher.launch( new String[]{} );
     }
 
+    @Test
     public void testLaunch_ValidStandardExitCode()
         throws Exception
     {
@@ -78,6 +84,7 @@ public class LauncherTest
         assertEquals( "check exit code", 15, launcher.getExitCode() );
     }
 
+    @Test
     public void testLaunch_ValidEnhanced()
         throws Exception
     {
@@ -86,6 +93,7 @@ public class LauncherTest
         launcher.launch( new String[]{} );
     }
 
+    @Test
     public void testLaunch_ValidEnhancedExitCode()
         throws Exception
     {
@@ -96,6 +104,7 @@ public class LauncherTest
         assertEquals( "check exit code", 45, launcher.getExitCode() );
     }
 
+    @Test
     public void testLaunch_NoSuchMethod()
         throws Exception
     {
@@ -112,6 +121,7 @@ public class LauncherTest
         }
     }
 
+    @Test
     public void testLaunch_ClassNotFound()
         throws Exception
     {

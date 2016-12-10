@@ -16,6 +16,7 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
+import static org.junit.Assert.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -24,19 +25,16 @@ import java.util.concurrent.CountDownLatch;
 import org.codehaus.classworlds.ClassRealmAdapter;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.junit.Test;
 
 public class DefaultClassRealmTest
     extends AbstractClassWorldsTestCase
 {
-    public DefaultClassRealmTest( String name )
-    {
-        super( name );
-    }
-
     // ----------------------------------------------------------------------
     // Class testing
     // ----------------------------------------------------------------------
 
+    @Test
     public void testLoadClassFromRealm()
         throws Exception
     {
@@ -47,6 +45,7 @@ public class DefaultClassRealmTest
         loadClass( mainRealm, "org.codehaus.plexus.Component0" );
     }
 
+    @Test
     public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
         throws Exception
     {
@@ -59,6 +58,7 @@ public class DefaultClassRealmTest
         loadClass( childRealm, "org.codehaus.plexus.Component0" );
     }
 
+    @Test
     public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
         throws Exception
     {
@@ -73,6 +73,7 @@ public class DefaultClassRealmTest
         loadClass( grandchildRealm, "org.codehaus.plexus.Component0" );
     }
 
+    @Test
     public void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
         throws Exception
     {
@@ -91,6 +92,7 @@ public class DefaultClassRealmTest
         assertEquals( "printNew", cls.getMethods()[0].getName() );
     }
 
+    @Test
     public void testLoadNonExistentClass()
         throws Exception
     {
@@ -110,6 +112,7 @@ public class DefaultClassRealmTest
         }
     }
 
+    @Test
     public void testImport()
         throws Exception
     {
@@ -126,6 +129,7 @@ public class DefaultClassRealmTest
         loadClass( r1, "org.codehaus.plexus.Component0" );
     }
 
+    @Test
     public void testParentImport()
         throws Exception
     {
@@ -150,6 +154,7 @@ public class DefaultClassRealmTest
         assertSame( type, loadClass( child, "org.codehaus.plexus.Component0" ) );
     }
 
+    @Test
     public void testLoadClassFromBaseClassLoaderBeforeSelf()
         throws Exception
     {
@@ -171,6 +176,7 @@ public class DefaultClassRealmTest
         assertSame( baseClass, childClass );
     }
 
+    @Test
     public void testLoadClassFromRealmWithCircularClassReferences()
         throws Exception
     {
@@ -189,6 +195,7 @@ public class DefaultClassRealmTest
     // Resource testing
     // ----------------------------------------------------------------------
 
+    @Test
     public void testResource()
         throws Exception
     {
@@ -199,6 +206,7 @@ public class DefaultClassRealmTest
         getResource( mainRealm, "META-INF/plexus/components.xml" );
     }
 
+    @Test
     public void testMalformedResource()
         throws Exception
     {
@@ -233,6 +241,7 @@ public class DefaultClassRealmTest
         assertTrue( legacyRealm.findResources( "/" + resource ).hasMoreElements() );
     }
 
+    @Test
     public void testFindResourceOnlyScansSelf()
         throws Exception
     {
@@ -252,6 +261,7 @@ public class DefaultClassRealmTest
         assertNotNull( childRealm.findResource( "b.properties" ) );
     }
 
+    @Test
     public void testFindResourcesOnlyScansSelf()
         throws Exception
     {
@@ -272,6 +282,7 @@ public class DefaultClassRealmTest
     }
 
     /** Should never deadlock. Ever */
+    @Test
     public void testParallelDeadlockClassRealm()
         throws InterruptedException
     {

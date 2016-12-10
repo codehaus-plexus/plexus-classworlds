@@ -15,6 +15,11 @@ package org.codehaus.plexus.classworlds;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,32 +28,34 @@ import java.util.Enumeration;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ClassWorldTest
     extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
 
-    public ClassWorldTest( String name )
-    {
-        super( name );
-    }
-
+    @Before
     public void setUp()
     {
         this.world = new ClassWorld();
     }
 
+    @After
     public void tearDown()
     {
         this.world = null;
     }
 
+    @Test
     public void testEmpty()
     {
         assertTrue( this.world.getRealms().isEmpty() );
     }
 
+    @Test
     public void testNewRealm()
         throws Exception
     {
@@ -57,6 +64,7 @@ public class ClassWorldTest
         assertNotNull( realm );
     }
 
+    @Test
     public void testGetRealm()
         throws Exception
     {
@@ -65,6 +73,7 @@ public class ClassWorldTest
         assertSame( realm, this.world.getRealm( "foo" ) );
     }
 
+    @Test
     public void testNewRealm_Duplicate()
         throws Exception
     {
@@ -85,6 +94,7 @@ public class ClassWorldTest
         }
     }
 
+    @Test
     public void testGetRealm_NoSuch()
         throws Exception
     {
@@ -103,6 +113,7 @@ public class ClassWorldTest
         }
     }
 
+    @Test
     public void testGetRealms()
         throws Exception
     {
@@ -121,6 +132,7 @@ public class ClassWorldTest
         assertTrue( this.world.getRealms().contains( bar ) );
     }
     
+    @Test
     public void testPLX334() 
         throws Exception 
     {

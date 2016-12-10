@@ -15,6 +15,10 @@ package org.codehaus.plexus.classworlds.realm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,27 +29,28 @@ import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ClassRealmImplTest
     extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
 
-    public ClassRealmImplTest( String name )
-    {
-        super( name );
-    }
-
+    @Before
     public void setUp()
     {
         this.world = new ClassWorld();
     }
 
+    @After
     public void tearDown()
     {
         this.world = null;
     }
 
+    @Test
     public void testNewRealm()
         throws Exception
     {
@@ -58,6 +63,7 @@ public class ClassRealmImplTest
         assertEquals( "foo", realm.getId() );
     }
 
+    @Test
     public void testLocateSourceRealm_NoImports()
         throws Exception
     {
@@ -66,6 +72,7 @@ public class ClassRealmImplTest
         assertSame( null, realm.getImportClassLoader( "com.werken.Stuff" ) );
     }
 
+    @Test
     public void testLocateSourceRealm_SimpleImport()
         throws Exception
     {
@@ -88,6 +95,7 @@ public class ClassRealmImplTest
         assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
+    @Test
     public void testLocateSourceRealm_MultipleImport()
         throws Exception
     {
@@ -114,6 +122,7 @@ public class ClassRealmImplTest
         assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
+    @Test
     public void testLocateSourceRealm_Hierachy()
         throws Exception
     {
@@ -148,6 +157,7 @@ public class ClassRealmImplTest
         assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
+    @Test
     public void testLocateSourceRealm_Hierachy_Reverse()
         throws Exception
     {
@@ -182,6 +192,7 @@ public class ClassRealmImplTest
         assertSame( null, mainRealm.getImportClassLoader( "NoviceProgrammerClass" ) );
     }
 
+    @Test
     public void testLoadClass_SystemClass()
         throws Exception
     {
@@ -192,6 +203,7 @@ public class ClassRealmImplTest
         assertNotNull( cls );
     }
 
+    @Test
     public void testLoadClass_NonSystemClass()
         throws Exception
     {
@@ -211,6 +223,7 @@ public class ClassRealmImplTest
         }
     }
 
+    @Test
     public void testLoadClass_ClassWorldsClass()
         throws Exception
     {
@@ -223,6 +236,7 @@ public class ClassRealmImplTest
         assertSame( ClassWorld.class, cls );
     }
 
+    @Test
     public void testLoadClass_Local()
         throws Exception
     {
@@ -255,6 +269,7 @@ public class ClassRealmImplTest
         }
     }
 
+    @Test
     public void testLoadClass_Imported()
         throws Exception
     {
@@ -303,6 +318,7 @@ public class ClassRealmImplTest
         assertSame( classA, classMain );
     }
 
+    @Test
     public void testLoadClass_Package()
         throws Exception
     {
@@ -319,6 +335,7 @@ public class ClassRealmImplTest
     }
 
 
+    @Test
     public void testLoadClass_Complex()
         throws Exception
     {
@@ -411,6 +428,7 @@ public class ClassRealmImplTest
         }
     }
 
+    @Test
     public void testLoadClass_ClassWorldsClassRepeatedly()
         throws Exception
     {
@@ -426,6 +444,7 @@ public class ClassRealmImplTest
         }
     }
 
+    @Test
     public void testGetResources_BaseBeforeSelf()
         throws Exception
     {
@@ -455,6 +474,7 @@ public class ClassRealmImplTest
         assertEquals( Arrays.asList( new String[] { "/a.jar!/common.properties", "/b.jar!/common.properties" } ), urls );
     }
 
+    @Test
     public void testGetResources_SelfBeforeParent()
         throws Exception
     {
