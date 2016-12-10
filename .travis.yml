@@ -16,6 +16,8 @@ install: true
 # Run all integration tests.
 script: 
   - "mvn --show-version --errors --batch-mode clean verify"
+# -XX:MaxPermSize in mavenrc deprecated
+env: "MAVEN_SKIP_RC=true"
 #
 cache:
     directories:
