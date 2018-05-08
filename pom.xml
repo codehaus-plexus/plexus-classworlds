@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.codehaus.plexus</groupId>
     <artifactId>plexus</artifactId>
-    <version>4.0</version>
+    <version>5.1</version>
   </parent>
 
   <artifactId>plexus-classworlds</artifactId>
@@ -35,8 +35,8 @@
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
-    <url>http://github.com/codehaus-plexus/plexus-classworlds</url>
-    <tag>HEAD</tag>
+    <url>http://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
+    <tag>master</tag>
   </scm>
   <issueManagement>
     <system>github</system>
