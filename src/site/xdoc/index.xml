@@ -56,7 +56,7 @@
 
     <p>
     In addition, <b>Plexus Classworlds</b> provides a
-    <a href="apidocs/index.html?org/codehaus/plexus/classworlds/launcher/package-summary.html">launcher</a>
+    <a href="launcher.html">launcher</a>
     to assist in the creation of classloaders and <code>ClassRealm</code>s
     from a configuration file and the launching of the application's <code>main</code>
     method from the correct class loaded through the correct classloader.
