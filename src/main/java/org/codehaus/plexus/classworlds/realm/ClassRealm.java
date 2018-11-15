@@ -273,9 +273,9 @@ public class ClassRealm
     }
 
     // java11
-    protected Class<?> findClass(String moduleName, String name)
+    protected Class<?> findClass( String moduleName, String name )
     {
-        if (moduleName != null)
+        if ( moduleName != null )
         {
             return null;
         }
