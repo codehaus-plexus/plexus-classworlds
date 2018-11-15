@@ -445,6 +445,14 @@ public class ClassRealmImplTest
     }
 
     @Test
+    public void testLoadClass_Java11()
+    {
+        final ExtendedClassRealm mainRealm = new ExtendedClassRealm(world);
+        mainRealm.addURL( getJarUrl( "a.jar" ) );
+        assertNotNull(mainRealm.simulateLoadClassFromModule( "a.A" ));
+    }
+
+    @Test
     public void testGetResources_BaseBeforeSelf()
         throws Exception
     {
@@ -497,4 +505,25 @@ public class ClassRealmImplTest
         assertEquals( Arrays.asList( new URL[] { childUrl, parentUrl } ), urls );
     }
 
+    // simulate new loadClass(Module,String) from java11
+    // it is reversed in terms of inheritance but enables to simulate the same behavior in these tests
+    private class ExtendedClassRealm extends ClassRealm
+    {
+        public ExtendedClassRealm(final ClassWorld world)
+        {
+            super( world, "java11", Thread.currentThread().getContextClassLoader() );
+        }
+
+        public Class<?> simulateLoadClassFromModule(final String name)
+        {
+            synchronized (getClassLoadingLock(name))
+            {
+                Class<?> c = findLoadedClass(name);
+                if (c == null) {
+                    c = findClass(null, name);
+                }
+                return c;
+            }
+        }
+    }
 }
