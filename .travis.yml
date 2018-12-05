@@ -1,17 +1,14 @@
 language: java
-
-# Required to give Java9 a try
-sudo: required
-dist: trusty
-group: edge
-
 jdk:
   - openjdk7
-  - oraclejdk8
-  - oraclejdk9
+  - openjdk8
+  - openjdk9
+  - openjdk10
+  - openjdk11
+  - openjdk-ea
+  
+dist: trusty
 
-# No need for preliminary install step.
-install: true
 #
 # Run all integration tests.
 script: 
