@@ -272,6 +272,30 @@ public class ClassRealm
         }
     }
 
+    // java11
+    protected Class<?> findClass( String moduleName, String name )
+    {
+        if ( moduleName != null )
+        {
+            return null;
+        }
+        try
+        {
+            return super.findClass( name );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            try
+            {
+                return strategy.getRealm().findClass( name );
+            }
+            catch ( ClassNotFoundException nestedException )
+            {
+                return null;
+            }
+        }
+    }
+
     protected Class<?> findClass( String name )
         throws ClassNotFoundException
     {
