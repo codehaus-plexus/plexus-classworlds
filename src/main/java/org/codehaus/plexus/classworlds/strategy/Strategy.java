@@ -25,9 +25,6 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 /**
  * A strategy is a class for defining how classes and resources are located
  * in classworlds.
- *
- * @uthor: Andrew Williams
- * @since: Nov 19, 2006
  */
 public interface Strategy
 {

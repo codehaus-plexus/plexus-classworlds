@@ -66,6 +66,12 @@ public class ConfigurationParser
 
     /**
      * Parse launcher configuration file and send events to the handler.
+     * 
+     * @param is the inputstream
+     * @throws IOException when IOException occurs
+     * @throws ConfigurationException when ConfigurationException occurs
+     * @throws DuplicateRealmException when realm already exists
+     * @throws NoSuchRealmException when realm doesn't exist 
      */
     public void parse( InputStream is )
         throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
@@ -315,7 +321,7 @@ public class ConfigurationParser
      *                               a valid path element.
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
-     * @throws ConfigurationException 
+     * @throws ConfigurationException will never occur (thrown for backwards compatibility)
      */
     protected void loadGlob( String line,
                              boolean optionally )

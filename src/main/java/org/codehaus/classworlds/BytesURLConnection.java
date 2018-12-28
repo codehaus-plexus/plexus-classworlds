@@ -22,10 +22,6 @@ import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 
 /**
- * @author Hani Suleiman (hani@formicary.net)
- *         <p/>
- *         Date: Oct 20, 2003
- *         Time: 12:46:01 AM
  */
 @Deprecated
 public class BytesURLConnection extends URLConnection

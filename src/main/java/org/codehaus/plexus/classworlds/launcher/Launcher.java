@@ -31,19 +31,15 @@ import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
- * Command-line invokable application launcher.
- * <p/>
- * <p/>
- * This launcher class assists in the creation of classloaders and <code>ClassRealm</code>s
+ * <p>Command-line invokable application launcher.</p>
+ * 
+ * <p>This launcher class assists in the creation of classloaders and <code>ClassRealm</code>s
  * from a configuration file and the launching of the application's <code>main</code>
- * method from the correct class loaded through the correct classloader.
- * </p>
- * <p/>
- * <p/>
- * The path to the configuration file is specified using the <code>classworlds.conf</code>
+ * method from the correct class loaded through the correct classloader.</p>
+ * 
+ * <p> The path to the configuration file is specified using the <code>classworlds.conf</code>
  * system property, typically specified using the <code>-D</code> switch to
- * <code>java</code>.
- * </p>
+ * <code>java</code>.</p>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
@@ -239,12 +235,9 @@ public class Launcher
     }
 
     /**
-     * Attempt to launch the application through the enhanced main method.
-     * <p/>
-     * <p/>
-     * This will seek a method with the exact signature of:
-     * </p>
-     * <p/>
+     * <p>Attempt to launch the application through the enhanced main method.</p>
+     * 
+     * <p>This will seek a method with the exact signature of:</p>
      * <pre>
      *  public static void main(String[] args, ClassWorld world)
      *  </pre>
@@ -297,12 +290,10 @@ public class Launcher
     }
 
     /**
-     * Attempt to launch the application through the standard main method.
-     * <p/>
-     * <p/>
-     * This will seek a method with the exact signature of:
-     * </p>
-     * <p/>
+     * <p>Attempt to launch the application through the standard main method.</p>
+     * 
+     * <p>This will seek a method with the exact signature of:</p>
+
      * <pre>
      *  public static void main(String[] args)
      *  </pre>

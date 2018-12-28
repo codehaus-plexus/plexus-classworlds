@@ -92,6 +92,7 @@ public class DefaultClassRealm
      *
      *  @param constituent class name
      *  @param b the class definition as a byte[]
+     *  @throws ClassNotFoundException when class couldn't be loaded
      */
     public void addConstituent(String constituent,
                                byte[] b) throws ClassNotFoundException

@@ -40,18 +40,18 @@ public interface ConfigurationHandler
     /**
      * Define a new realm
      * @param realmName the new realm name
-     * @throws DuplicateRealmException
+     * @throws DuplicateRealmException when realm with name already exists
      */
     void addRealm( String realmName )
         throws DuplicateRealmException;
 
     /**
      * Add an import specification from a realm
-     * @param relamName the realm name
+     * @param realmName the realm name
      * @param importSpec the import specification
-     * @throws NoSuchRealmException
+     * @throws NoSuchRealmException if realm doesn't exist 
      */
-    void addImportFrom( String relamName, String importSpec )
+    void addImportFrom( String realmName, String importSpec )
         throws NoSuchRealmException;
 
     /**

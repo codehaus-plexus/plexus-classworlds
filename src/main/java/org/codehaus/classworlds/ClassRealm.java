@@ -51,13 +51,11 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * Autonomous sub-portion of a <code>ClassWorld</code>.
- * <p/>
- * <p/>
- * This class most closed maps to the <code>ClassLoader</code>
+ * <p>Autonomous sub-portion of a <code>ClassWorld</code>.</p>
+ * 
+ * <p>This class most closed maps to the <code>ClassLoader</code>
  * role from Java and in facts can provide a <code>ClassLoader</code>
- * view of itself using {@link #getClassLoader}.
- * </p>
+ * view of itself using {@link #getClassLoader}.</p>
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>

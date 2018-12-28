@@ -20,9 +20,6 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * StrategyFactory loads a strategy, either default or from a given hint.
- *
- * @uthor: Andrew Williams
- * @since: Nov 19, 2006
  */
 public class StrategyFactory
 {
