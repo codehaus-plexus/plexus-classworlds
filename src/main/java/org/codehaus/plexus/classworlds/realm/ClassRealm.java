@@ -272,6 +272,10 @@ public class ClassRealm
         }
     }
 
+    protected Class<?> findClass(String moduleName, String name) throws ClassNotFoundException {
+        return super.findClass(name);
+    }
+
     protected Class<?> findClass( String name )
         throws ClassNotFoundException
     {
