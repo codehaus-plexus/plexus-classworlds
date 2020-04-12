@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.codehaus.plexus</groupId>
     <artifactId>plexus</artifactId>
-    <version>5.1</version>
+    <version>6.1</version>
   </parent>
 
   <artifactId>plexus-classworlds</artifactId>
@@ -49,10 +49,11 @@
       <url>${project.scm.developerConnection}</url>
     </site>
   </distributionManagement>
-  
+
   <properties>
     <javaVersion>7</javaVersion>
-  </properties> 
+    <project.build.outputTimestamp>2020-01-20T18:52:37Z</project.build.outputTimestamp>
+  </properties>
 
   <build>
     <pluginManagement>
@@ -64,18 +65,6 @@
             <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.5</version>
-          <configuration>
-            <localCheckout>true</localCheckout>
-            <pushChanges>false</pushChanges>
-            <useReleaseProfile>false</useReleaseProfile>
-            <goals>deploy</goals>
-            <arguments>-Pplexus-release</arguments>
-          </configuration>
-        </plugin>        
       </plugins>
     </pluginManagement>
     <plugins>
