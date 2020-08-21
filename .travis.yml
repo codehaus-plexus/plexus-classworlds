@@ -1,3 +1,19 @@
+arch:
+  - amd64
+  - ppc64le
+
+jobs:
+  include:
+    - os: linux
+      arch: amd64
+    - os: linux
+      arch: ppc64le
+      
+addons:
+  apt:
+    packages:
+      - maven
+
 language: java
 jdk:
   - openjdk7
