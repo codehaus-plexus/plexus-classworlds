@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +67,7 @@ public class Configurator implements ConfigurationHandler
     {
         this.launcher = launcher;
 
-        configuredRealms = new HashMap<String, ClassRealm>();
+        configuredRealms = new HashMap<>();
 
         if ( launcher != null )
         {
@@ -97,7 +95,7 @@ public class Configurator implements ConfigurationHandler
     {
         this.world = world;
 
-        configuredRealms = new HashMap<String, ClassRealm>();
+        configuredRealms = new HashMap<>();
     }
 
     /**
@@ -148,19 +146,10 @@ public class Configurator implements ConfigurationHandler
      */
     public void associateRealms()
     {
-        List<String> sortRealmNames = new ArrayList<String>( configuredRealms.keySet() );
+        List<String> sortRealmNames = new ArrayList<>( configuredRealms.keySet() );
 
         // sort by name
-        Comparator<String> comparator = new Comparator<String>()
-        {
-            public int compare( String g1,
-                                String g2 )
-            {
-                return g1.compareTo( g2 );
-            }
-        };
-
-        Collections.sort( sortRealmNames, comparator );
+        sortRealmNames.sort( String::compareTo );
 
         // So now we have something like the following for defined
         // realms:

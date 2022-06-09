@@ -170,7 +170,7 @@ class Entry
      * based upon package name.
      * </p>
      *
-     * @param thatObj The object to compare.
+     * @param that The object to compare.
      * @return -1 if this object sorts before that object, 0
      *         if they are equal, or 1 if this object sorts
      *         after that object.

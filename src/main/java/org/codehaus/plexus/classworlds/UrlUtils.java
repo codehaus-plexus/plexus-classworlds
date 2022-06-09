@@ -18,6 +18,7 @@ package org.codehaus.plexus.classworlds;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,13 +57,6 @@ public class UrlUtils
 
     public static Set<URL> getURLs( URLClassLoader loader )
     {
-        Set<URL> ret = new HashSet<URL>();
-
-        for ( URL url : loader.getURLs() )
-        {
-            ret.add( url );
-        }
-
-        return ret;
+        return new HashSet<>( Arrays.asList( loader.getURLs() ) );
     }
 }

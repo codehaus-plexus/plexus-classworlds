@@ -82,11 +82,11 @@ public class ClassRealm
 
         this.id = id;
 
-        foreignImports = new TreeSet<Entry>();
+        foreignImports = new TreeSet<>();
 
         strategy = StrategyFactory.getStrategy( this );
 
-        lockMap = isParallelCapable ? new ConcurrentHashMap<String, Object>() : null;
+        lockMap = isParallelCapable ? new ConcurrentHashMap<>() : null;
 
         if ( isParallelCapable ) {
         	// We must call super.getClassLoadingLock at least once
@@ -109,7 +109,7 @@ public class ClassRealm
     {
         if ( parentImports == null )
         {
-            parentImports = new TreeSet<Entry>();
+            parentImports = new TreeSet<>();
         }
 
         parentImports.add( new Entry( null, packageName ) );
@@ -159,7 +159,7 @@ public class ClassRealm
 
     public Collection<ClassRealm> getImportRealms()
     {
-        Collection<ClassRealm> importRealms = new HashSet<ClassRealm>();
+        Collection<ClassRealm> importRealms = new HashSet<>();
 
         for ( Entry entry : foreignImports )
         {
@@ -320,7 +320,7 @@ public class ClassRealm
     public Enumeration<URL> getResources( String name )
         throws IOException
     {
-        Collection<URL> resources = new LinkedHashSet<URL>( Collections.list( super.getResources( name ) ) );
+        Collection<URL> resources = new LinkedHashSet<>( Collections.list( super.getResources( name ) ) );
         resources.addAll( Collections.list( strategy.getResources( name ) ) );
         return Collections.enumeration( resources );
     }

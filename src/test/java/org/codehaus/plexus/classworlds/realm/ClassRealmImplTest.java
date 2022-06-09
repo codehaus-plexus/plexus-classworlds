@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
@@ -65,7 +64,6 @@ public class ClassRealmImplTest
 
     @Test
     public void testLocateSourceRealm_NoImports()
-        throws Exception
     {
         ClassRealm realm = new ClassRealm( this.world, "foo", null );
 
@@ -447,7 +445,7 @@ public class ClassRealmImplTest
     @Test
     public void testLoadClass_Java11()
     {
-        final ExtendedClassRealm mainRealm = new ExtendedClassRealm(world);
+        final ExtendedClassRealm mainRealm = new ExtendedClassRealm( world );
         mainRealm.addURL( getJarUrl( "a.jar" ) );
         assertNotNull(mainRealm.simulateLoadClassFromModule( "a.A" ));
     }
@@ -472,14 +470,14 @@ public class ClassRealmImplTest
 
         assertEquals( baseUrl, subUrl );
 
-        List<String> urls = new ArrayList<String>();
-        for ( Iterator<URL> it = Collections.list( sub.getResources( resource ) ).iterator(); it.hasNext(); )
+        List<String> urls = new ArrayList<>();
+        for ( URL url : Collections.list( sub.getResources( resource ) ) )
         {
-            String path = it.next().toString();
+            String path = url.toString();
             path = path.substring( path.lastIndexOf( '/', path.lastIndexOf( ".jar!" ) ) );
             urls.add( path );
         }
-        assertEquals( Arrays.asList( new String[] { "/a.jar!/common.properties", "/b.jar!/common.properties" } ), urls );
+        assertEquals( Arrays.asList( "/a.jar!/common.properties", "/b.jar!/common.properties" ), urls );
     }
 
     @Test
@@ -502,12 +500,12 @@ public class ClassRealmImplTest
 
         List<URL> urls = Collections.list( child.getResources( resource ) );
         assertNotNull( urls );
-        assertEquals( Arrays.asList( new URL[] { childUrl, parentUrl } ), urls );
+        assertEquals( Arrays.asList( childUrl, parentUrl ), urls );
     }
 
     // simulate new loadClass(Module,String) from java11
     // it is reversed in terms of inheritance but enables to simulate the same behavior in these tests
-    private class ExtendedClassRealm extends ClassRealm
+    private static class ExtendedClassRealm extends ClassRealm
     {
         public ExtendedClassRealm(final ClassWorld world)
         {

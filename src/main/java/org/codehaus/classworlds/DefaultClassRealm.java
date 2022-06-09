@@ -16,12 +16,11 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-/**
+/*
  * A compatibility wrapper for org.codehaus.plexus.classworlds.realm.ClassRealm
  * provided for legacy code
  *
  * @author Andrew Williams
- * @version $Id$
  */
 
 import java.io.File;

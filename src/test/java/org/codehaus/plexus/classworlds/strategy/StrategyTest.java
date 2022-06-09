@@ -37,8 +37,6 @@ import org.junit.Test;
 public class StrategyTest
     extends AbstractClassWorldsTestCase
 {
-    private ClassWorld world;
-    
     private ClassRealm realm;
 
     private Strategy strategy;
@@ -47,12 +45,8 @@ public class StrategyTest
     public void setUp()
         throws Exception
     {
-        this.world = new ClassWorld();
-
-        this.realm = this.world.newRealm( "realm" );
-
+        this.realm = new ClassWorld().newRealm( "realm" );
         this.strategy = this.realm.getStrategy();
-        
         realm.addURL( getJarUrl( "component0-1.0.jar" ) );
     }
 
@@ -60,9 +54,7 @@ public class StrategyTest
     public void testLoadingOfApplicationClass()
         throws Exception
     {
-        Class<?> c = strategy.loadClass( "org.codehaus.plexus.Component0" );
-
-        assertNotNull( c );
+        assertNotNull( strategy.loadClass( "org.codehaus.plexus.Component0" ) );
     }
 
     @Test
@@ -83,14 +75,11 @@ public class StrategyTest
     public void testLoadingOfSystemClass()
         throws Exception
     {
-        Class<?> c = strategy.getRealm().loadClass( "java.lang.Object" );
-
-        assertNotNull( c );
+        assertNotNull( strategy.getRealm().loadClass( "java.lang.Object" ) );
     }
 
     @Test
     public void testLoadingOfNonExistentClass()
-        throws Exception
     {
         try
         {
@@ -119,7 +108,6 @@ public class StrategyTest
 
     @Test
     public void testGetSystemResource()
-        throws Exception
     {
         assumeTrue( "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9",
                     getJavaVersion() < 9.0 );
@@ -136,18 +124,14 @@ public class StrategyTest
         realm.addURL( getJarUrl( "component1-1.0.jar" ) );
 
         Enumeration<URL> e = strategy.getResources( "META-INF/plexus/components.xml" );
-
         assertNotNull( e );
 
         int resourceCount = 0;
-
-        for ( Enumeration<URL> resources = e; resources.hasMoreElements(); )
+        while ( e.hasMoreElements() )
         {
-            resources.nextElement();
-
+            e.nextElement();
             resourceCount++;
         }
-
         assertEquals( 2, resourceCount );
     }
 
@@ -156,9 +140,9 @@ public class StrategyTest
     {
         byte[] buffer = new byte[1024];
 
-        int read = 0;
+        int read;
 
-        StringBuffer content = new StringBuffer();
+        StringBuilder content = new StringBuilder();
 
         while ( ( read = in.read( buffer, 0, 1024 ) ) >= 0 )
         {

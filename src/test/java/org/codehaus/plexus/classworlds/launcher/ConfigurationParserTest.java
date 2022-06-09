@@ -15,7 +15,6 @@ public class ConfigurationParserTest
 
     @Test
     public void testFilter_Unterminated()
-        throws Exception
     {
         try
         {
@@ -78,7 +77,6 @@ public class ConfigurationParserTest
 
     @Test
     public void testFilter_NonExistent()
-        throws Exception
     {
         try
         {

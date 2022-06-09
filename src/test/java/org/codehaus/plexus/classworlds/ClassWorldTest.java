@@ -75,7 +75,6 @@ public class ClassWorldTest
 
     @Test
     public void testNewRealm_Duplicate()
-        throws Exception
     {
         try
         {
@@ -96,7 +95,6 @@ public class ClassWorldTest
 
     @Test
     public void testGetRealm_NoSuch()
-        throws Exception
     {
         try
         {
@@ -147,7 +145,7 @@ public class ClassWorldTest
         for ( Enumeration<URL> resources = e; resources.hasMoreElements(); )
         {
             URL obj = resources.nextElement();
-            assertTrue( obj.getPath().indexOf( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) >= 0 );
+            assertTrue( obj.getPath().contains( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) );
             resourceCount++;
         }
 //        assertEquals( 2, resourceCount );

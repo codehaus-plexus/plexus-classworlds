@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds.launcher;
  * limitations under the License.
  */
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +23,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -165,7 +166,7 @@ public class Launcher
     {
         Class<?> cwClass = getMainRealm().loadClass( ClassWorld.class.getName() );
 
-        Method m = getMainClass().getMethod( "main", new Class[]{String[].class, cwClass} );
+        Method m = getMainClass().getMethod( "main", String[].class, cwClass );
 
         int modifiers = m.getModifiers();
 
@@ -191,7 +192,7 @@ public class Launcher
     protected Method getMainMethod()
         throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException
     {
-        Method m = getMainClass().getMethod( "main", new Class[]{String[].class} );
+        Method m = getMainClass().getMethod( "main", String[].class );
 
         int modifiers = m.getModifiers();
 
@@ -279,11 +280,11 @@ public class Launcher
 
         Thread.currentThread().setContextClassLoader( cl );
 
-        Object ret = mainMethod.invoke( mainClass, new Object[]{args, getWorld()} );
+        Object ret = mainMethod.invoke( mainClass, args, getWorld() );
 
         if ( ret instanceof Integer )
         {
-            exitCode = ( (Integer) ret ).intValue();
+            exitCode = (Integer) ret;
         }
 
         Thread.currentThread().setContextClassLoader( systemClassLoader );
@@ -322,7 +323,7 @@ public class Launcher
 
         if ( ret instanceof Integer )
         {
-            exitCode = ( (Integer) ret ).intValue();
+            exitCode = (Integer) ret;
         }
 
         Thread.currentThread().setContextClassLoader( systemClassLoader );
@@ -378,7 +379,7 @@ public class Launcher
 
         if ( classworldsConf != null )
         {
-            is = new FileInputStream( classworldsConf );
+            is = Files.newInputStream( Paths.get( classworldsConf ) );
         }
         else
         {

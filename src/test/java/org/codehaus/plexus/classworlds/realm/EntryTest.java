@@ -15,6 +15,7 @@ package org.codehaus.plexus.classworlds.realm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -44,12 +45,9 @@ public class EntryTest
 
     /**
      * Tests the equality is realm independant
-     *
-     * @throws Exception
      */
     @Test
-    public void testEquals()
-        throws Exception
+    public void testEquals() throws DuplicateRealmException
     {
         ClassWorld cw = new ClassWorld();
         ClassRealm r1 = cw.newRealm( "test1" );
@@ -58,8 +56,8 @@ public class EntryTest
         Entry entry1 = new Entry( r1, "org.test" );
         Entry entry2 = new Entry( r2, "org.test" );
 
-        assertTrue( "entry1 == entry2", entry1.equals( entry2 ) );
-        assertTrue( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode() == entry2.hashCode() );
+        assertEquals( "entry1 == entry2", entry1, entry2 );
+        assertEquals( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode(), entry2.hashCode() );
     }
 
     @Test

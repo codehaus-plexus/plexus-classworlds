@@ -94,7 +94,6 @@ public class DefaultClassRealmTest
 
     @Test
     public void testLoadNonExistentClass()
-        throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
@@ -303,43 +302,27 @@ public class DefaultClassRealmTest
         cl2.addURL( getJarUrl( "deadlock.jar" ) );
         final CountDownLatch latch = new CountDownLatch( 1 );
 
-        Runnable r1 = new Runnable()
-        {
-            public void run()
+        Runnable r1 = () -> {
+            try
             {
-                try
-                {
-                    latch.await();
-                    cl1.loadClass( "deadlock.A" );
-                }
-                catch ( ClassNotFoundException e )
-                {
-                    throw new RuntimeException( e );
-                }
-                catch ( InterruptedException e )
-                {
-                    throw new RuntimeException( e );
-                }
+                latch.await();
+                cl1.loadClass( "deadlock.A" );
+            }
+            catch ( ClassNotFoundException | InterruptedException e )
+            {
+                throw new RuntimeException( e );
             }
         };
 
-        Runnable r2 = new Runnable()
-        {
-            public void run()
+        Runnable r2 = () -> {
+            try
             {
-                try
-                {
-                    latch.await();
-                    cl1.loadClass( "deadlock.C" );
-                }
-                catch ( ClassNotFoundException e )
-                {
-                    throw new RuntimeException( e );
-                }
-                catch ( InterruptedException e )
-                {
-                    throw new RuntimeException( e );
-                }
+                latch.await();
+                cl1.loadClass( "deadlock.C" );
+            }
+            catch ( ClassNotFoundException | InterruptedException e )
+            {
+                throw new RuntimeException( e );
             }
         };
 

@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +37,7 @@ public class ClassWorld
 {
     private Map<String, ClassRealm> realms;
 
-    private final List<ClassWorldListener> listeners = new ArrayList<ClassWorldListener>();
+    private final List<ClassWorldListener> listeners = new ArrayList<>();
 
     public ClassWorld( String realmId, ClassLoader classLoader )
     {
@@ -56,7 +55,7 @@ public class ClassWorld
 
     public ClassWorld()
     {
-        this.realms = new LinkedHashMap<String, ClassRealm>();
+        this.realms = new LinkedHashMap<>();
     }
 
     public ClassRealm newRealm( String id )
@@ -90,31 +89,21 @@ public class ClassWorld
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
-        ClassRealm realm = (ClassRealm) realms.remove( id );
+        ClassRealm realm = realms.remove( id );
 
         if ( realm != null )
         {
-            closeIfJava7( realm );
+            try
+            {
+                realm.close();
+            }
+            catch ( IOException ignore )
+            {
+            }
             for ( ClassWorldListener listener : listeners )
             {
                 listener.realmDisposed( realm );
             }
-        }
-    }
-
-    private void closeIfJava7( ClassRealm realm )
-    {
-        try
-        {
-            //noinspection ConstantConditions
-            if ( realm instanceof Closeable )
-            {
-                //noinspection RedundantCast
-                ( (Closeable) realm ).close();
-            }
-        }
-        catch ( IOException ignore )
-        {
         }
     }
 
@@ -123,7 +112,7 @@ public class ClassWorld
     {
         if ( realms.containsKey( id ) )
         {
-            return (ClassRealm) realms.get( id );
+            return realms.get( id );
         }
 
         throw new NoSuchRealmException( this, id );
@@ -131,7 +120,7 @@ public class ClassWorld
 
     public synchronized Collection<ClassRealm> getRealms()
     {
-        return Collections.unmodifiableList( new ArrayList<ClassRealm>( realms.values() ) );
+        return Collections.unmodifiableList( new ArrayList<>( realms.values() ) );
     }
 
     // from exports branch

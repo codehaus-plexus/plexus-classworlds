@@ -19,7 +19,6 @@ package org.codehaus.classworlds;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Vector;
-import java.util.Iterator;
 
 /**
  * A reverse adapter for ClassWorlds
@@ -110,10 +109,9 @@ public class ClassWorldReverseAdapter
         Collection realms = world.getRealms();
         Vector ret = new Vector();
 
-        Iterator it = realms.iterator();
-        while ( it.hasNext() )
+        for ( Object o : realms )
         {
-            ClassRealm realm = (ClassRealm) it.next();
+            ClassRealm realm = (ClassRealm) o;
             ret.add( ClassRealmReverseAdapter.getInstance( realm ) );
         }
 

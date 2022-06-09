@@ -20,7 +20,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 public interface ClassWorldListener
 {
-    public void realmCreated( ClassRealm realm );
+    void realmCreated( ClassRealm realm );
 
-    public void realmDisposed( ClassRealm realm );
+    void realmDisposed( ClassRealm realm );
 }

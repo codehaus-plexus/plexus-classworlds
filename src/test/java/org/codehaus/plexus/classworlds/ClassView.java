@@ -55,7 +55,7 @@ public class ClassView
      */
     private static String toClassString( Class<?> clz, String sIndent )
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( sIndent )
             .append( "Class " )
             .append( clz.getName() )
@@ -66,10 +66,10 @@ public class ClassView
         sIndent += "  ";
 
         Class<?>[] aclz = clz.getInterfaces();
-        for ( int i = 0, c = aclz.length; i < c; ++i )
+        for ( Class<?> aClass : aclz )
         {
             sb.append( '\n' )
-                .append( toInterfaceString( aclz[i], sIndent ) );
+                    .append( toInterfaceString( aClass, sIndent ) );
         }
 
         clz = clz.getSuperclass();
@@ -92,7 +92,7 @@ public class ClassView
      */
     private static String toInterfaceString( Class<?> clz, String sIndent )
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( sIndent )
             .append( "Interface " )
             .append( clz.getName() )
@@ -101,12 +101,12 @@ public class ClassView
             .append( ')' );
 
         Class<?>[] aclz = clz.getInterfaces();
-        for ( int i = 0, c = aclz.length; i < c; ++i )
+        for ( Class<?> aClass : aclz )
         {
-            clz = aclz[i];
+            clz = aClass;
 
             sb.append( '\n' )
-                .append( toInterfaceString( clz, sIndent + "  " ) );
+                    .append( toInterfaceString( clz, sIndent + "  " ) );
         }
 
         return sb.toString();

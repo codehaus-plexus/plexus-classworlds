@@ -18,14 +18,15 @@ package org.codehaus.plexus.classworlds.launcher;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
@@ -76,9 +77,9 @@ public class ConfigurationParser
     public void parse( InputStream is )
         throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
     {
-        BufferedReader reader = new BufferedReader( new InputStreamReader( is, "UTF-8" ) );
+        BufferedReader reader = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) );
 
-        String line = null;
+        String line;
 
         int lineNo = 0;
 
@@ -181,7 +182,7 @@ public class ConfigurationParser
 
                         try
                         {
-                            properties.load( new FileInputStream( propertiesFileName ) );
+                            properties.load( Files.newInputStream( Paths.get( propertiesFileName ) ) );
 
                             value = properties.getProperty( property );
                         }
@@ -247,7 +248,7 @@ public class ConfigurationParser
 
                 constituent = filter( constituent );
 
-                if ( constituent.indexOf( "*" ) >= 0 )
+                if ( constituent.contains( "*" ) )
                 {
                     loadGlob( constituent, false /*not optionally*/ );
                 }
@@ -278,7 +279,7 @@ public class ConfigurationParser
 
                 constituent = filter( constituent );
 
-                if ( constituent.indexOf( "*" ) >= 0 )
+                if ( constituent.contains( "*" ) )
                 {
                     loadGlob( constituent, true /*optionally*/ );
                 }
@@ -350,23 +351,18 @@ public class ConfigurationParser
 
         final String suffix = localName.substring( starLoc + 1 );
 
-        File[] matches = dir.listFiles( new FilenameFilter()
-        {
-            public boolean accept( File dir,
-                                   String name )
+        File[] matches = dir.listFiles( ( dir1, name ) -> {
+            if ( !name.startsWith( prefix ) )
             {
-                if ( !name.startsWith( prefix ) )
-                {
-                    return false;
-                }
-
-                if ( !name.endsWith( suffix ) )
-                {
-                    return false;
-                }
-
-                return true;
+                return false;
             }
+
+            if ( !name.endsWith( suffix ) )
+            {
+                return false;
+            }
+
+            return true;
         } );
 
         for ( File match : matches )
@@ -386,16 +382,16 @@ public class ConfigurationParser
     protected String filter( String text )
         throws ConfigurationException
     {
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         int cur = 0;
         int textLen = text.length();
 
-        int propStart = -1;
-        int propStop = -1;
+        int propStart;
+        int propStop;
 
-        String propName = null;
-        String propValue = null;
+        String propName;
+        String propValue;
 
         while ( cur < textLen )
         {
@@ -406,7 +402,7 @@ public class ConfigurationParser
                 break;
             }
 
-            result += text.substring( cur, propStart );
+            result.append( text, cur, propStart );
 
             propStop = text.indexOf( "}", propStart );
 
@@ -430,14 +426,14 @@ public class ConfigurationParser
             {
                 throw new ConfigurationException( "No such property: " + propName );
             }
-            result += propValue;
+            result.append( propValue );
 
             cur = propStop + 1;
         }
 
-        result += text.substring( cur );
+        result.append( text.substring( cur ) );
 
-        return result;
+        return result.toString();
     }
 
     /**

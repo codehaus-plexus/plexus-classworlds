@@ -18,7 +18,6 @@ package org.codehaus.classworlds;
 
 import java.util.Collection;
 import java.util.Vector;
-import java.util.Iterator;
 
 /**
  * An adapter for ClassWorlds
@@ -32,9 +31,7 @@ public class ClassWorldAdapter
 
     public static ClassWorldAdapter getInstance( org.codehaus.plexus.classworlds.ClassWorld newWorld )
     {
-        ClassWorldAdapter adapter = new ClassWorldAdapter( newWorld );
-
-        return adapter;
+        return new ClassWorldAdapter( newWorld );
     }
 
     private org.codehaus.plexus.classworlds.ClassWorld world;
@@ -64,8 +61,7 @@ public class ClassWorldAdapter
     {
         try
         {
-            return ClassRealmAdapter.getInstance( world.newRealm( id,
-                                                                  classLoader ) );
+            return ClassRealmAdapter.getInstance( world.newRealm( id, classLoader ) );
         }
         catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
         {
@@ -101,15 +97,11 @@ public class ClassWorldAdapter
 
     public Collection getRealms()
     {
-        Collection realms = world.getRealms();
-        Vector ret = new Vector();
-
-        Iterator it = realms.iterator();
-        while ( it.hasNext() )
+        Collection<org.codehaus.plexus.classworlds.realm.ClassRealm> realms = world.getRealms();
+        Vector<ClassRealmAdapter> ret = new Vector<>();
+        for ( org.codehaus.plexus.classworlds.realm.ClassRealm classRealm : realms )
         {
-            org.codehaus.plexus.classworlds.realm.ClassRealm realm =
-                (org.codehaus.plexus.classworlds.realm.ClassRealm) it.next();
-            ret.add( ClassRealmAdapter.getInstance( realm ) );
+            ret.add( ClassRealmAdapter.getInstance( classRealm ) );
         }
 
         return ret;

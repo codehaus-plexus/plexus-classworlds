@@ -46,7 +46,7 @@ public abstract class AbstractStrategy
 
     protected Enumeration<URL> combineResources( Enumeration<URL> en1, Enumeration<URL> en2, Enumeration<URL> en3 )
     {
-        Collection<URL> urls = new LinkedHashSet<URL>();
+        Collection<URL> urls = new LinkedHashSet<>();
 
         addAll( urls, en1 );
         addAll( urls, en2 );

@@ -363,11 +363,10 @@ public class ConfiguratorTest
 
     private void assertArrayContains( URL[] array,
                                       URL url )
-        throws Exception
     {
-        for ( int i = 0; i < array.length; ++i )
+        for ( URL value : array )
         {
-            if ( url.equals( array[i] ) )
+            if ( url.equals( value ) )
             {
                 return;
             }
