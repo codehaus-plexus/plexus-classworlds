@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.codehaus.plexus</groupId>
     <artifactId>plexus</artifactId>
-    <version>8</version>
+    <version>10</version>
   </parent>
 
   <artifactId>plexus-classworlds</artifactId>
