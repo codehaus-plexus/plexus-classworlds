@@ -74,10 +74,10 @@ public class ClassWorld
 
     /**
      * Shortcut for {@link #newRealm(String, ClassLoader, Set)} with the class loader of the current class.
-     * @param id
-     * @param allowedResourceNamePrefixes
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param allowedResourceNamePrefixes the prefixes of resource names which should be exposed. Separator '/' is used here (even for classes).
      * @return the created class realm
-     * @throws DuplicateRealmException
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
      * @since 2.7.0
      * @see FilteredClassRealm
      */
@@ -90,11 +90,12 @@ public class ClassWorld
     /**
      * Adds a class realm with filtering.
      * Only resources/classes starting with one of the given prefixes are exposed.
-     * @param id
-     * @param classLoader
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
+     *            loader.
      * @param allowedResourceNamePrefixes the prefixes of resource names which should be exposed. Separator '/' is used here (even for classes).
      * @return the created class realm
-     * @throws DuplicateRealmException
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
      * @since 2.7.0
      * @see FilteredClassRealm
      */

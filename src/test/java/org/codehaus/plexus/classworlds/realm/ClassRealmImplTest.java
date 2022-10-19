@@ -443,7 +443,7 @@ public class ClassRealmImplTest
     }
 
     @Test
-    public void testLoadClass_Java11()
+    public void testLoadClassWithModuleName_Java9()
     {
         final ExtendedClassRealm mainRealm = new ExtendedClassRealm( world );
         mainRealm.addURL( getJarUrl( "a.jar" ) );
@@ -503,13 +503,17 @@ public class ClassRealmImplTest
         assertEquals( Arrays.asList( childUrl, parentUrl ), urls );
     }
 
-    // simulate new loadClass(Module,String) from java11
-    // it is reversed in terms of inheritance but enables to simulate the same behavior in these tests
+    /**
+     * Simulates new {@code java.lang.ClassLoader#findClass(String,String)} introduced with Java 9.
+     * It is reversed in terms of inheritance but enables to simulate the same behavior in these tests.
+     * @see <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String)">ClassLoader#findClass(String,String)</a>
+     */
     private static class ExtendedClassRealm extends ClassRealm
     {
+        
         public ExtendedClassRealm(final ClassWorld world)
         {
-            super( world, "java11", Thread.currentThread().getContextClassLoader() );
+            super( world, "java9", Thread.currentThread().getContextClassLoader() );
         }
 
         public Class<?> simulateLoadClassFromModule(final String name)

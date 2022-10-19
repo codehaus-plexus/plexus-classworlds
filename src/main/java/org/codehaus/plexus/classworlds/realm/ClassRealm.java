@@ -272,7 +272,8 @@ public class ClassRealm
         }
     }
 
-    // java11
+    // overwrites https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String) 
+    // introduced in Java9
     protected Class<?> findClass( String moduleName, String name )
     {
         if ( moduleName != null )
@@ -281,7 +282,7 @@ public class ClassRealm
         }
         try
         {
-            return super.findClass( name );
+            return findClassInternal( name );
         }
         catch ( ClassNotFoundException e )
         {

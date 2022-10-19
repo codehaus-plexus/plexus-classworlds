@@ -1,5 +1,3 @@
-package org.codehaus.plexus.classworlds.realm;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,7 +16,10 @@ package org.codehaus.plexus.classworlds.realm;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.codehaus.plexus.classworlds.realm;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,29 +37,24 @@ import static org.junit.Assert.assertTrue;
 public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
+    private ClassRealm realmA;
 
     @Before
-    public void setUp()
+    public void setUp() throws DuplicateRealmException
     {
         this.world = new ClassWorld();
-    }
-
-    @Test
-    public void testLoadClassAndResourcesFiltered()
-        throws Exception
-    {
         // only allow loading resources whose names start with "a."
         Set<String> allowedResourcePrefixes = new HashSet<>();
         allowedResourcePrefixes.add( "a." );
         allowedResourcePrefixes.add( "a/Aa" );
-        ClassRealm realmA = this.world.newRealm( "realmA",  allowedResourcePrefixes );
+        realmA = this.world.newRealm( "realmA",  allowedResourcePrefixes );
+    }
 
-        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.Aa" ) );
+    @Test
+    public void testLoadResources()
+        throws Exception
+    {
         realmA.addURL( getJarUrl( "a.jar" ) );
-
-        assertNotNull( realmA.loadClass( "a.Aa" ) );
-        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.A" ) );
-
         assertNull( realmA.getResource( "common.properties" ) );
         assertFalse( realmA.getResources( "common.properties" ).hasMoreElements() );
         
@@ -66,4 +62,53 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
         assertTrue( realmA.getResources( "a.properties" ).hasMoreElements() );
     }
 
+    @Test
+    public void testLoadClass() throws ClassNotFoundException
+    {
+        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.Aa" ) );
+        realmA.addURL( getJarUrl( "a.jar" ) );
+
+        assertNotNull( realmA.loadClass( "a.Aa" ) );
+        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.A" ) );
+
+        assertNotNull( realmA.loadClass(  "a.Aa" ) );
+        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.A" ) );
+    }
+
+    @Test
+    public void testLoadClassWithModule() throws IOException
+    {
+        try (ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm( world, Collections.singleton( "a/Aa" ) )) {
+            realmA.addURL( getJarUrl( "a.jar" ) );
+            assertNotNull( realmA.simulateLoadClassFromModule( "a.Aa" ) );
+            assertNull( realmA.simulateLoadClassFromModule( "a.A" ) );
+        }
+    }
+
+    /**
+     * Simulates new {@code java.lang.ClassLoader#findClass(String,String)} introduced with Java 9.
+     * It is reversed in terms of inheritance but enables to simulate the same behavior in these tests.
+     * @see <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String)">ClassLoader#findClass(String,String)</a>
+     * @see ClassRealmImplTest.ExtendedClassRealm
+     */
+    static class ExtendedFilteredClassRealm extends FilteredClassRealm
+    {
+
+        public ExtendedFilteredClassRealm( final ClassWorld world, Set<String> allowedResourcePrefixes )
+        {
+            super( allowedResourcePrefixes, world, "java9", Thread.currentThread().getContextClassLoader() );
+        }
+
+        public Class<?> simulateLoadClassFromModule(final String name)
+        {
+            synchronized (getClassLoadingLock(name))
+            {
+                Class<?> c = findLoadedClass(name);
+                if (c == null) {
+                    c = findClass(null, name);
+                }
+                return c;
+            }
+        }
+    }
 }
