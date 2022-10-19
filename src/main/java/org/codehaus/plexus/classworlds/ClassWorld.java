@@ -91,7 +91,7 @@ public class ClassWorld
      * Adds a class realm with filtering.
      * Only resources/classes starting with one of the given prefixes are exposed.
      * @param id The identifier for this realm, must not be <code>null</code>.
-     * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
+     * @param classLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
      *            loader.
      * @param allowedResourceNamePrefixes the prefixes of resource names which should be exposed. Separator '/' is used here (even for classes).
      * @return the created class realm
