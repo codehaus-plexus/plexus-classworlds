@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.FilteredClassRealm;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
@@ -64,7 +66,39 @@ public class ClassWorld
         return newRealm( id, getClass().getClassLoader() );
     }
 
-    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader )
+    public ClassRealm newRealm( String id, ClassLoader classLoader )
+        throws DuplicateRealmException
+    {
+        return newRealm( id, classLoader, Collections.emptySet() );
+    }
+
+    /**
+     * Shortcut for {@link #newRealm(String, ClassLoader, Set)} with the class loader of the current class.
+     * @param id
+     * @param allowedResourceNamePrefixes
+     * @return the created class realm
+     * @throws DuplicateRealmException
+     * @since 2.7.0
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm( String id, Set<String> allowedResourceNamePrefixes )
+         throws DuplicateRealmException
+    {
+        return newRealm( id, getClass().getClassLoader(), allowedResourceNamePrefixes );
+    }
+
+    /**
+     * Adds a class realm with filtering.
+     * Only resources/classes starting with one of the given prefixes are exposed.
+     * @param id
+     * @param classLoader
+     * @param allowedResourceNamePrefixes the prefixes of resource names which should be exposed. Separator '/' is used here (even for classes).
+     * @return the created class realm
+     * @throws DuplicateRealmException
+     * @since 2.7.0
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader, Set<String> allowedResourceNamePrefixes )
         throws DuplicateRealmException
     {
         if ( realms.containsKey( id ) )
@@ -74,8 +108,14 @@ public class ClassWorld
 
         ClassRealm realm;
 
-        realm = new ClassRealm( this, id, classLoader );
-
+        if ( allowedResourceNamePrefixes.isEmpty() )
+        {
+            realm = new ClassRealm( this, id, classLoader );
+        }
+        else
+        {
+            realm = new FilteredClassRealm( allowedResourceNamePrefixes, this, id, classLoader );
+        }
         realms.put( id, realm );
 
         for ( ClassWorldListener listener : listeners )
@@ -85,7 +125,7 @@ public class ClassWorld
 
         return realm;
     }
-
+    
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {

@@ -200,7 +200,7 @@ public class ClassRealm
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
-        ClassRealm childRealm = getWorld().newRealm( id, null );
+        ClassRealm childRealm = getWorld().newRealm( id, (ClassLoader) null );
 
         childRealm.setParentRealm( this );
 
@@ -304,6 +304,12 @@ public class ClassRealm
          * stuff. Don't scan our class path yet, loadClassFromSelf() will do this later when called by the strategy.
          */
         throw new ClassNotFoundException( name );
+    }
+
+    protected Class<?> findClassInternal( String name )
+         throws ClassNotFoundException
+    {
+        return super.findClass( name );
     }
 
     public URL getResource( String name )
@@ -422,7 +428,7 @@ public class ClassRealm
 
                 if ( clazz == null )
                 {
-                    clazz = super.findClass( name );
+                    clazz = findClassInternal( name );
                 }
 
                 return clazz;
@@ -495,7 +501,7 @@ public class ClassRealm
 
     public URL loadResourceFromSelf( String name )
     {
-        return super.findResource( name );
+        return findResource( name );
     }
 
     public URL loadResourceFromParent( String name )
@@ -539,7 +545,7 @@ public class ClassRealm
     {
         try
         {
-            return super.findResources( name );
+            return findResources( name );
         }
         catch ( IOException e )
         {
