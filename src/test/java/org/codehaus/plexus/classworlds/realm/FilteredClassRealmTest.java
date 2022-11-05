@@ -19,9 +19,9 @@
 package org.codehaus.plexus.classworlds.realm;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
@@ -47,7 +47,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
         Set<String> allowedResourcePrefixes = new HashSet<>();
         allowedResourcePrefixes.add( "a." );
         allowedResourcePrefixes.add( "a/Aa" );
-        realmA = this.world.newRealm( "realmA",  allowedResourcePrefixes );
+        realmA = this.world.newRealm( "realmA", s -> allowedResourcePrefixes.stream().anyMatch( s::startsWith ) );
     }
 
     @Test
@@ -78,7 +78,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
     @Test
     public void testLoadClassWithModule() throws IOException
     {
-        try (ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm( world, Collections.singleton( "a/Aa" ) )) {
+        try ( ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm( world, s -> s.startsWith( "a/Aa" ) ) ) {
             realmA.addURL( getJarUrl( "a.jar" ) );
             assertNotNull( realmA.simulateLoadClassFromModule( "a.Aa" ) );
             assertNull( realmA.simulateLoadClassFromModule( "a.A" ) );
@@ -94,9 +94,9 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
     static class ExtendedFilteredClassRealm extends FilteredClassRealm
     {
 
-        public ExtendedFilteredClassRealm( final ClassWorld world, Set<String> allowedResourcePrefixes )
+        public ExtendedFilteredClassRealm( final ClassWorld world, Predicate<String> filter )
         {
-            super( allowedResourcePrefixes, world, "java9", Thread.currentThread().getContextClassLoader() );
+            super( filter, world, "java9", Thread.currentThread().getContextClassLoader() );
         }
 
         public Class<?> simulateLoadClassFromModule(final String name)

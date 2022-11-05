@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Set;
+import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.ClassWorld;
 
@@ -32,23 +32,21 @@ import org.codehaus.plexus.classworlds.ClassWorld;
  */
 public class FilteredClassRealm extends ClassRealm
 {
-
-    // no regular expressions for performance reasons
-    private final Set<String> allowedResourceNamePrefixes;
+    private final Predicate<String> filter;
 
     /**
      * Creates a new class realm.
      *
-     * @param allowedResourceNamePrefixes all resources not starting with one of the given prefixes are never exposed through this class loader
+     * @param filter a predicate to apply to each resource name to determine if it should be loaded through this class loader
      * @param world The class world this realm belongs to, must not be <code>null</code>.
      * @param id The identifier for this realm, must not be <code>null</code>.
      * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
      *            loader.
      */
-    public FilteredClassRealm( Set<String> allowedResourceNamePrefixes, ClassWorld world, String id, ClassLoader baseClassLoader )
+    public FilteredClassRealm( Predicate<String> filter, ClassWorld world, String id, ClassLoader baseClassLoader )
     {
         super( world, id, baseClassLoader );
-        this.allowedResourceNamePrefixes = allowedResourceNamePrefixes;
+        this.filter = filter;
     }
 
     @Override
@@ -56,7 +54,7 @@ public class FilteredClassRealm extends ClassRealm
         throws ClassNotFoundException
     {
         String resourceName = name.replace( '.', '/' ).concat( ".class" );
-        if ( !isAllowedName( resourceName ))
+        if ( !filter.test( resourceName ) )
         {
             throw new ClassNotFoundException(name);
         }
@@ -66,7 +64,7 @@ public class FilteredClassRealm extends ClassRealm
     @Override
     public URL findResource( String name )
     {
-        if ( !isAllowedName( name ))
+        if ( !filter.test( name ) )
         {
             return null;
         }
@@ -77,15 +75,10 @@ public class FilteredClassRealm extends ClassRealm
     public Enumeration<URL> findResources( String name )
         throws IOException
     {
-        if ( !isAllowedName( name ))
+        if ( !filter.test( name ) )
         {
             return Collections.emptyEnumeration();
         }
         return super.findResources( name );
-    }
-
-    private boolean isAllowedName( String name )
-    {
-        return allowedResourceNamePrefixes.stream().anyMatch( name::startsWith );
     }
 }
