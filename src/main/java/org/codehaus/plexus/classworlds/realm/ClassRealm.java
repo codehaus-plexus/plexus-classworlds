@@ -200,7 +200,7 @@ public class ClassRealm
     public ClassRealm createChildRealm( String id )
         throws DuplicateRealmException
     {
-        ClassRealm childRealm = getWorld().newRealm( id, null );
+        ClassRealm childRealm = getWorld().newRealm( id, (ClassLoader) null );
 
         childRealm.setParentRealm( this );
 
@@ -272,7 +272,8 @@ public class ClassRealm
         }
     }
 
-    // java11
+    // overwrites https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String) 
+    // introduced in Java9
     protected Class<?> findClass( String moduleName, String name )
     {
         if ( moduleName != null )
@@ -281,7 +282,7 @@ public class ClassRealm
         }
         try
         {
-            return super.findClass( name );
+            return findClassInternal( name );
         }
         catch ( ClassNotFoundException e )
         {
@@ -304,6 +305,12 @@ public class ClassRealm
          * stuff. Don't scan our class path yet, loadClassFromSelf() will do this later when called by the strategy.
          */
         throw new ClassNotFoundException( name );
+    }
+
+    protected Class<?> findClassInternal( String name )
+         throws ClassNotFoundException
+    {
+        return super.findClass( name );
     }
 
     public URL getResource( String name )
@@ -422,7 +429,7 @@ public class ClassRealm
 
                 if ( clazz == null )
                 {
-                    clazz = super.findClass( name );
+                    clazz = findClassInternal( name );
                 }
 
                 return clazz;
@@ -495,7 +502,7 @@ public class ClassRealm
 
     public URL loadResourceFromSelf( String name )
     {
-        return super.findResource( name );
+        return findResource( name );
     }
 
     public URL loadResourceFromParent( String name )
@@ -539,7 +546,7 @@ public class ClassRealm
     {
         try
         {
-            return super.findResources( name );
+            return findResources( name );
         }
         catch ( IOException e )
         {

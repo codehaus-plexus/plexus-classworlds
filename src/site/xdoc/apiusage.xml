@@ -32,7 +32,7 @@ ClassWorld world = new ClassWorld();
     <p>
     Once a <code>ClassWorld</code> is created, realms within it
     can be created.  These realms effectively only allow loading
-    of the core JVM classes.  
+    of the core JVM classes initially.
     </p>
 
 <source><![CDATA[
@@ -42,8 +42,9 @@ ClassRealm logComponentRealm = world.newRealm( "logComponent" );
 ]]></source>
 
     <p>
-    In order to make each <code>ClassRealm</code> useful, constituent
-    must be added to that each can provide certain classes.
+    In order to make each <code>ClassRealm</code> useful, constituents
+    in form of URLs must be added to it where each can provide certain classes.
+    The URL must return either a JAR or a directory on the default file system.
     </p>
 
 <source><![CDATA[
@@ -51,6 +52,11 @@ containerRealm.addURL( containerJarUrl );
 logComponentRealm.addURL( logComponentJarUrl );
 ]]></source>
 
+    <p>
+    <code>ClassRealm</code>s can optionally be filtered to further restrict which classes/resources
+    are exposed. The filter is provided as additional argument to <code>world.newRealm( "filteredcontainer", myPredicate );</code>
+    </p>
+    
     <p>
     Now, links between the various realms need to be created to allow
     classes loaded from one to be available to classes loaded in another.

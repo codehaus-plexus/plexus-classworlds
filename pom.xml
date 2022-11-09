@@ -207,7 +207,7 @@
               <report>summary</report>
               <report>index</report>
               <report>dependencies</report>
-              <report>issue-tracking</report>
+              <report>issue-management</report>
               <report>scm</report>
             </reports>
           </reportSet>

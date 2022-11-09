@@ -23,9 +23,11 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.FilteredClassRealm;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
 
 /**
@@ -64,7 +66,40 @@ public class ClassWorld
         return newRealm( id, getClass().getClassLoader() );
     }
 
-    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader )
+    public ClassRealm newRealm( String id, ClassLoader classLoader )
+        throws DuplicateRealmException
+    {
+        return newRealm( id, classLoader, null );
+    }
+
+    /**
+     * Shortcut for {@link #newRealm(String, ClassLoader, Predicate)} with the class loader of the current class.
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param filter a predicate to apply to each resource name to determine if it should be loaded through this class loader
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
+     * @since 2.7.0
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm( String id, Predicate<String> filter )
+         throws DuplicateRealmException
+    {
+        return newRealm( id, getClass().getClassLoader(), filter );
+    }
+
+    /**
+     * Adds a class realm with filtering.
+     * Only resources/classes whose name matches a given predicate are exposed.
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param classLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
+     *            loader.
+     * @param filter a predicate to apply to each resource name to determine if it should be loaded through this class loader
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
+     * @since 2.7.0
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader, Predicate<String> filter )
         throws DuplicateRealmException
     {
         if ( realms.containsKey( id ) )
@@ -74,8 +109,14 @@ public class ClassWorld
 
         ClassRealm realm;
 
-        realm = new ClassRealm( this, id, classLoader );
-
+        if ( filter == null )
+        {
+            realm = new ClassRealm( this, id, classLoader );
+        }
+        else
+        {
+            realm = new FilteredClassRealm( filter, this, id, classLoader );
+        }
         realms.put( id, realm );
 
         for ( ClassWorldListener listener : listeners )
@@ -85,7 +126,7 @@ public class ClassWorld
 
         return realm;
     }
-
+    
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
