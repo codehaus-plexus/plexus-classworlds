@@ -16,6 +16,7 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,7 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class ClassWorld
+public class ClassWorld implements Closeable
 {
     private Map<String, ClassRealm> realms;
 
@@ -127,6 +128,18 @@ public class ClassWorld
         return realm;
     }
     
+    /**
+     * Closes all contained class realms.
+     * @since 2.7.0
+     */
+    @Override
+    public synchronized void close()
+        throws IOException
+    {
+        realms.values().stream().forEach( this::disposeRealm );
+        realms.clear();
+    }
+
     public synchronized void disposeRealm( String id )
         throws NoSuchRealmException
     {
@@ -134,17 +147,26 @@ public class ClassWorld
 
         if ( realm != null )
         {
-            try
-            {
-                realm.close();
-            }
-            catch ( IOException ignore )
-            {
-            }
-            for ( ClassWorldListener listener : listeners )
-            {
-                listener.realmDisposed( realm );
-            }
+            disposeRealm( realm );
+        }
+        else
+        {
+            throw new NoSuchRealmException( this, id );
+        }
+    }
+
+    private void disposeRealm( ClassRealm realm )
+    {
+        try
+        {
+            realm.close();
+        }
+        catch ( IOException ignore )
+        {
+        }
+        for ( ClassWorldListener listener : listeners )
+        {
+            listener.realmDisposed( realm );
         }
     }
 
