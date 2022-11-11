@@ -74,21 +74,6 @@ public class ClassWorld implements Closeable
     }
 
     /**
-     * Shortcut for {@link #newRealm(String, ClassLoader, Predicate)} with the class loader of the current class.
-     * @param id The identifier for this realm, must not be <code>null</code>.
-     * @param filter a predicate to apply to each resource name to determine if it should be loaded through this class loader
-     * @return the created class realm
-     * @throws DuplicateRealmException in case a realm with the given id does already exist
-     * @since 2.7.0
-     * @see FilteredClassRealm
-     */
-    public synchronized ClassRealm newRealm( String id, Predicate<String> filter )
-         throws DuplicateRealmException
-    {
-        return newRealm( id, getClass().getClassLoader(), filter );
-    }
-
-    /**
      * Adds a class realm with filtering.
      * Only resources/classes whose name matches a given predicate are exposed.
      * @param id The identifier for this realm, must not be <code>null</code>.

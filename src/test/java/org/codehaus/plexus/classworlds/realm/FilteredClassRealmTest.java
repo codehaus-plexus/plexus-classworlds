@@ -47,7 +47,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
         Set<String> allowedResourcePrefixes = new HashSet<>();
         allowedResourcePrefixes.add( "a." );
         allowedResourcePrefixes.add( "a/Aa" );
-        realmA = this.world.newRealm( "realmA", s -> allowedResourcePrefixes.stream().anyMatch( s::startsWith ) );
+        realmA = this.world.newRealm( "realmA", getClass().getClassLoader(), s -> allowedResourcePrefixes.stream().anyMatch( s::startsWith ) );
     }
 
     @Test
