@@ -16,7 +16,14 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -25,9 +32,9 @@ import java.util.concurrent.CountDownLatch;
 import org.codehaus.classworlds.ClassRealmAdapter;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DefaultClassRealmTest
+class DefaultClassRealmTest
     extends AbstractClassWorldsTestCase
 {
     // ----------------------------------------------------------------------
@@ -35,7 +42,7 @@ public class DefaultClassRealmTest
     // ----------------------------------------------------------------------
 
     @Test
-    public void testLoadClassFromRealm()
+    void testLoadClassFromRealm()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -46,7 +53,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
+    void testLoadClassFromChildRealmWhereClassIsLocatedInParentRealm()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -59,7 +66,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
+    void testLoadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -74,7 +81,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
+    void testLoadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "parent", null );
@@ -93,7 +100,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadNonExistentClass()
+    void testLoadNonExistentClass()
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
 
@@ -112,7 +119,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testImport()
+    void testImport()
         throws Exception
     {
         ClassWorld world = new ClassWorld();
@@ -129,7 +136,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testParentImport()
+    void testParentImport()
         throws Exception
     {
         ClassWorld world = new ClassWorld();
@@ -154,7 +161,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadClassFromBaseClassLoaderBeforeSelf()
+    void testLoadClassFromBaseClassLoaderBeforeSelf()
         throws Exception
     {
         ClassWorld world = new ClassWorld();
@@ -176,7 +183,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testLoadClassFromRealmWithCircularClassReferences()
+    void testLoadClassFromRealmWithCircularClassReferences()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -195,7 +202,7 @@ public class DefaultClassRealmTest
     // ----------------------------------------------------------------------
 
     @Test
-    public void testResource()
+    void testResource()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -206,7 +213,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testMalformedResource()
+    void testMalformedResource()
         throws Exception
     {
         URL jarUrl = getJarUrl( "component0-1.0.jar" );
@@ -241,7 +248,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testFindResourceOnlyScansSelf()
+    void testFindResourceOnlyScansSelf()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -261,7 +268,7 @@ public class DefaultClassRealmTest
     }
 
     @Test
-    public void testFindResourcesOnlyScansSelf()
+    void testFindResourcesOnlyScansSelf()
         throws Exception
     {
         ClassRealm mainRealm = new ClassRealm( new ClassWorld(), "main", null );
@@ -282,7 +289,7 @@ public class DefaultClassRealmTest
 
     /** Should never deadlock. Ever */
     @Test
-    public void testParallelDeadlockClassRealm()
+    void testParallelDeadlockClassRealm()
         throws InterruptedException
     {
         for (int i = 0; i < 100; i++){

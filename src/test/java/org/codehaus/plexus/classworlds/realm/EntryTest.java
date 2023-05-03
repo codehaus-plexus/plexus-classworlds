@@ -15,23 +15,23 @@ package org.codehaus.plexus.classworlds.realm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
  */
-public class EntryTest
+class EntryTest
     extends AbstractClassWorldsTestCase
 {
 
     @Test
-    public void testCompareTo()
+    void testCompareTo()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -40,14 +40,14 @@ public class EntryTest
         Entry entry1 = new Entry( r, "org.test" );
         Entry entry2 = new Entry( r, "org.test.impl" );
 
-        assertTrue( "org.test > org.test.impl", entry1.compareTo( entry2 ) > 0 );
+        assertTrue( entry1.compareTo( entry2 ) > 0 , "org.test > org.test.impl");
     }
 
     /**
      * Tests the equality is realm independant
      */
     @Test
-    public void testEquals() throws DuplicateRealmException
+    void testEquals() throws DuplicateRealmException
     {
         ClassWorld cw = new ClassWorld();
         ClassRealm r1 = cw.newRealm( "test1" );
@@ -56,12 +56,12 @@ public class EntryTest
         Entry entry1 = new Entry( r1, "org.test" );
         Entry entry2 = new Entry( r2, "org.test" );
 
-        assertEquals( "entry1 == entry2", entry1, entry2 );
-        assertEquals( "entry1.hashCode() == entry2.hashCode()", entry1.hashCode(), entry2.hashCode() );
+        assertEquals( entry1, entry2 , "entry1 == entry2");
+        assertEquals( entry1.hashCode(), entry2.hashCode() , "entry1.hashCode() == entry2.hashCode()");
     }
 
     @Test
-    public void testMatchesClassByPackageImport()
+    void testMatchesClassByPackageImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -77,7 +77,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesClassByClassImport()
+    void testMatchesClassByClassImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -92,7 +92,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesResourceByPackageImport()
+    void testMatchesResourceByPackageImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -108,7 +108,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesResourceByClassImport()
+    void testMatchesResourceByClassImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -123,7 +123,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesAllImport()
+    void testMatchesAllImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -138,7 +138,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesResourceByResourceImport()
+    void testMatchesResourceByResourceImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -156,7 +156,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesClassByExactPackageImport()
+    void testMatchesClassByExactPackageImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();
@@ -172,7 +172,7 @@ public class EntryTest
     }
 
     @Test
-    public void testMatchesResourceByExactPackageImport()
+    void testMatchesResourceByExactPackageImport()
         throws Exception
     {
         ClassWorld cw = new ClassWorld();

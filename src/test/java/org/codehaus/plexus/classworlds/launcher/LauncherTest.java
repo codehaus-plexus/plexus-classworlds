@@ -15,25 +15,25 @@ package org.codehaus.plexus.classworlds.launcher;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.TestUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class LauncherTest
+class LauncherTest
     extends AbstractClassWorldsTestCase
 {
     private Launcher launcher;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         System.setProperty( "java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol" );
@@ -43,14 +43,14 @@ public class LauncherTest
         this.launcher.setSystemClassLoader( Thread.currentThread().getContextClassLoader() );
     }
 
-    @After
+    @AfterEach
     public void tearDown()
     {
         this.launcher = null;
     }
 
     @Test
-    public void testConfigure_Valid()
+    void testConfigure_Valid()
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
@@ -65,7 +65,7 @@ public class LauncherTest
     }
 
     @Test
-    public void testLaunch_ValidStandard()
+    void testLaunch_ValidStandard()
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch.conf" ) );
@@ -74,18 +74,18 @@ public class LauncherTest
     }
 
     @Test
-    public void testLaunch_ValidStandardExitCode()
+    void testLaunch_ValidStandardExitCode()
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-launch-exitCode.conf" ) );
 
         launcher.launch( new String[]{} );
 
-        assertEquals( "check exit code", 15, launcher.getExitCode() );
+        assertEquals( 15, launcher.getExitCode() , "check exit code");
     }
 
     @Test
-    public void testLaunch_ValidEnhanced()
+    void testLaunch_ValidEnhanced()
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-enh-launch.conf" ) );
@@ -94,18 +94,18 @@ public class LauncherTest
     }
 
     @Test
-    public void testLaunch_ValidEnhancedExitCode()
+    void testLaunch_ValidEnhancedExitCode()
         throws Exception
     {
         launcher.configure( getConfigPath( "valid-enh-launch-exitCode.conf" ) );
 
         launcher.launch( new String[]{} );
 
-        assertEquals( "check exit code", 45, launcher.getExitCode() );
+        assertEquals( 45, launcher.getExitCode() , "check exit code");
     }
 
     @Test
-    public void testLaunch_NoSuchMethod()
+    void testLaunch_NoSuchMethod()
         throws Exception
     {
         launcher.configure( getConfigPath( "launch-nomethod.conf" ) );
@@ -122,7 +122,7 @@ public class LauncherTest
     }
 
     @Test
-    public void testLaunch_ClassNotFound()
+    void testLaunch_ClassNotFound()
         throws Exception
     {
         launcher.configure( getConfigPath( "launch-noclass.conf" ) );

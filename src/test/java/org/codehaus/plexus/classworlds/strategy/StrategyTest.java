@@ -15,11 +15,11 @@ package org.codehaus.plexus.classworlds.strategy;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -28,20 +28,20 @@ import java.util.Enumeration;
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 // jars within jars
 // hierarchy vs graph
 
-public class StrategyTest
+class StrategyTest
     extends AbstractClassWorldsTestCase
 {
     private ClassRealm realm;
 
     private Strategy strategy;
 
-    @Before
+    @BeforeEach
     public void setUp()
         throws Exception
     {
@@ -51,14 +51,14 @@ public class StrategyTest
     }
 
     @Test
-    public void testLoadingOfApplicationClass()
+    void testLoadingOfApplicationClass()
         throws Exception
     {
         assertNotNull( strategy.loadClass( "org.codehaus.plexus.Component0" ) );
     }
 
     @Test
-    public void testLoadingOfApplicationClassThenDoingItAgain()
+    void testLoadingOfApplicationClassThenDoingItAgain()
         throws Exception
     {
         Class<?> c = strategy.loadClass( "org.codehaus.plexus.Component0" );
@@ -72,14 +72,14 @@ public class StrategyTest
 
 
     @Test
-    public void testLoadingOfSystemClass()
+    void testLoadingOfSystemClass()
         throws Exception
     {
         assertNotNull( strategy.getRealm().loadClass( "java.lang.Object" ) );
     }
 
     @Test
-    public void testLoadingOfNonExistentClass()
+    void testLoadingOfNonExistentClass()
     {
         try
         {
@@ -94,7 +94,7 @@ public class StrategyTest
     }
 
     @Test
-    public void testGetApplicationResource()
+    void testGetApplicationResource()
         throws Exception
     {
         URL resource = strategy.getResource( "META-INF/plexus/components.xml" );
@@ -107,10 +107,10 @@ public class StrategyTest
     }
 
     @Test
-    public void testGetSystemResource()
+    void testGetSystemResource()
     {
-        assumeTrue( "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9",
-                    getJavaVersion() < 9.0 );
+        assumeTrue( getJavaVersion() < 9.0,
+                    "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9" );
         
         URL resource = strategy.getRealm().getResource( "java/lang/Object.class" );
 
@@ -118,7 +118,7 @@ public class StrategyTest
     }
 
     @Test
-    public void testFindResources()
+    void testFindResources()
         throws Exception
     {
         realm.addURL( getJarUrl( "component1-1.0.jar" ) );
