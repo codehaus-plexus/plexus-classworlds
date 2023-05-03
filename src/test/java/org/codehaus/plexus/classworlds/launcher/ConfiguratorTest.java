@@ -169,11 +169,14 @@ class ConfiguratorTest
 
         assertSame( null, antRealm.getImportClassLoader( "org.apache.tools.Ant" ) );
 
-        assertSame( xmlRealm, antRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
+        // Ant has dependency to xerces:xercesImpl (test)
+        assertSame( null, antRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
+
+        assertSame( xmlRealm, antRealm.getImportClassLoader( "jakarta.xml.bind.JAXBException" ) );
 
         assertSame( null, mavenRealm.getImportClassLoader( "org.apache.maven.app.App" ) );
 
-        assertSame( xmlRealm, mavenRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
+        assertSame( xmlRealm, mavenRealm.getImportClassLoader( "jakarta.xml.bind.JAXBException" ) );
 
         URL[] urls = globRealm.getURLs();
 
@@ -233,7 +236,7 @@ class ConfiguratorTest
 
         assertEquals( 1, urls.length , "one url");
 
-        assertSame( null, optRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
+        assertSame( null, optRealm.getImportClassLoader( "jakarta.xml.bind.JAXBException" ) );
     }
 
     @Test
