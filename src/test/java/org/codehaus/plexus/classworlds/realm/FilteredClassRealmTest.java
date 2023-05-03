@@ -25,21 +25,21 @@ import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
+class FilteredClassRealmTest extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
     private ClassRealm realmA;
 
-    @Before
+    @BeforeEach
     public void setUp() throws DuplicateRealmException
     {
         this.world = new ClassWorld();
@@ -51,7 +51,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
     }
 
     @Test
-    public void testLoadResources()
+    void testLoadResources()
         throws Exception
     {
         realmA.addURL( getJarUrl( "a.jar" ) );
@@ -63,7 +63,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
     }
 
     @Test
-    public void testLoadClass() throws ClassNotFoundException
+    void testLoadClass() throws ClassNotFoundException
     {
         assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.Aa" ) );
         realmA.addURL( getJarUrl( "a.jar" ) );
@@ -76,7 +76,7 @@ public class FilteredClassRealmTest extends AbstractClassWorldsTestCase
     }
 
     @Test
-    public void testLoadClassWithModule() throws IOException
+    void testLoadClassWithModule() throws IOException
     {
         try ( ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm( world, s -> s.startsWith( "a/Aa" ) ) ) {
             realmA.addURL( getJarUrl( "a.jar" ) );

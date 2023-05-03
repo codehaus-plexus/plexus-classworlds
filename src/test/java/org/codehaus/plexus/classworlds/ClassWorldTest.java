@@ -15,11 +15,11 @@ package org.codehaus.plexus.classworlds;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -28,35 +28,35 @@ import java.util.Enumeration;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ClassWorldTest
+class ClassWorldTest
     extends AbstractClassWorldsTestCase
 {
     private ClassWorld world;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         this.world = new ClassWorld();
     }
 
-    @After
+    @AfterEach
     public void tearDown()
     {
         this.world = null;
     }
 
     @Test
-    public void testEmpty()
+    void testEmpty()
     {
         assertTrue( this.world.getRealms().isEmpty() );
     }
 
     @Test
-    public void testNewRealm()
+    void testNewRealm()
         throws Exception
     {
         ClassRealm realm = this.world.newRealm( "foo" );
@@ -65,7 +65,7 @@ public class ClassWorldTest
     }
 
     @Test
-    public void testGetRealm()
+    void testGetRealm()
         throws Exception
     {
         ClassRealm realm = this.world.newRealm( "foo" );
@@ -74,7 +74,7 @@ public class ClassWorldTest
     }
 
     @Test
-    public void testNewRealm_Duplicate()
+    void testNewRealm_Duplicate()
     {
         try
         {
@@ -94,7 +94,7 @@ public class ClassWorldTest
     }
 
     @Test
-    public void testGetRealm_NoSuch()
+    void testGetRealm_NoSuch()
     {
         try
         {
@@ -112,7 +112,7 @@ public class ClassWorldTest
     }
 
     @Test
-    public void testGetRealms()
+    void testGetRealms()
         throws Exception
     {
         assertTrue( this.world.getRealms().isEmpty() );
@@ -129,9 +129,9 @@ public class ClassWorldTest
 
         assertTrue( this.world.getRealms().contains( bar ) );
     }
-    
+
     @Test
-    public void testPLX334() 
+    void testPLX334()
         throws Exception 
     {
         ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl( "component1-1.0.jar" ) } );

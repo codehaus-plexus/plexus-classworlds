@@ -15,12 +15,12 @@ package org.codehaus.plexus.classworlds.launcher;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,24 +33,24 @@ import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.TestUtil;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ConfiguratorTest
+class ConfiguratorTest
     extends AbstractClassWorldsTestCase
 {
     private Launcher launcher;
     private Configurator configurator;
 
-    @Before
+    @BeforeEach
     public void setUp()
     {
         this.launcher = new Launcher();
         this.configurator = new Configurator( this.launcher );
     }
 
-    @After
+    @AfterEach
     public void tearDown()
     {
         this.launcher = null;
@@ -64,7 +64,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_Nonexistent()
+    void testConfigure_Nonexistent()
         throws Exception
     {
         try
@@ -79,7 +79,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_DuplicateMain()
+    void testConfigure_DuplicateMain()
         throws Exception
     {
         try
@@ -95,7 +95,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_DuplicateRealm()
+    void testConfigure_DuplicateRealm()
         throws Exception
     {
         try
@@ -111,7 +111,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_EarlyImport()
+    void testConfigure_EarlyImport()
         throws Exception
     {
         try
@@ -127,7 +127,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_RealmSyntax()
+    void testConfigure_RealmSyntax()
         throws Exception
     {
         try
@@ -143,7 +143,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_Valid()
+    void testConfigure_Valid()
         throws Exception
     {
         this.configurator.configure( getConfigPath( "valid.conf" ) );
@@ -185,7 +185,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testConfigure_Optionally_NonExistent()
+    void testConfigure_Optionally_NonExistent()
         throws Exception
     {
         this.configurator.configure( getConfigPath( "optionally-nonexistent.conf" ) );
@@ -206,11 +206,11 @@ public class ConfiguratorTest
 
         URL[] urls = optRealm.getURLs();
 
-        assertEquals( "no urls", 0, urls.length );
+        assertEquals( 0, urls.length , "no urls");
     }
 
     @Test
-    public void testConfigure_Optionally_Existent()
+    void testConfigure_Optionally_Existent()
         throws Exception
     {
         this.configurator.configure( getConfigPath( "optionally-existent.conf" ) );
@@ -231,13 +231,13 @@ public class ConfiguratorTest
 
         URL[] urls = optRealm.getURLs();
 
-        assertEquals( "one url", 1, urls.length );
+        assertEquals( 1, urls.length , "one url");
 
         assertSame( null, optRealm.getImportClassLoader( "org.xml.sax.SAXException" ) );
     }
 
     @Test
-    public void testConfigure_Unhandled()
+    void testConfigure_Unhandled()
         throws Exception
     {
         try
@@ -253,7 +253,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Existent()
+    void testSet_Using_Existent()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.existent" ) );
@@ -264,7 +264,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_NonExistent()
+    void testSet_Using_NonExistent()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.nonexistent" ) );
@@ -275,7 +275,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_NonExistent_Default()
+    void testSet_Using_NonExistent_Default()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.nonexistent.default" ) );
@@ -286,7 +286,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_NonExistent_Override()
+    void testSet_Using_NonExistent_Override()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.default" ) );
@@ -298,7 +298,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Existent_Override()
+    void testSet_Using_Existent_Override()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.existent" ) );
@@ -310,7 +310,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Existent_Default()
+    void testSet_Using_Existent_Default()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.default" ) );
@@ -321,7 +321,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Missing_Default()
+    void testSet_Using_Missing_Default()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.missing" ) );
@@ -332,7 +332,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Missing_Override()
+    void testSet_Using_Missing_Override()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.missing" ) );
@@ -344,7 +344,7 @@ public class ConfiguratorTest
     }
 
     @Test
-    public void testSet_Using_Filtered_Default()
+    void testSet_Using_Filtered_Default()
         throws Exception
     {
         assertNull( System.getProperty( "set.using.filtered.default" ) );

@@ -16,12 +16,14 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UrlUtilsTest
-    extends TestCase
+import org.junit.jupiter.api.Test;
+
+class UrlUtilsTest
 {
 
+    @Test
     public void testNormalizeUrlPath()
     {
         assertEquals( "org/codehaus/Test.class", UrlUtils.normalizeUrlPath( "org/codehaus/Test.class" ) );

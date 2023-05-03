@@ -1,20 +1,20 @@
 package org.codehaus.plexus.classworlds.launcher;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ConfigurationParserTest
+class ConfigurationParserTest
     extends AbstractClassWorldsTestCase
 {
     
     ConfigurationParser configurator = new ConfigurationParser( null, System.getProperties() );
 
     @Test
-    public void testFilter_Unterminated()
+    void testFilter_Unterminated()
     {
         try
         {
@@ -29,7 +29,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_Solitary()
+    void testFilter_Solitary()
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
@@ -40,7 +40,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_AtStart()
+    void testFilter_AtStart()
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
@@ -51,7 +51,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_AtEnd()
+    void testFilter_AtEnd()
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
@@ -62,7 +62,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_Multiple()
+    void testFilter_Multiple()
         throws Exception
     {
         System.setProperty( "classworlds.test.prop.one", "test prop value one" );
@@ -76,7 +76,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_NonExistent()
+    void testFilter_NonExistent()
     {
         try
         {
@@ -91,7 +91,7 @@ public class ConfigurationParserTest
     }
 
     @Test
-    public void testFilter_InMiddle()
+    void testFilter_InMiddle()
         throws Exception
     {
         System.setProperty( "classworlds.test.prop", "test prop value" );
