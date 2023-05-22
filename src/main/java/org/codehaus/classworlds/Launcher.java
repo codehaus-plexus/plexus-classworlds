@@ -23,13 +23,8 @@ package org.codehaus.classworlds;
  * @author Andrew Williams
  */
 @Deprecated
-public class Launcher
-    extends org.codehaus.plexus.classworlds.launcher.Launcher
-{
-    public Launcher()
-    {
-    }
-
+public class Launcher extends org.codehaus.plexus.classworlds.launcher.Launcher {
+    public Launcher() {}
 
     // ------------------------------------------------------------
     //     Class methods
@@ -42,9 +37,8 @@ public class Launcher
      *
      * @param args The application command-line arguments.
      */
-    public static void main( String[] args )
-    {
-        org.codehaus.plexus.classworlds.launcher.Launcher.main( args );
+    public static void main(String[] args) {
+        org.codehaus.plexus.classworlds.launcher.Launcher.main(args);
     }
 
     /**
@@ -54,9 +48,7 @@ public class Launcher
      * @return an integer exit code
      * @throws Exception If an error occurs.
      */
-    public static int mainWithExitCode( String[] args )
-        throws Exception
-    {
-        return org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode( args );
+    public static int mainWithExitCode(String[] args) throws Exception {
+        return org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(args);
     }
 }

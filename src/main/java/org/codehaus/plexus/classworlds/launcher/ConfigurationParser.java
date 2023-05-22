@@ -40,8 +40,7 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  * @author Igor Fedorenko
  * @see ConfigurationHandler
  */
-public class ConfigurationParser
-{
+public class ConfigurationParser {
     public static final String MAIN_PREFIX = "main is";
 
     public static final String SET_PREFIX = "set";
@@ -59,254 +58,200 @@ public class ConfigurationParser
 
     private Properties systemProperties;
 
-    public ConfigurationParser( ConfigurationHandler handler, Properties systemProperties )
-    {
+    public ConfigurationParser(ConfigurationHandler handler, Properties systemProperties) {
         this.handler = handler;
         this.systemProperties = systemProperties;
     }
 
     /**
      * Parse launcher configuration file and send events to the handler.
-     * 
+     *
      * @param is the inputstream
      * @throws IOException when IOException occurs
      * @throws ConfigurationException when ConfigurationException occurs
      * @throws DuplicateRealmException when realm already exists
-     * @throws NoSuchRealmException when realm doesn't exist 
+     * @throws NoSuchRealmException when realm doesn't exist
      */
-    public void parse( InputStream is )
-        throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
-    {
-        BufferedReader reader = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) );
+    public void parse(InputStream is)
+            throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 
         String line;
 
         int lineNo = 0;
 
         boolean mainSet = false;
-        
+
         String curRealm = null;
 
-        while ( true )
-        {
+        while (true) {
             line = reader.readLine();
 
-            if ( line == null )
-            {
+            if (line == null) {
                 break;
             }
 
             ++lineNo;
             line = line.trim();
 
-            if ( canIgnore( line ) )
-            {
+            if (canIgnore(line)) {
                 continue;
             }
 
-            if ( line.startsWith( MAIN_PREFIX ) )
-            {
-                if ( mainSet )
-                {
-                    throw new ConfigurationException( "Duplicate main configuration", lineNo, line );
+            if (line.startsWith(MAIN_PREFIX)) {
+                if (mainSet) {
+                    throw new ConfigurationException("Duplicate main configuration", lineNo, line);
                 }
 
-                String conf = line.substring( MAIN_PREFIX.length() ).trim();
+                String conf = line.substring(MAIN_PREFIX.length()).trim();
 
-                int fromLoc = conf.indexOf( "from" );
+                int fromLoc = conf.indexOf("from");
 
-                if ( fromLoc < 0 )
-                {
-                    throw new ConfigurationException( "Missing from clause", lineNo, line );
+                if (fromLoc < 0) {
+                    throw new ConfigurationException("Missing from clause", lineNo, line);
                 }
 
-                String mainClassName = filter( conf.substring( 0, fromLoc ).trim() );
+                String mainClassName = filter(conf.substring(0, fromLoc).trim());
 
-                String mainRealmName = filter( conf.substring( fromLoc + 4 ).trim() );
+                String mainRealmName = filter(conf.substring(fromLoc + 4).trim());
 
-                this.handler.setAppMain( mainClassName, mainRealmName );
+                this.handler.setAppMain(mainClassName, mainRealmName);
 
                 mainSet = true;
-            }
-            else if ( line.startsWith( SET_PREFIX ) )
-            {
-                String conf = line.substring( SET_PREFIX.length() ).trim();
+            } else if (line.startsWith(SET_PREFIX)) {
+                String conf = line.substring(SET_PREFIX.length()).trim();
 
-                int usingLoc = conf.indexOf( " using" ) + 1;
+                int usingLoc = conf.indexOf(" using") + 1;
 
                 String property = null;
 
                 String propertiesFileName = null;
 
-                if ( usingLoc > 0 )
-                {
-                    property = conf.substring( 0, usingLoc ).trim();
+                if (usingLoc > 0) {
+                    property = conf.substring(0, usingLoc).trim();
 
-                    propertiesFileName = filter( conf.substring( usingLoc + 5 ).trim() );
+                    propertiesFileName = filter(conf.substring(usingLoc + 5).trim());
 
                     conf = propertiesFileName;
                 }
 
                 String defaultValue = null;
 
-                int defaultLoc = conf.indexOf( " default" ) + 1;
+                int defaultLoc = conf.indexOf(" default") + 1;
 
-                if ( defaultLoc > 0 )
-                {
-                    defaultValue = filter( conf.substring( defaultLoc + 7 ).trim() );
+                if (defaultLoc > 0) {
+                    defaultValue = filter(conf.substring(defaultLoc + 7).trim());
 
-                    if ( property == null )
-                    {
-                        property = conf.substring( 0, defaultLoc ).trim();
-                    }
-                    else
-                    {
-                        propertiesFileName = conf.substring( 0, defaultLoc ).trim();
+                    if (property == null) {
+                        property = conf.substring(0, defaultLoc).trim();
+                    } else {
+                        propertiesFileName = conf.substring(0, defaultLoc).trim();
                     }
                 }
 
-                String value = systemProperties.getProperty( property );
+                String value = systemProperties.getProperty(property);
 
-                if ( value != null )
-                {
+                if (value != null) {
                     continue;
                 }
 
-                if ( propertiesFileName != null )
-                {
-                    File propertiesFile = new File( propertiesFileName );
+                if (propertiesFileName != null) {
+                    File propertiesFile = new File(propertiesFileName);
 
-                    if ( propertiesFile.exists() )
-                    {
+                    if (propertiesFile.exists()) {
                         Properties properties = new Properties();
 
-                        try
-                        {
-                            properties.load( Files.newInputStream( Paths.get( propertiesFileName ) ) );
+                        try {
+                            properties.load(Files.newInputStream(Paths.get(propertiesFileName)));
 
-                            value = properties.getProperty( property );
-                        }
-                        catch ( Exception e )
-                        {
+                            value = properties.getProperty(property);
+                        } catch (Exception e) {
                             // do nothing
                         }
                     }
                 }
 
-                if ( value == null && defaultValue != null )
-                {
+                if (value == null && defaultValue != null) {
                     value = defaultValue;
                 }
 
-                if ( value != null )
-                {
-                    value = filter( value );
-                    systemProperties.setProperty( property, value );
+                if (value != null) {
+                    value = filter(value);
+                    systemProperties.setProperty(property, value);
                 }
-            }
-            else if ( line.startsWith( "[" ) )
-            {
-                int rbrack = line.indexOf( "]" );
+            } else if (line.startsWith("[")) {
+                int rbrack = line.indexOf("]");
 
-                if ( rbrack < 0 )
-                {
-                    throw new ConfigurationException( "Invalid realm specifier", lineNo, line );
+                if (rbrack < 0) {
+                    throw new ConfigurationException("Invalid realm specifier", lineNo, line);
                 }
 
-                String realmName = line.substring( 1, rbrack );
+                String realmName = line.substring(1, rbrack);
 
-                handler.addRealm( realmName );
+                handler.addRealm(realmName);
 
                 curRealm = realmName;
-            }
-            else if ( line.startsWith( IMPORT_PREFIX ) )
-            {
-                if ( curRealm == null )
-                {
-                    throw new ConfigurationException( "Unhandled import", lineNo, line );
+            } else if (line.startsWith(IMPORT_PREFIX)) {
+                if (curRealm == null) {
+                    throw new ConfigurationException("Unhandled import", lineNo, line);
                 }
 
-                String conf = line.substring( IMPORT_PREFIX.length() ).trim();
+                String conf = line.substring(IMPORT_PREFIX.length()).trim();
 
-                int fromLoc = conf.indexOf( "from" );
+                int fromLoc = conf.indexOf("from");
 
-                if ( fromLoc < 0 )
-                {
-                    throw new ConfigurationException( "Missing from clause", lineNo, line );
+                if (fromLoc < 0) {
+                    throw new ConfigurationException("Missing from clause", lineNo, line);
                 }
 
-                String importSpec = conf.substring( 0, fromLoc ).trim();
+                String importSpec = conf.substring(0, fromLoc).trim();
 
-                String relamName = conf.substring( fromLoc + 4 ).trim();
+                String relamName = conf.substring(fromLoc + 4).trim();
 
-                handler.addImportFrom( relamName, importSpec );
+                handler.addImportFrom(relamName, importSpec);
 
-            }
-            else if ( line.startsWith( LOAD_PREFIX ) )
-            {
-                String constituent = line.substring( LOAD_PREFIX.length() ).trim();
+            } else if (line.startsWith(LOAD_PREFIX)) {
+                String constituent = line.substring(LOAD_PREFIX.length()).trim();
 
-                constituent = filter( constituent );
+                constituent = filter(constituent);
 
-                if ( constituent.contains( "*" ) )
-                {
-                    loadGlob( constituent, false /*not optionally*/ );
-                }
-                else
-                {
-                    File file = new File( constituent );
+                if (constituent.contains("*")) {
+                    loadGlob(constituent, false /*not optionally*/);
+                } else {
+                    File file = new File(constituent);
 
-                    if ( file.exists() )
-                    {
-                        handler.addLoadFile( file );
-                    }
-                    else
-                    {
-                        try
-                        {
-                          handler.addLoadURL( new URL( constituent ) );
-                        }
-                        catch ( MalformedURLException e )
-                        {
-                            throw new FileNotFoundException( constituent );
+                    if (file.exists()) {
+                        handler.addLoadFile(file);
+                    } else {
+                        try {
+                            handler.addLoadURL(new URL(constituent));
+                        } catch (MalformedURLException e) {
+                            throw new FileNotFoundException(constituent);
                         }
                     }
                 }
-            }
-            else if ( line.startsWith( OPTIONALLY_PREFIX ) )
-            {
-                String constituent = line.substring( OPTIONALLY_PREFIX.length() ).trim();
+            } else if (line.startsWith(OPTIONALLY_PREFIX)) {
+                String constituent = line.substring(OPTIONALLY_PREFIX.length()).trim();
 
-                constituent = filter( constituent );
+                constituent = filter(constituent);
 
-                if ( constituent.contains( "*" ) )
-                {
-                    loadGlob( constituent, true /*optionally*/ );
-                }
-                else
-                {
-                    File file = new File( constituent );
+                if (constituent.contains("*")) {
+                    loadGlob(constituent, true /*optionally*/);
+                } else {
+                    File file = new File(constituent);
 
-                    if ( file.exists() )
-                    {
-                        handler.addLoadFile( file );
-                    }
-                    else
-                    {
-                        try
-                        {
-                            handler.addLoadURL( new URL( constituent ) );
-                        }
-                        catch ( MalformedURLException e )
-                        {
+                    if (file.exists()) {
+                        handler.addLoadFile(file);
+                    } else {
+                        try {
+                            handler.addLoadURL(new URL(constituent));
+                        } catch (MalformedURLException e) {
                             // swallow
                         }
                     }
                 }
-            }
-            else
-            {
-                throw new ConfigurationException( "Unhandled configuration", lineNo, line );
+            } else {
+                throw new ConfigurationException("Unhandled configuration", lineNo, line);
             }
         }
 
@@ -324,50 +269,41 @@ public class ConfigurationParser
      *                               a valid path element in the filesystem.
      * @throws ConfigurationException will never occur (thrown for backwards compatibility)
      */
-    protected void loadGlob( String line,
-                             boolean optionally )
-        throws MalformedURLException, FileNotFoundException, ConfigurationException
-    {
-        File globFile = new File( line );
+    protected void loadGlob(String line, boolean optionally)
+            throws MalformedURLException, FileNotFoundException, ConfigurationException {
+        File globFile = new File(line);
 
         File dir = globFile.getParentFile();
-        if ( !dir.exists() )
-        {
-            if ( optionally )
-            {
+        if (!dir.exists()) {
+            if (optionally) {
                 return;
-            }
-            else
-            {
-                throw new FileNotFoundException( dir.toString() );
+            } else {
+                throw new FileNotFoundException(dir.toString());
             }
         }
 
         String localName = globFile.getName();
 
-        int starLoc = localName.indexOf( "*" );
+        int starLoc = localName.indexOf("*");
 
-        final String prefix = localName.substring( 0, starLoc );
+        final String prefix = localName.substring(0, starLoc);
 
-        final String suffix = localName.substring( starLoc + 1 );
+        final String suffix = localName.substring(starLoc + 1);
 
-        File[] matches = dir.listFiles( ( dir1, name ) -> {
-            if ( !name.startsWith( prefix ) )
-            {
+        File[] matches = dir.listFiles((dir1, name) -> {
+            if (!name.startsWith(prefix)) {
                 return false;
             }
 
-            if ( !name.endsWith( suffix ) )
-            {
+            if (!name.endsWith(suffix)) {
                 return false;
             }
 
             return true;
-        } );
+        });
 
-        for ( File match : matches )
-        {
-            handler.addLoadFile( match );
+        for (File match : matches) {
+            handler.addLoadFile(match);
         }
     }
 
@@ -379,9 +315,7 @@ public class ConfigurationParser
      * @throws ConfigurationException If the property does not
      *                                exist or if there is a syntax error.
      */
-    protected String filter( String text )
-        throws ConfigurationException
-    {
+    protected String filter(String text) throws ConfigurationException {
         StringBuilder result = new StringBuilder();
 
         int cur = 0;
@@ -393,45 +327,39 @@ public class ConfigurationParser
         String propName;
         String propValue;
 
-        while ( cur < textLen )
-        {
-            propStart = text.indexOf( "${", cur );
+        while (cur < textLen) {
+            propStart = text.indexOf("${", cur);
 
-            if ( propStart < 0 )
-            {
+            if (propStart < 0) {
                 break;
             }
 
-            result.append( text, cur, propStart );
+            result.append(text, cur, propStart);
 
-            propStop = text.indexOf( "}", propStart );
+            propStop = text.indexOf("}", propStart);
 
-            if ( propStop < 0 )
-            {
-                throw new ConfigurationException( "Unterminated property: " + text.substring( propStart ) );
+            if (propStop < 0) {
+                throw new ConfigurationException("Unterminated property: " + text.substring(propStart));
             }
 
-            propName = text.substring( propStart + 2, propStop );
+            propName = text.substring(propStart + 2, propStop);
 
-            propValue = systemProperties.getProperty( propName );
+            propValue = systemProperties.getProperty(propName);
 
             /* do our best if we are not running from surefire */
-            if ( propName.equals( "basedir" ) && ( propValue == null || propValue.equals( "" ) ) )
-            {
-                propValue = ( new File( "" ) ).getAbsolutePath();
-
+            if (propName.equals("basedir") && (propValue == null || propValue.equals(""))) {
+                propValue = (new File("")).getAbsolutePath();
             }
 
-            if ( propValue == null )
-            {
-                throw new ConfigurationException( "No such property: " + propName );
+            if (propValue == null) {
+                throw new ConfigurationException("No such property: " + propName);
             }
-            result.append( propValue );
+            result.append(propValue);
 
             cur = propStop + 1;
         }
 
-        result.append( text.substring( cur ) );
+        result.append(text.substring(cur));
 
         return result.toString();
     }
@@ -444,8 +372,7 @@ public class ConfigurationParser
      * @return <code>true</code> if the line is ignorable,
      *         otherwise <code>false</code>.
      */
-    private boolean canIgnore( String line )
-    {
-        return ( line.length() == 0 || line.startsWith( "#" ) );
+    private boolean canIgnore(String line) {
+        return (line.length() == 0 || line.startsWith("#"));
     }
 }

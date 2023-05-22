@@ -34,54 +34,49 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FilteredClassRealmTest extends AbstractClassWorldsTestCase
-{
+class FilteredClassRealmTest extends AbstractClassWorldsTestCase {
     private ClassWorld world;
     private ClassRealm realmA;
 
     @BeforeEach
-    public void setUp() throws DuplicateRealmException
-    {
+    public void setUp() throws DuplicateRealmException {
         this.world = new ClassWorld();
         // only allow loading resources whose names start with "a."
         Set<String> allowedResourcePrefixes = new HashSet<>();
-        allowedResourcePrefixes.add( "a." );
-        allowedResourcePrefixes.add( "a/Aa" );
-        realmA = this.world.newRealm( "realmA", getClass().getClassLoader(), s -> allowedResourcePrefixes.stream().anyMatch( s::startsWith ) );
+        allowedResourcePrefixes.add("a.");
+        allowedResourcePrefixes.add("a/Aa");
+        realmA = this.world.newRealm("realmA", getClass().getClassLoader(), s -> allowedResourcePrefixes.stream()
+                .anyMatch(s::startsWith));
     }
 
     @Test
-    void testLoadResources()
-        throws Exception
-    {
-        realmA.addURL( getJarUrl( "a.jar" ) );
-        assertNull( realmA.getResource( "common.properties" ) );
-        assertFalse( realmA.getResources( "common.properties" ).hasMoreElements() );
-        
-        assertNotNull( realmA.getResource( "a.properties" ) );
-        assertTrue( realmA.getResources( "a.properties" ).hasMoreElements() );
+    void testLoadResources() throws Exception {
+        realmA.addURL(getJarUrl("a.jar"));
+        assertNull(realmA.getResource("common.properties"));
+        assertFalse(realmA.getResources("common.properties").hasMoreElements());
+
+        assertNotNull(realmA.getResource("a.properties"));
+        assertTrue(realmA.getResources("a.properties").hasMoreElements());
     }
 
     @Test
-    void testLoadClass() throws ClassNotFoundException
-    {
-        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.Aa" ) );
-        realmA.addURL( getJarUrl( "a.jar" ) );
+    void testLoadClass() throws ClassNotFoundException {
+        assertThrows(ClassNotFoundException.class, () -> realmA.loadClass("a.Aa"));
+        realmA.addURL(getJarUrl("a.jar"));
 
-        assertNotNull( realmA.loadClass( "a.Aa" ) );
-        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.A" ) );
+        assertNotNull(realmA.loadClass("a.Aa"));
+        assertThrows(ClassNotFoundException.class, () -> realmA.loadClass("a.A"));
 
-        assertNotNull( realmA.loadClass(  "a.Aa" ) );
-        assertThrows( ClassNotFoundException.class, () -> realmA.loadClass( "a.A" ) );
+        assertNotNull(realmA.loadClass("a.Aa"));
+        assertThrows(ClassNotFoundException.class, () -> realmA.loadClass("a.A"));
     }
 
     @Test
-    void testLoadClassWithModule() throws IOException
-    {
-        try ( ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm( world, s -> s.startsWith( "a/Aa" ) ) ) {
-            realmA.addURL( getJarUrl( "a.jar" ) );
-            assertNotNull( realmA.simulateLoadClassFromModule( "a.Aa" ) );
-            assertNull( realmA.simulateLoadClassFromModule( "a.A" ) );
+    void testLoadClassWithModule() throws IOException {
+        try (ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm(world, s -> s.startsWith("a/Aa"))) {
+            realmA.addURL(getJarUrl("a.jar"));
+            assertNotNull(realmA.simulateLoadClassFromModule("a.Aa"));
+            assertNull(realmA.simulateLoadClassFromModule("a.A"));
         }
     }
 
@@ -91,18 +86,14 @@ class FilteredClassRealmTest extends AbstractClassWorldsTestCase
      * @see <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String)">ClassLoader#findClass(String,String)</a>
      * @see ClassRealmImplTest.ExtendedClassRealm
      */
-    static class ExtendedFilteredClassRealm extends FilteredClassRealm
-    {
+    static class ExtendedFilteredClassRealm extends FilteredClassRealm {
 
-        public ExtendedFilteredClassRealm( final ClassWorld world, Predicate<String> filter )
-        {
-            super( filter, world, "java9", Thread.currentThread().getContextClassLoader() );
+        public ExtendedFilteredClassRealm(final ClassWorld world, Predicate<String> filter) {
+            super(filter, world, "java9", Thread.currentThread().getContextClassLoader());
         }
 
-        public Class<?> simulateLoadClassFromModule(final String name)
-        {
-            synchronized (getClassLoadingLock(name))
-            {
+        public Class<?> simulateLoadClassFromModule(final String name) {
+            synchronized (getClassLoadingLock(name)) {
                 Class<?> c = findLoadedClass(name);
                 if (c == null) {
                     c = findClass(null, name);

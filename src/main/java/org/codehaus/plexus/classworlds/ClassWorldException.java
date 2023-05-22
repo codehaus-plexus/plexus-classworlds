@@ -21,9 +21,7 @@ package org.codehaus.plexus.classworlds;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class ClassWorldException
-    extends Exception
-{
+public class ClassWorldException extends Exception {
     // ------------------------------------------------------------
     //     Instance members
     // ------------------------------------------------------------
@@ -42,8 +40,7 @@ public class ClassWorldException
      *
      * @param world The world.
      */
-    public ClassWorldException( final ClassWorld world )
-    {
+    public ClassWorldException(final ClassWorld world) {
         this.world = world;
     }
 
@@ -53,9 +50,8 @@ public class ClassWorldException
      * @param world The world.
      * @param msg   The detail message.
      */
-    public ClassWorldException( final ClassWorld world, final String msg )
-    {
-        super( msg );
+    public ClassWorldException(final ClassWorld world, final String msg) {
+        super(msg);
         this.world = world;
     }
 
@@ -68,8 +64,7 @@ public class ClassWorldException
      *
      * @return The world.
      */
-    public ClassWorld getWorld()
-    {
+    public ClassWorld getWorld() {
         return this.world;
     }
 }

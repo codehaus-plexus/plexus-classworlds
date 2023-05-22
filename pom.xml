@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ~
   ~  Copyright 2001-2006 The Codehaus Foundation.
@@ -14,7 +15,6 @@
   ~  See the License for the specific language governing permissions and
   ~  limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -35,8 +35,8 @@
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
-    <url>http://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
     <tag>master</tag>
+    <url>http://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
   </scm>
   <issueManagement>
     <system>github</system>
@@ -102,7 +102,8 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-scm-publish-plugin</artifactId>
           <configuration>
-            <content>${project.reporting.outputDirectory}</content><!-- mono-module doesn't require site:stage -->
+            <content>${project.reporting.outputDirectory}</content>
+            <!-- mono-module doesn't require site:stage -->
           </configuration>
         </plugin>
         <plugin>
@@ -124,10 +125,11 @@
         <executions>
           <execution>
             <id>scm-publish</id>
-            <phase>site-deploy</phase><!-- deploy site with maven-scm-publish-plugin -->
+            <!-- deploy site with maven-scm-publish-plugin -->
             <goals>
               <goal>publish-scm</goal>
             </goals>
+            <phase>site-deploy</phase>
           </execution>
         </executions>
       </plugin>
@@ -177,10 +179,10 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <phase>generate-test-resources</phase>
             <goals>
               <goal>copy</goal>
             </goals>
+            <phase>generate-test-resources</phase>
             <configuration>
               <artifactItems>
                 <artifactItem>

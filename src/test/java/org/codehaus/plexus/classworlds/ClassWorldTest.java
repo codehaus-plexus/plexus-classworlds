@@ -15,12 +15,6 @@ package org.codehaus.plexus.classworlds;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -32,133 +26,115 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class ClassWorldTest
-    extends AbstractClassWorldsTestCase
-{
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+class ClassWorldTest extends AbstractClassWorldsTestCase {
     private ClassWorld world;
 
     @BeforeEach
-    public void setUp()
-    {
+    public void setUp() {
         this.world = new ClassWorld();
     }
 
     @AfterEach
-    public void tearDown()
-    {
+    public void tearDown() {
         this.world = null;
     }
 
     @Test
-    void testEmpty()
-    {
-        assertTrue( this.world.getRealms().isEmpty() );
+    void testEmpty() {
+        assertTrue(this.world.getRealms().isEmpty());
     }
 
     @Test
-    void testNewRealm()
-        throws Exception
-    {
-        ClassRealm realm = this.world.newRealm( "foo" );
+    void testNewRealm() throws Exception {
+        ClassRealm realm = this.world.newRealm("foo");
 
-        assertNotNull( realm );
+        assertNotNull(realm);
     }
 
     @Test
-    void testGetRealm()
-        throws Exception
-    {
-        ClassRealm realm = this.world.newRealm( "foo" );
+    void testGetRealm() throws Exception {
+        ClassRealm realm = this.world.newRealm("foo");
 
-        assertSame( realm, this.world.getRealm( "foo" ) );
+        assertSame(realm, this.world.getRealm("foo"));
     }
 
     @Test
-    void testNewRealm_Duplicate()
-    {
-        try
-        {
-            this.world.newRealm( "foo" );
-            this.world.newRealm( "foo" );
+    void testNewRealm_Duplicate() {
+        try {
+            this.world.newRealm("foo");
+            this.world.newRealm("foo");
 
-            fail( "throw DuplicateRealmException" );
-        }
-        catch ( DuplicateRealmException e )
-        {
+            fail("throw DuplicateRealmException");
+        } catch (DuplicateRealmException e) {
             // expected and correct
 
-            assertSame( this.world, e.getWorld() );
+            assertSame(this.world, e.getWorld());
 
-            assertEquals( "foo", e.getId() );
+            assertEquals("foo", e.getId());
         }
     }
 
     @Test
-    void testGetRealm_NoSuch()
-    {
-        try
-        {
-            this.world.getRealm( "foo" );
-            fail( "throw NoSuchRealmException" );
-        }
-        catch ( NoSuchRealmException e )
-        {
+    void testGetRealm_NoSuch() {
+        try {
+            this.world.getRealm("foo");
+            fail("throw NoSuchRealmException");
+        } catch (NoSuchRealmException e) {
             // expected and correct
 
-            assertSame( this.world, e.getWorld() );
+            assertSame(this.world, e.getWorld());
 
-            assertEquals( "foo", e.getId() );
+            assertEquals("foo", e.getId());
         }
     }
 
     @Test
-    void testGetRealms()
-        throws Exception
-    {
-        assertTrue( this.world.getRealms().isEmpty() );
+    void testGetRealms() throws Exception {
+        assertTrue(this.world.getRealms().isEmpty());
 
-        ClassRealm foo = this.world.newRealm( "foo" );
+        ClassRealm foo = this.world.newRealm("foo");
 
-        assertEquals( 1, this.world.getRealms().size() );
+        assertEquals(1, this.world.getRealms().size());
 
-        assertTrue( this.world.getRealms().contains( foo ) );
+        assertTrue(this.world.getRealms().contains(foo));
 
-        ClassRealm bar = this.world.newRealm( "bar" );
+        ClassRealm bar = this.world.newRealm("bar");
 
-        assertEquals( 2, this.world.getRealms().size() );
+        assertEquals(2, this.world.getRealms().size());
 
-        assertTrue( this.world.getRealms().contains( bar ) );
+        assertTrue(this.world.getRealms().contains(bar));
     }
 
     @Test
-    void testPLX334()
-        throws Exception 
-    {
-        ClassLoader loader = new URLClassLoader( new URL[] { getJarUrl( "component1-1.0.jar" ) } );
-        world.newRealm( "netbeans", loader );
-        ClassRealm plexus = world.newRealm( "plexus" );
-        plexus.importFrom( "netbeans", "META-INF/plexus" );
-        plexus.importFrom( "netbeans", "org.codehaus.plexus" );
-        Enumeration<URL> e = plexus.getResources( "META-INF/plexus/components.xml" );
-        assertNotNull( e );
+    void testPLX334() throws Exception {
+        ClassLoader loader = new URLClassLoader(new URL[] {getJarUrl("component1-1.0.jar")});
+        world.newRealm("netbeans", loader);
+        ClassRealm plexus = world.newRealm("plexus");
+        plexus.importFrom("netbeans", "META-INF/plexus");
+        plexus.importFrom("netbeans", "org.codehaus.plexus");
+        Enumeration<URL> e = plexus.getResources("META-INF/plexus/components.xml");
+        assertNotNull(e);
         int resourceCount = 0;
-        for ( Enumeration<URL> resources = e; resources.hasMoreElements(); )
-        {
+        for (Enumeration<URL> resources = e; resources.hasMoreElements(); ) {
             URL obj = resources.nextElement();
-            assertTrue( obj.getPath().contains( "/component1-1.0.jar!/META-INF/plexus/components.xml" ) );
+            assertTrue(obj.getPath().contains("/component1-1.0.jar!/META-INF/plexus/components.xml"));
             resourceCount++;
         }
-//        assertEquals( 2, resourceCount );
-// for some reason surefire-plugin 2.3 returned 2 items there:        
-//        for example:
-//jar:file:/home/mkleint/.m2/repository/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7.jar!/META-INF/plexus/components.xml
-//jar:file:/home/mkleint/src/plexus-trunk/plexus-classworlds/src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml
-//    However only 1 is correct, which is actually returned by the 2.4 surefire-plugin
-        
-        assertEquals( 1, resourceCount );
-        Class<?> c = plexus.loadClass( "org.codehaus.plexus.Component1" );
-        assertNotNull( c );
-        
-    }
+        //        assertEquals( 2, resourceCount );
+        // for some reason surefire-plugin 2.3 returned 2 items there:
+        //        for example:
+        // jar:file:/home/mkleint/.m2/repository/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7.jar!/META-INF/plexus/components.xml
+        // jar:file:/home/mkleint/src/plexus-trunk/plexus-classworlds/src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml
+        //    However only 1 is correct, which is actually returned by the 2.4 surefire-plugin
 
+        assertEquals(1, resourceCount);
+        Class<?> c = plexus.loadClass("org.codehaus.plexus.Component1");
+        assertNotNull(c);
+    }
 }

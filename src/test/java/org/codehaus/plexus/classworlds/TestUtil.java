@@ -23,38 +23,30 @@ import java.net.URL;
 /**
  * @author <a href="bwalding@jakarta.org">Ben Walding</a>
  */
-public class TestUtil
-{
+public class TestUtil {
 
-    public static URL getTestResourceUrl( String resourceName )
-    {
-        File baseDir = new File( getBasedir() );
+    public static URL getTestResourceUrl(String resourceName) {
+        File baseDir = new File(getBasedir());
 
-        File testDir = new File( baseDir, "src/test/test-data" );
+        File testDir = new File(baseDir, "src/test/test-data");
 
-        File resourceFile = new File( testDir, resourceName );
+        File resourceFile = new File(testDir, resourceName);
 
-        try
-        {
+        try {
             return resourceFile.toURI().toURL();
-        }
-        catch ( MalformedURLException e )
-        {
-            throw new RuntimeException( e );
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public static String getBasedir()
-    {
-        String basedir = System.getProperty( "basedir" );
+    public static String getBasedir() {
+        String basedir = System.getProperty("basedir");
 
         /* do our best if we are not running from surefire */
-        if ( basedir == null || basedir.length() <= 0 )
-        {
-            basedir = ( new File( "" ) ).getAbsolutePath();
+        if (basedir == null || basedir.length() <= 0) {
+            basedir = (new File("")).getAbsolutePath();
         }
 
         return basedir;
     }
-
 }

@@ -28,29 +28,26 @@ import java.net.MalformedURLException;
  * @author Andrew Williams
  */
 @Deprecated
-public class Configurator
-{
+public class Configurator {
     private ConfiguratorAdapter config;
 
     /** Construct.
      *
      *  @param launcher The launcher to configure.
      */
-    public Configurator( Launcher launcher )
-    {
+    public Configurator(Launcher launcher) {
         config = ConfiguratorAdapter.getInstance(
-            new org.codehaus.plexus.classworlds.launcher.Configurator( launcher ), launcher );
+                new org.codehaus.plexus.classworlds.launcher.Configurator(launcher), launcher);
     }
 
     /** Construct.
      *
      *  @param world The classWorld to configure.
      */
-    public Configurator( ClassWorld world )
-    {
+    public Configurator(ClassWorld world) {
         config = ConfiguratorAdapter.getInstance(
-            new org.codehaus.plexus.classworlds.launcher.Configurator(
-                ClassWorldReverseAdapter.getInstance( world ) ), world );
+                new org.codehaus.plexus.classworlds.launcher.Configurator(ClassWorldReverseAdapter.getInstance(world)),
+                world);
     }
 
     /** set world.
@@ -58,9 +55,8 @@ public class Configurator
      *
      *  @param world The classWorld to configure.
      */
-    public void setClassWorld( ClassWorld world )
-    {
-        config.setClassWorld( world );
+    public void setClassWorld(ClassWorld world) {
+        config.setClassWorld(world);
     }
 
     /**
@@ -74,17 +70,16 @@ public class Configurator
      * @throws NoSuchRealmException    If the config file defines a main entry point in
      *                                 a non-existent realm.
      */
-    public void configure( InputStream is )
-        throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
-    {
-        config.configureAdapter( is );
+    public void configure(InputStream is)
+            throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException,
+                    NoSuchRealmException {
+        config.configureAdapter(is);
     }
 
     /**
      * Associate parent realms with their children.
      */
-    protected void associateRealms()
-    {
+    protected void associateRealms() {
         config.associateRealms();
     }
 
@@ -98,10 +93,8 @@ public class Configurator
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
      */
-    protected void loadGlob( String line, ClassRealm realm )
-        throws MalformedURLException, FileNotFoundException
-    {
-        loadGlob( line, realm, false );
+    protected void loadGlob(String line, ClassRealm realm) throws MalformedURLException, FileNotFoundException {
+        loadGlob(line, realm, false);
     }
 
     /**
@@ -115,10 +108,9 @@ public class Configurator
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
      */
-    protected void loadGlob( String line, ClassRealm realm, boolean optionally )
-        throws MalformedURLException, FileNotFoundException
-    {
-        config.loadGlob( line, realm, optionally );
+    protected void loadGlob(String line, ClassRealm realm, boolean optionally)
+            throws MalformedURLException, FileNotFoundException {
+        config.loadGlob(line, realm, optionally);
     }
 
     /**
@@ -129,11 +121,7 @@ public class Configurator
      * @throws ConfigurationException If the property does not
      *                                exist or if there is a syntax error.
      */
-    protected String filter( String text )
-        throws ConfigurationException
-    {
-        return config.filter( text );
+    protected String filter(String text) throws ConfigurationException {
+        return config.filter(text);
     }
-
 }
-

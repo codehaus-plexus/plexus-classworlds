@@ -30,8 +30,7 @@ import org.codehaus.plexus.classworlds.ClassWorld;
  * Similar to {@link ClassRealm} but only exposing some resources of the underlying URL.
  * Only supposed to be called from {@link ClassWorld}.
  */
-public class FilteredClassRealm extends ClassRealm
-{
+public class FilteredClassRealm extends ClassRealm {
     private final Predicate<String> filter;
 
     /**
@@ -43,42 +42,33 @@ public class FilteredClassRealm extends ClassRealm
      * @param baseClassLoader The base class loader for this realm, may be <code>null</code> to use the bootstrap class
      *            loader.
      */
-    public FilteredClassRealm( Predicate<String> filter, ClassWorld world, String id, ClassLoader baseClassLoader )
-    {
-        super( world, id, baseClassLoader );
+    public FilteredClassRealm(Predicate<String> filter, ClassWorld world, String id, ClassLoader baseClassLoader) {
+        super(world, id, baseClassLoader);
         this.filter = filter;
     }
 
     @Override
-    protected Class<?> findClassInternal( String name )
-        throws ClassNotFoundException
-    {
-        String resourceName = name.replace( '.', '/' ).concat( ".class" );
-        if ( !filter.test( resourceName ) )
-        {
+    protected Class<?> findClassInternal(String name) throws ClassNotFoundException {
+        String resourceName = name.replace('.', '/').concat(".class");
+        if (!filter.test(resourceName)) {
             throw new ClassNotFoundException(name);
         }
-        return super.findClassInternal( name );
+        return super.findClassInternal(name);
     }
 
     @Override
-    public URL findResource( String name )
-    {
-        if ( !filter.test( name ) )
-        {
+    public URL findResource(String name) {
+        if (!filter.test(name)) {
             return null;
         }
-        return super.findResource( name );
+        return super.findResource(name);
     }
 
     @Override
-    public Enumeration<URL> findResources( String name )
-        throws IOException
-    {
-        if ( !filter.test( name ) )
-        {
+    public Enumeration<URL> findResources(String name) throws IOException {
+        if (!filter.test(name)) {
             return Collections.emptyEnumeration();
         }
-        return super.findResources( name );
+        return super.findResources(name);
     }
 }

@@ -25,9 +25,7 @@ import org.codehaus.plexus.classworlds.ClassWorldException;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class NoSuchRealmException
-    extends ClassWorldException
-{
+public class NoSuchRealmException extends ClassWorldException {
     // ------------------------------------------------------------
     //     Instance members
     // ------------------------------------------------------------
@@ -47,9 +45,8 @@ public class NoSuchRealmException
      * @param world The world.
      * @param id    The realm id.
      */
-    public NoSuchRealmException( ClassWorld world, String id )
-    {
-        super( world, id );
+    public NoSuchRealmException(ClassWorld world, String id) {
+        super(world, id);
         this.id = id;
     }
 
@@ -62,8 +59,7 @@ public class NoSuchRealmException
      *
      * @return The id.
      */
-    public String getId()
-    {
+    public String getId() {
         return this.id;
     }
 }

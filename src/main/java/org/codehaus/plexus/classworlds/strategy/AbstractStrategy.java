@@ -28,47 +28,37 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 /**
  * @author Jason van Zyl
  */
-public abstract class AbstractStrategy
-    implements Strategy    
-{
+public abstract class AbstractStrategy implements Strategy {
 
     protected ClassRealm realm;
 
-    public AbstractStrategy( ClassRealm realm )
-    {
+    public AbstractStrategy(ClassRealm realm) {
         this.realm = realm;
     }
 
-    protected String getNormalizedResource( String name )
-    {
-        return UrlUtils.normalizeUrlPath( name );
+    protected String getNormalizedResource(String name) {
+        return UrlUtils.normalizeUrlPath(name);
     }
 
-    protected Enumeration<URL> combineResources( Enumeration<URL> en1, Enumeration<URL> en2, Enumeration<URL> en3 )
-    {
+    protected Enumeration<URL> combineResources(Enumeration<URL> en1, Enumeration<URL> en2, Enumeration<URL> en3) {
         Collection<URL> urls = new LinkedHashSet<>();
 
-        addAll( urls, en1 );
-        addAll( urls, en2 );
-        addAll( urls, en3 );
+        addAll(urls, en1);
+        addAll(urls, en2);
+        addAll(urls, en3);
 
-        return Collections.enumeration( urls );
+        return Collections.enumeration(urls);
     }
 
-    private void addAll( Collection<URL> target, Enumeration<URL> en )
-    {
-        if ( en != null )
-        {
-            while ( en.hasMoreElements() )
-            {
-                target.add( en.nextElement() );
+    private void addAll(Collection<URL> target, Enumeration<URL> en) {
+        if (en != null) {
+            while (en.hasMoreElements()) {
+                target.add(en.nextElement());
             }
         }
     }
 
-    public ClassRealm getRealm()
-    {
+    public ClassRealm getRealm() {
         return realm;
     }
-
 }

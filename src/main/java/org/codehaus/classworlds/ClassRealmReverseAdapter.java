@@ -16,10 +16,10 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import java.util.Enumeration;
-import java.net.URL;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
 
 /**
  * A reverse adapter for ClassRealms
@@ -27,126 +27,94 @@ import java.io.InputStream;
  * @author Andrew Williams
  */
 @Deprecated
-public class ClassRealmReverseAdapter
-    extends org.codehaus.plexus.classworlds.realm.ClassRealm
-{
+public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.realm.ClassRealm {
 
-    public static ClassRealmReverseAdapter getInstance( ClassRealm oldRealm )
-    {
-        ClassRealmReverseAdapter adapter = new ClassRealmReverseAdapter( oldRealm );
+    public static ClassRealmReverseAdapter getInstance(ClassRealm oldRealm) {
+        ClassRealmReverseAdapter adapter = new ClassRealmReverseAdapter(oldRealm);
 
         return adapter;
     }
 
     private ClassRealm realm;
 
-    private ClassRealmReverseAdapter( ClassRealm oldRealm )
-    {
-        super( ClassWorldReverseAdapter.getInstance( oldRealm.getWorld() ),
-               oldRealm.getId(), oldRealm.getClassLoader() );
+    private ClassRealmReverseAdapter(ClassRealm oldRealm) {
+        super(ClassWorldReverseAdapter.getInstance(oldRealm.getWorld()), oldRealm.getId(), oldRealm.getClassLoader());
         this.realm = oldRealm;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return realm.getId();
     }
 
-    public org.codehaus.plexus.classworlds.ClassWorld getWorld()
-    {
-        return ClassWorldReverseAdapter.getInstance( realm.getWorld() );
+    public org.codehaus.plexus.classworlds.ClassWorld getWorld() {
+        return ClassWorldReverseAdapter.getInstance(realm.getWorld());
     }
 
-    public void importFrom( String realmId,
-                            String pkgName )
-        throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException
-    {
-        try
-        {
-            realm.importFrom( realmId, pkgName );
-        }
-        catch ( NoSuchRealmException e )
-        {
-            throw new org.codehaus.plexus.classworlds.realm.NoSuchRealmException( getWorld(), e.getId() );
+    public void importFrom(String realmId, String pkgName)
+            throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException {
+        try {
+            realm.importFrom(realmId, pkgName);
+        } catch (NoSuchRealmException e) {
+            throw new org.codehaus.plexus.classworlds.realm.NoSuchRealmException(getWorld(), e.getId());
         }
     }
 
-    public void addURL( URL constituent )
-    {
-        realm.addConstituent( constituent );
+    public void addURL(URL constituent) {
+        realm.addConstituent(constituent);
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm locateSourceRealm( String className )
-    {
-        return getInstance( realm.locateSourceRealm(
-            className ) );
+    public org.codehaus.plexus.classworlds.realm.ClassRealm locateSourceRealm(String className) {
+        return getInstance(realm.locateSourceRealm(className));
     }
 
-    public void setParentRealm( org.codehaus.plexus.classworlds.realm.ClassRealm classRealm )
-    {
-        realm.setParent( ClassRealmAdapter.getInstance( classRealm ) );
+    public void setParentRealm(org.codehaus.plexus.classworlds.realm.ClassRealm classRealm) {
+        realm.setParent(ClassRealmAdapter.getInstance(classRealm));
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm createChildRealm( String id )
-        throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException
-    {
-        try
-        {
-            return getInstance( realm.createChildRealm( id ) );
-        }
-        catch ( DuplicateRealmException e )
-        {
-            throw new org.codehaus.plexus.classworlds.realm.DuplicateRealmException( getWorld(), e.getId() );
+    public org.codehaus.plexus.classworlds.realm.ClassRealm createChildRealm(String id)
+            throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException {
+        try {
+            return getInstance(realm.createChildRealm(id));
+        } catch (DuplicateRealmException e) {
+            throw new org.codehaus.plexus.classworlds.realm.DuplicateRealmException(getWorld(), e.getId());
         }
     }
 
-    public ClassLoader getClassLoader()
-    {
+    public ClassLoader getClassLoader() {
         return realm.getClassLoader();
     }
 
-    public org.codehaus.plexus.classworlds.realm.ClassRealm getParentRealm()
-    {
-        return getInstance( realm.getParent() );
+    public org.codehaus.plexus.classworlds.realm.ClassRealm getParentRealm() {
+        return getInstance(realm.getParent());
     }
 
-    public URL[] getURLs()
-    {
+    public URL[] getURLs() {
         return realm.getConstituents();
     }
 
-    public Class loadClass( String name )
-        throws ClassNotFoundException
-    {
-        return realm.loadClass( name );
+    public Class loadClass(String name) throws ClassNotFoundException {
+        return realm.loadClass(name);
     }
 
-    public URL getResource( String name )
-    {
-        return realm.getResource( name );
+    public URL getResource(String name) {
+        return realm.getResource(name);
     }
 
-    public Enumeration findResources( String name )
-        throws IOException
-    {
-        return realm.findResources( name );
+    public Enumeration findResources(String name) throws IOException {
+        return realm.findResources(name);
     }
 
-    public InputStream getResourceAsStream( String name )
-    {
-        return realm.getResourceAsStream( name );
+    public InputStream getResourceAsStream(String name) {
+        return realm.getResourceAsStream(name);
     }
 
-    public void display()
-    {
+    public void display() {
         realm.display();
     }
 
-    public boolean equals(Object o)
-    {
-        if ( !( o instanceof ClassRealm ) )
-            return false;
+    public boolean equals(Object o) {
+        if (!(o instanceof ClassRealm)) return false;
 
-        return getId().equals( ( (ClassRealm) o ).getId() );
+        return getId().equals(((ClassRealm) o).getId());
     }
 }

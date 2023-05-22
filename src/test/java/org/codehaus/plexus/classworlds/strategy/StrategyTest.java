@@ -15,12 +15,6 @@ package org.codehaus.plexus.classworlds.strategy;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
@@ -31,129 +25,111 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 // jars within jars
 // hierarchy vs graph
 
-class StrategyTest
-    extends AbstractClassWorldsTestCase
-{
+class StrategyTest extends AbstractClassWorldsTestCase {
     private ClassRealm realm;
 
     private Strategy strategy;
 
     @BeforeEach
-    public void setUp()
-        throws Exception
-    {
-        this.realm = new ClassWorld().newRealm( "realm" );
+    public void setUp() throws Exception {
+        this.realm = new ClassWorld().newRealm("realm");
         this.strategy = this.realm.getStrategy();
-        realm.addURL( getJarUrl( "component0-1.0.jar" ) );
+        realm.addURL(getJarUrl("component0-1.0.jar"));
     }
 
     @Test
-    void testLoadingOfApplicationClass()
-        throws Exception
-    {
-        assertNotNull( strategy.loadClass( "org.codehaus.plexus.Component0" ) );
+    void testLoadingOfApplicationClass() throws Exception {
+        assertNotNull(strategy.loadClass("org.codehaus.plexus.Component0"));
     }
 
     @Test
-    void testLoadingOfApplicationClassThenDoingItAgain()
-        throws Exception
-    {
-        Class<?> c = strategy.loadClass( "org.codehaus.plexus.Component0" );
+    void testLoadingOfApplicationClassThenDoingItAgain() throws Exception {
+        Class<?> c = strategy.loadClass("org.codehaus.plexus.Component0");
 
-        assertNotNull( c );
+        assertNotNull(c);
 
-        c = strategy.loadClass( "org.codehaus.plexus.Component0" );
+        c = strategy.loadClass("org.codehaus.plexus.Component0");
 
-        assertNotNull( c );
-    }
-
-
-    @Test
-    void testLoadingOfSystemClass()
-        throws Exception
-    {
-        assertNotNull( strategy.getRealm().loadClass( "java.lang.Object" ) );
+        assertNotNull(c);
     }
 
     @Test
-    void testLoadingOfNonExistentClass()
-    {
-        try
-        {
-            strategy.loadClass( "org.codehaus.plexus.NonExistentComponent" );
+    void testLoadingOfSystemClass() throws Exception {
+        assertNotNull(strategy.getRealm().loadClass("java.lang.Object"));
+    }
 
-            fail( "Should have thrown a ClassNotFoundException!" );
-        }
-        catch ( ClassNotFoundException e )
-        {
+    @Test
+    void testLoadingOfNonExistentClass() {
+        try {
+            strategy.loadClass("org.codehaus.plexus.NonExistentComponent");
+
+            fail("Should have thrown a ClassNotFoundException!");
+        } catch (ClassNotFoundException e) {
             // do nothing
         }
     }
 
     @Test
-    void testGetApplicationResource()
-        throws Exception
-    {
-        URL resource = strategy.getResource( "META-INF/plexus/components.xml" );
+    void testGetApplicationResource() throws Exception {
+        URL resource = strategy.getResource("META-INF/plexus/components.xml");
 
-        assertNotNull( resource );
+        assertNotNull(resource);
 
-        String content = getContent( resource.openStream() );
+        String content = getContent(resource.openStream());
 
-        assertTrue( content.startsWith( "<component-set>" ) );
+        assertTrue(content.startsWith("<component-set>"));
     }
 
     @Test
-    void testGetSystemResource()
-    {
-        assumeTrue( getJavaVersion() < 9.0,
-                    "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9" );
-        
-        URL resource = strategy.getRealm().getResource( "java/lang/Object.class" );
+    void testGetSystemResource() {
+        assumeTrue(
+                getJavaVersion() < 9.0,
+                "Due to strong encapsulation you cannot get the java/lang/Object.class as resource since Java 9");
 
-        assertNotNull( resource );
+        URL resource = strategy.getRealm().getResource("java/lang/Object.class");
+
+        assertNotNull(resource);
     }
 
     @Test
-    void testFindResources()
-        throws Exception
-    {
-        realm.addURL( getJarUrl( "component1-1.0.jar" ) );
+    void testFindResources() throws Exception {
+        realm.addURL(getJarUrl("component1-1.0.jar"));
 
-        Enumeration<URL> e = strategy.getResources( "META-INF/plexus/components.xml" );
-        assertNotNull( e );
+        Enumeration<URL> e = strategy.getResources("META-INF/plexus/components.xml");
+        assertNotNull(e);
 
         int resourceCount = 0;
-        while ( e.hasMoreElements() )
-        {
+        while (e.hasMoreElements()) {
             e.nextElement();
             resourceCount++;
         }
-        assertEquals( 2, resourceCount );
+        assertEquals(2, resourceCount);
     }
 
-    protected String getContent( InputStream in )
-        throws Exception
-    {
+    protected String getContent(InputStream in) throws Exception {
         byte[] buffer = new byte[1024];
 
         int read;
 
         StringBuilder content = new StringBuilder();
 
-        while ( ( read = in.read( buffer, 0, 1024 ) ) >= 0 )
-        {
-            content.append( new String( buffer, 0, read ) );
+        while ((read = in.read(buffer, 0, 1024)) >= 0) {
+            content.append(new String(buffer, 0, read));
         }
 
         return content.toString();
     }
-    
-    private double getJavaVersion()
-    {
-        return Double.parseDouble( System.getProperty( "java.specification.version" ) );
+
+    private double getJavaVersion() {
+        return Double.parseDouble(System.getProperty("java.specification.version"));
     }
 }
