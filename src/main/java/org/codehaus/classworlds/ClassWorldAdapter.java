@@ -25,83 +25,56 @@ import java.util.Vector;
  * @author Andrew Williams
  */
 @Deprecated
-public class ClassWorldAdapter
-    extends ClassWorld
-{
+public class ClassWorldAdapter extends ClassWorld {
 
-    public static ClassWorldAdapter getInstance( org.codehaus.plexus.classworlds.ClassWorld newWorld )
-    {
-        return new ClassWorldAdapter( newWorld );
+    public static ClassWorldAdapter getInstance(org.codehaus.plexus.classworlds.ClassWorld newWorld) {
+        return new ClassWorldAdapter(newWorld);
     }
 
     private org.codehaus.plexus.classworlds.ClassWorld world;
 
-    private ClassWorldAdapter( org.codehaus.plexus.classworlds.ClassWorld newWorld )
-    {
-        super( false );
+    private ClassWorldAdapter(org.codehaus.plexus.classworlds.ClassWorld newWorld) {
+        super(false);
         this.world = newWorld;
     }
 
-    public ClassRealm newRealm( String id )
-        throws DuplicateRealmException
-    {
-        try
-        {
-            return ClassRealmAdapter.getInstance( world.newRealm( id ) );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
-        {
-            throw new DuplicateRealmException( this, e.getId() );
+    public ClassRealm newRealm(String id) throws DuplicateRealmException {
+        try {
+            return ClassRealmAdapter.getInstance(world.newRealm(id));
+        } catch (org.codehaus.plexus.classworlds.realm.DuplicateRealmException e) {
+            throw new DuplicateRealmException(this, e.getId());
         }
     }
 
-    public ClassRealm newRealm( String id,
-                                ClassLoader classLoader )
-        throws DuplicateRealmException
-    {
-        try
-        {
-            return ClassRealmAdapter.getInstance( world.newRealm( id, classLoader ) );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.DuplicateRealmException e )
-        {
-            throw new DuplicateRealmException( this, e.getId() );
+    public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
+        try {
+            return ClassRealmAdapter.getInstance(world.newRealm(id, classLoader));
+        } catch (org.codehaus.plexus.classworlds.realm.DuplicateRealmException e) {
+            throw new DuplicateRealmException(this, e.getId());
         }
     }
 
-    public void disposeRealm( String id )
-        throws NoSuchRealmException
-    {
-        try
-        {
-            world.disposeRealm( id );
-        }
-        catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
-        {
-            throw new NoSuchRealmException( this, e.getId() );
+    public void disposeRealm(String id) throws NoSuchRealmException {
+        try {
+            world.disposeRealm(id);
+        } catch (org.codehaus.plexus.classworlds.realm.NoSuchRealmException e) {
+            throw new NoSuchRealmException(this, e.getId());
         }
     }
 
-    public ClassRealm getRealm( String id )
-        throws NoSuchRealmException
-    {
-        try
-        {
-            return ClassRealmAdapter.getInstance( world.getRealm( id ) );
+    public ClassRealm getRealm(String id) throws NoSuchRealmException {
+        try {
+            return ClassRealmAdapter.getInstance(world.getRealm(id));
+        } catch (org.codehaus.plexus.classworlds.realm.NoSuchRealmException e) {
+            throw new NoSuchRealmException(this, e.getId());
         }
-        catch ( org.codehaus.plexus.classworlds.realm.NoSuchRealmException e )
-        {
-            throw new NoSuchRealmException( this, e.getId() );
-        }            
     }
 
-    public Collection getRealms()
-    {
+    public Collection getRealms() {
         Collection<org.codehaus.plexus.classworlds.realm.ClassRealm> realms = world.getRealms();
         Vector<ClassRealmAdapter> ret = new Vector<>();
-        for ( org.codehaus.plexus.classworlds.realm.ClassRealm classRealm : realms )
-        {
-            ret.add( ClassRealmAdapter.getInstance( classRealm ) );
+        for (org.codehaus.plexus.classworlds.realm.ClassRealm classRealm : realms) {
+            ret.add(ClassRealmAdapter.getInstance(classRealm));
         }
 
         return ret;

@@ -30,57 +30,44 @@ import java.net.URL;
 import java.util.Enumeration;
 
 @Deprecated
-public class DefaultClassRealm
-    implements ClassRealm
-{
+public class DefaultClassRealm implements ClassRealm {
     private ClassRealmAdapter adapter;
 
-    public DefaultClassRealm( ClassWorld world, String id )
-    {
-        this( world, id, null );
+    public DefaultClassRealm(ClassWorld world, String id) {
+        this(world, id, null);
     }
 
-    public DefaultClassRealm( ClassWorld world, String id, ClassLoader foreignClassLoader )
-    {
-        this.adapter = ClassRealmAdapter.getInstance(
-            new org.codehaus.plexus.classworlds.realm.ClassRealm(
-                ClassWorldReverseAdapter.getInstance( world ), id, foreignClassLoader ) );
+    public DefaultClassRealm(ClassWorld world, String id, ClassLoader foreignClassLoader) {
+        this.adapter = ClassRealmAdapter.getInstance(new org.codehaus.plexus.classworlds.realm.ClassRealm(
+                ClassWorldReverseAdapter.getInstance(world), id, foreignClassLoader));
     }
 
-    public URL[] getConstituents()
-    {
+    public URL[] getConstituents() {
         return adapter.getConstituents();
     }
 
-    public ClassRealm getParent()
-    {
+    public ClassRealm getParent() {
         return adapter.getParentRealm();
     }
 
-    public void setParent( ClassRealm parent )
-    {
-        adapter.setParent( parent );
+    public void setParent(ClassRealm parent) {
+        adapter.setParent(parent);
     }
 
-    public String getId()
-    {
+    public String getId() {
         return adapter.getId();
     }
 
-    public ClassWorld getWorld()
-    {
+    public ClassWorld getWorld() {
         return adapter.getWorld();
     }
 
-    public void importFrom( String realmId, String packageName )
-        throws NoSuchRealmException
-    {
-        adapter.importFrom( realmId, packageName );
+    public void importFrom(String realmId, String packageName) throws NoSuchRealmException {
+        adapter.importFrom(realmId, packageName);
     }
 
-    public void addConstituent( URL constituent )
-    {
-        adapter.addConstituent( constituent );
+    public void addConstituent(URL constituent) {
+        adapter.addConstituent(constituent);
     }
 
     /**
@@ -93,79 +80,61 @@ public class DefaultClassRealm
      *  @param b the class definition as a byte[]
      *  @throws ClassNotFoundException when class couldn't be loaded
      */
-    public void addConstituent(String constituent,
-                               byte[] b) throws ClassNotFoundException
-    {
-        try
-        {
+    public void addConstituent(String constituent, byte[] b) throws ClassNotFoundException {
+        try {
             File path, file;
-            if (constituent.lastIndexOf('.') != -1)
-            {
-                path = new File("byteclass/" + constituent.substring(0, constituent.lastIndexOf('.') + 1).replace('.', File.separatorChar));
+            if (constituent.lastIndexOf('.') != -1) {
+                path = new File("byteclass/"
+                        + constituent
+                                .substring(0, constituent.lastIndexOf('.') + 1)
+                                .replace('.', File.separatorChar));
 
                 file = new File(path, constituent.substring(constituent.lastIndexOf('.') + 1) + ".class");
-            }
-            else
-            {
+            } else {
                 path = new File("byteclass/");
 
                 file = new File(path, constituent + ".class");
             }
 
-            addConstituent( new URL( null,
-                                     file.toURI().toURL().toExternalForm(),
-                                     new BytesURLStreamHandler(b) ) );
-        }
-        catch (java.io.IOException e)
-        {
-            throw new ClassNotFoundException( "Couldn't load byte stream.", e );
+            addConstituent(new URL(null, file.toURI().toURL().toExternalForm(), new BytesURLStreamHandler(b)));
+        } catch (java.io.IOException e) {
+            throw new ClassNotFoundException("Couldn't load byte stream.", e);
         }
     }
 
-    public ClassRealm locateSourceRealm( String classname )
-    {
-        return adapter.locateSourceRealm( classname );
+    public ClassRealm locateSourceRealm(String classname) {
+        return adapter.locateSourceRealm(classname);
     }
 
-    public ClassLoader getClassLoader()
-    {
+    public ClassLoader getClassLoader() {
         return adapter.getClassLoader();
     }
 
-    public ClassRealm createChildRealm( String id )
-        throws DuplicateRealmException
-    {
-        return adapter.createChildRealm( id );
+    public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
+        return adapter.createChildRealm(id);
     }
 
     // ----------------------------------------------------------------------
     // ClassLoader API
     // ----------------------------------------------------------------------
 
-    public Class loadClass( String name )
-        throws ClassNotFoundException
-    {
-        return adapter.loadClass( name );
+    public Class loadClass(String name) throws ClassNotFoundException {
+        return adapter.loadClass(name);
     }
 
-    public URL getResource( String name )
-    {
-        return adapter.getResource( name );
+    public URL getResource(String name) {
+        return adapter.getResource(name);
     }
 
-    public InputStream getResourceAsStream( String name )
-    {
-        return adapter.getResourceAsStream( name );
+    public InputStream getResourceAsStream(String name) {
+        return adapter.getResourceAsStream(name);
     }
 
-    public Enumeration findResources(String name)
-        throws IOException
-	{
-		return adapter.findResources( name );
-	}
+    public Enumeration findResources(String name) throws IOException {
+        return adapter.findResources(name);
+    }
 
-    public void display()
-    {
+    public void display() {
         adapter.display();
     }
 }

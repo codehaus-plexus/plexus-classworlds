@@ -21,17 +21,14 @@ package org.codehaus.plexus.classworlds.launcher;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class ConfigurationException
-    extends Exception
-{
+public class ConfigurationException extends Exception {
     /**
      * Construct.
      *
      * @param msg The message.
      */
-    public ConfigurationException( String msg )
-    {
-        super( msg );
+    public ConfigurationException(String msg) {
+        super(msg);
     }
 
     /**
@@ -41,13 +38,11 @@ public class ConfigurationException
      * @param lineNo The number of configuraton line where the problem occured.
      * @param line   The configuration line where the problem occured.
      */
-    public ConfigurationException( String msg, int lineNo, String line )
-    {
-        super( msg + " (" + lineNo + "): " + line );
+    public ConfigurationException(String msg, int lineNo, String line) {
+        super(msg + " (" + lineNo + "): " + line);
     }
 
-    protected ConfigurationException( Exception cause )
-    {
-        super( cause );
+    protected ConfigurationException(Exception cause) {
+        super(cause);
     }
 }

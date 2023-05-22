@@ -36,41 +36,31 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
-public class ClassWorld implements Closeable
-{
+public class ClassWorld implements Closeable {
     private Map<String, ClassRealm> realms;
 
     private final List<ClassWorldListener> listeners = new ArrayList<>();
 
-    public ClassWorld( String realmId, ClassLoader classLoader )
-    {
+    public ClassWorld(String realmId, ClassLoader classLoader) {
         this();
 
-        try
-        {
-            newRealm( realmId, classLoader );
-        }
-        catch ( DuplicateRealmException e )
-        {
+        try {
+            newRealm(realmId, classLoader);
+        } catch (DuplicateRealmException e) {
             // Will never happen as we are just creating the world.
         }
     }
 
-    public ClassWorld()
-    {
+    public ClassWorld() {
         this.realms = new LinkedHashMap<>();
     }
 
-    public ClassRealm newRealm( String id )
-        throws DuplicateRealmException
-    {
-        return newRealm( id, getClass().getClassLoader() );
+    public ClassRealm newRealm(String id) throws DuplicateRealmException {
+        return newRealm(id, getClass().getClassLoader());
     }
 
-    public ClassRealm newRealm( String id, ClassLoader classLoader )
-        throws DuplicateRealmException
-    {
-        return newRealm( id, classLoader, null );
+    public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
+        return newRealm(id, classLoader, null);
     }
 
     /**
@@ -85,114 +75,87 @@ public class ClassWorld implements Closeable
      * @since 2.7.0
      * @see FilteredClassRealm
      */
-    public synchronized ClassRealm newRealm( String id, ClassLoader classLoader, Predicate<String> filter )
-        throws DuplicateRealmException
-    {
-        if ( realms.containsKey( id ) )
-        {
-            throw new DuplicateRealmException( this, id );
+    public synchronized ClassRealm newRealm(String id, ClassLoader classLoader, Predicate<String> filter)
+            throws DuplicateRealmException {
+        if (realms.containsKey(id)) {
+            throw new DuplicateRealmException(this, id);
         }
 
         ClassRealm realm;
 
-        if ( filter == null )
-        {
-            realm = new ClassRealm( this, id, classLoader );
+        if (filter == null) {
+            realm = new ClassRealm(this, id, classLoader);
+        } else {
+            realm = new FilteredClassRealm(filter, this, id, classLoader);
         }
-        else
-        {
-            realm = new FilteredClassRealm( filter, this, id, classLoader );
-        }
-        realms.put( id, realm );
+        realms.put(id, realm);
 
-        for ( ClassWorldListener listener : listeners )
-        {
-            listener.realmCreated( realm );
+        for (ClassWorldListener listener : listeners) {
+            listener.realmCreated(realm);
         }
 
         return realm;
     }
-    
+
     /**
      * Closes all contained class realms.
      * @since 2.7.0
      */
     @Override
-    public synchronized void close()
-        throws IOException
-    {
-        realms.values().stream().forEach( this::disposeRealm );
+    public synchronized void close() throws IOException {
+        realms.values().stream().forEach(this::disposeRealm);
         realms.clear();
     }
 
-    public synchronized void disposeRealm( String id )
-        throws NoSuchRealmException
-    {
-        ClassRealm realm = realms.remove( id );
+    public synchronized void disposeRealm(String id) throws NoSuchRealmException {
+        ClassRealm realm = realms.remove(id);
 
-        if ( realm != null )
-        {
-            disposeRealm( realm );
-        }
-        else
-        {
-            throw new NoSuchRealmException( this, id );
+        if (realm != null) {
+            disposeRealm(realm);
+        } else {
+            throw new NoSuchRealmException(this, id);
         }
     }
 
-    private void disposeRealm( ClassRealm realm )
-    {
-        try
-        {
+    private void disposeRealm(ClassRealm realm) {
+        try {
             realm.close();
+        } catch (IOException ignore) {
         }
-        catch ( IOException ignore )
-        {
-        }
-        for ( ClassWorldListener listener : listeners )
-        {
-            listener.realmDisposed( realm );
+        for (ClassWorldListener listener : listeners) {
+            listener.realmDisposed(realm);
         }
     }
 
-    public synchronized ClassRealm getRealm( String id )
-        throws NoSuchRealmException
-    {
-        if ( realms.containsKey( id ) )
-        {
-            return realms.get( id );
+    public synchronized ClassRealm getRealm(String id) throws NoSuchRealmException {
+        if (realms.containsKey(id)) {
+            return realms.get(id);
         }
 
-        throw new NoSuchRealmException( this, id );
+        throw new NoSuchRealmException(this, id);
     }
 
-    public synchronized Collection<ClassRealm> getRealms()
-    {
-        return Collections.unmodifiableList( new ArrayList<>( realms.values() ) );
+    public synchronized Collection<ClassRealm> getRealms() {
+        return Collections.unmodifiableList(new ArrayList<>(realms.values()));
     }
 
     // from exports branch
-    public synchronized ClassRealm getClassRealm( String id )
-    {
-        if ( realms.containsKey( id ) )
-        {
-            return realms.get( id );
+    public synchronized ClassRealm getClassRealm(String id) {
+        if (realms.containsKey(id)) {
+            return realms.get(id);
         }
 
         return null;
     }
 
-    public synchronized void addListener( ClassWorldListener listener )
-    {
+    public synchronized void addListener(ClassWorldListener listener) {
         // TODO ideally, use object identity, not equals
-        if ( !listeners.contains( listener ) )
-        {
-            listeners.add( listener );
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
         }
     }
 
-    public synchronized void removeListener( ClassWorldListener listener )
-    {
-        listeners.remove( listener );
+    public synchronized void removeListener(ClassWorldListener listener) {
+        listeners.remove(listener);
     }
 }

@@ -18,9 +18,8 @@ package org.codehaus.plexus.classworlds;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
-public interface ClassWorldListener
-{
-    void realmCreated( ClassRealm realm );
+public interface ClassWorldListener {
+    void realmCreated(ClassRealm realm);
 
-    void realmDisposed( ClassRealm realm );
+    void realmDisposed(ClassRealm realm);
 }

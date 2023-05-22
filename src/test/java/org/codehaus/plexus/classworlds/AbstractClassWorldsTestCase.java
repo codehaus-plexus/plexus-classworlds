@@ -21,11 +21,8 @@ import java.net.URL;
 /**
  * @author Jason van Zyl
  */
-public abstract class AbstractClassWorldsTestCase
-{
-    protected URL getJarUrl( String jarName )
-    {
-        return TestUtil.getTestResourceUrl( jarName );
+public abstract class AbstractClassWorldsTestCase {
+    protected URL getJarUrl(String jarName) {
+        return TestUtil.getTestResourceUrl(jarName);
     }
-
 }

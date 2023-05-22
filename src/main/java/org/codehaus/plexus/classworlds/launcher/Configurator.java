@@ -37,8 +37,7 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  */
-public class Configurator implements ConfigurationHandler
-{
+public class Configurator implements ConfigurationHandler {
     /**
      * The launcher to configure.
      */
@@ -57,20 +56,18 @@ public class Configurator implements ConfigurationHandler
     private ClassRealm curRealm;
 
     private ClassLoader foreignClassLoader = null;
-    
+
     /**
      * Construct.
      *
      * @param launcher The launcher to configure.
      */
-    public Configurator( Launcher launcher )
-    {
+    public Configurator(Launcher launcher) {
         this.launcher = launcher;
 
         configuredRealms = new HashMap<>();
 
-        if ( launcher != null )
-        {
+        if (launcher != null) {
             this.foreignClassLoader = launcher.getSystemClassLoader();
         }
     }
@@ -80,9 +77,8 @@ public class Configurator implements ConfigurationHandler
      *
      * @param world The classWorld to configure.
      */
-    public Configurator( ClassWorld world )
-    {
-        setClassWorld( world );
+    public Configurator(ClassWorld world) {
+        setClassWorld(world);
     }
 
     /**
@@ -91,8 +87,7 @@ public class Configurator implements ConfigurationHandler
      *
      * @param world The classWorld to configure.
      */
-    public void setClassWorld( ClassWorld world )
-    {
+    public void setClassWorld(ClassWorld world) {
         this.world = world;
 
         configuredRealms = new HashMap<>();
@@ -109,11 +104,9 @@ public class Configurator implements ConfigurationHandler
      * @throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException    If the config file defines a main entry point in
      *                                 a non-existent realm.
      */
-    public void configure( InputStream is )
-        throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException
-    {
-        if ( world == null )
-        {
+    public void configure(InputStream is)
+            throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException {
+        if (world == null) {
             world = new ClassWorld();
         }
 
@@ -121,35 +114,31 @@ public class Configurator implements ConfigurationHandler
 
         foreignClassLoader = null;
 
-        if ( this.launcher != null )
-        {
+        if (this.launcher != null) {
             foreignClassLoader = this.launcher.getSystemClassLoader();
         }
 
-        ConfigurationParser parser = new ConfigurationParser( this, System.getProperties() );
+        ConfigurationParser parser = new ConfigurationParser(this, System.getProperties());
 
-        parser.parse( is );
+        parser.parse(is);
 
         // Associate child realms to their parents.
         associateRealms();
 
-        if ( this.launcher != null )
-        {
-            this.launcher.setWorld( world );
+        if (this.launcher != null) {
+            this.launcher.setWorld(world);
         }
-
     }
 
     // TODO return this to protected when the legacy wrappers can be removed.
     /**
      * Associate parent realms with their children.
      */
-    public void associateRealms()
-    {
-        List<String> sortRealmNames = new ArrayList<>( configuredRealms.keySet() );
+    public void associateRealms() {
+        List<String> sortRealmNames = new ArrayList<>(configuredRealms.keySet());
 
         // sort by name
-        sortRealmNames.sort( String::compareTo );
+        sortRealmNames.sort(String::compareTo);
 
         // So now we have something like the following for defined
         // realms:
@@ -161,63 +150,49 @@ public class Configurator implements ConfigurationHandler
         // Now if the name of a realm is a superset of an existing realm
         // the we want to make child/parent associations.
 
-        for ( String realmName : sortRealmNames )
-        {
-            int j = realmName.lastIndexOf( '.' );
+        for (String realmName : sortRealmNames) {
+            int j = realmName.lastIndexOf('.');
 
-            if ( j > 0 )
-            {
-                String parentRealmName = realmName.substring( 0, j );
+            if (j > 0) {
+                String parentRealmName = realmName.substring(0, j);
 
-                ClassRealm parentRealm = configuredRealms.get( parentRealmName );
+                ClassRealm parentRealm = configuredRealms.get(parentRealmName);
 
-                if ( parentRealm != null )
-                {
-                    ClassRealm realm = configuredRealms.get( realmName );
+                if (parentRealm != null) {
+                    ClassRealm realm = configuredRealms.get(realmName);
 
-                    realm.setParentRealm( parentRealm );
+                    realm.setParentRealm(parentRealm);
                 }
             }
         }
     }
 
-    public void addImportFrom( String relamName, String importSpec )
-        throws NoSuchRealmException
-    {
-        curRealm.importFrom( relamName, importSpec );
+    public void addImportFrom(String relamName, String importSpec) throws NoSuchRealmException {
+        curRealm.importFrom(relamName, importSpec);
     }
 
-    public void addLoadFile( File file )
-    {
-        try
-        {
-            curRealm.addURL( file.toURI().toURL() );
-        }
-        catch ( MalformedURLException e )
-        {
+    public void addLoadFile(File file) {
+        try {
+            curRealm.addURL(file.toURI().toURL());
+        } catch (MalformedURLException e) {
             // can't really happen... or can it?
         }
     }
 
-    public void addLoadURL( URL url )
-    {
-        curRealm.addURL( url );
+    public void addLoadURL(URL url) {
+        curRealm.addURL(url);
     }
 
-    public void addRealm( String realmName )
-        throws DuplicateRealmException
-    {
-        curRealm = world.newRealm( realmName, foreignClassLoader );
+    public void addRealm(String realmName) throws DuplicateRealmException {
+        curRealm = world.newRealm(realmName, foreignClassLoader);
 
         // Stash the configured realm for subsequent association processing.
-        configuredRealms.put( realmName, curRealm );
+        configuredRealms.put(realmName, curRealm);
     }
 
-    public void setAppMain( String mainClassName, String mainRealmName )
-    {
-        if ( this.launcher != null )
-        {
-            this.launcher.setAppMain( mainClassName, mainRealmName );
+    public void setAppMain(String mainClassName, String mainRealmName) {
+        if (this.launcher != null) {
+            this.launcher.setAppMain(mainClassName, mainRealmName);
         }
     }
 }

@@ -16,9 +16,9 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-import java.net.URLStreamHandler;
-import java.net.URLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
 /**
  * @author Hani Suleiman (hani@formicary.net)
@@ -26,21 +26,18 @@ import java.net.URL;
  *         Time: 12:45:18 AM
  */
 @Deprecated
-public class BytesURLStreamHandler extends URLStreamHandler
-{
+public class BytesURLStreamHandler extends URLStreamHandler {
     byte[] content;
 
     int offset;
 
     int length;
 
-    public BytesURLStreamHandler( byte[] content )
-    {
+    public BytesURLStreamHandler(byte[] content) {
         this.content = content;
     }
 
-    public URLConnection openConnection( URL url )
-    {
-        return new BytesURLConnection( url, content );
+    public URLConnection openConnection(URL url) {
+        return new BytesURLConnection(url, content);
     }
 }

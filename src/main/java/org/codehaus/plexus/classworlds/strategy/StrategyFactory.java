@@ -21,19 +21,15 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 /**
  * StrategyFactory loads a strategy, either default or from a given hint.
  */
-public class StrategyFactory
-{
+public class StrategyFactory {
 
-    public static Strategy getStrategy( ClassRealm realm )
-    {
-        return getStrategy( realm, "default" );
+    public static Strategy getStrategy(ClassRealm realm) {
+        return getStrategy(realm, "default");
     }
 
-    public static Strategy getStrategy( ClassRealm realm, String hint )
-    {
+    public static Strategy getStrategy(ClassRealm realm, String hint) {
         // TODO: Here we shall check hint to load non-default strategies
 
-        return new SelfFirstStrategy( realm );
+        return new SelfFirstStrategy(realm);
     }
-
 }

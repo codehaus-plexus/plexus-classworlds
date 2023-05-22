@@ -25,55 +25,38 @@ import java.util.Collection;
  * @author Andrew Williams
  */
 @Deprecated
-public class ClassWorld
-{
+public class ClassWorld {
     private ClassWorldAdapter adapter;
 
-    public ClassWorld( String realmId,
-                       ClassLoader classLoader )
-    {
-        adapter = ClassWorldAdapter.getInstance(
-            new org.codehaus.plexus.classworlds.ClassWorld( realmId, classLoader ) );
+    public ClassWorld(String realmId, ClassLoader classLoader) {
+        adapter = ClassWorldAdapter.getInstance(new org.codehaus.plexus.classworlds.ClassWorld(realmId, classLoader));
     }
 
-    public ClassWorld()
-    {
-        adapter = ClassWorldAdapter.getInstance(
-            new org.codehaus.plexus.classworlds.ClassWorld( ) );
+    public ClassWorld() {
+        adapter = ClassWorldAdapter.getInstance(new org.codehaus.plexus.classworlds.ClassWorld());
     }
 
-    public ClassWorld( boolean ignore )
-    {
+    public ClassWorld(boolean ignore) {
         /* fake */
     }
 
-    public ClassRealm newRealm( String id )
-        throws DuplicateRealmException
-    {
-        return adapter.newRealm( id );
+    public ClassRealm newRealm(String id) throws DuplicateRealmException {
+        return adapter.newRealm(id);
     }
 
-    public ClassRealm newRealm( String id,
-                                ClassLoader classLoader )
-        throws DuplicateRealmException
-    {
-        return adapter.newRealm( id, classLoader );
+    public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
+        return adapter.newRealm(id, classLoader);
     }
 
-    public void disposeRealm( String id )
-        throws NoSuchRealmException
-    {
-        adapter.disposeRealm( id );
+    public void disposeRealm(String id) throws NoSuchRealmException {
+        adapter.disposeRealm(id);
     }
 
-    public ClassRealm getRealm( String id )
-        throws NoSuchRealmException
-    {
-        return adapter.getRealm( id );
+    public ClassRealm getRealm(String id) throws NoSuchRealmException {
+        return adapter.getRealm(id);
     }
 
-    public Collection getRealms()
-    {
+    public Collection getRealms() {
         return adapter.getRealms();
     }
 }

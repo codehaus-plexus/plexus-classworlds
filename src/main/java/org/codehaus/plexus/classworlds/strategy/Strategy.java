@@ -26,17 +26,13 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  * A strategy is a class for defining how classes and resources are located
  * in classworlds.
  */
-public interface Strategy
-{
+public interface Strategy {
 
-    Class<?> loadClass( String name )
-        throws ClassNotFoundException;
+    Class<?> loadClass(String name) throws ClassNotFoundException;
 
-    URL getResource( String name );
+    URL getResource(String name);
 
-    Enumeration<URL> getResources( String name )
-        throws IOException;
+    Enumeration<URL> getResources(String name) throws IOException;
 
     ClassRealm getRealm();
-
 }

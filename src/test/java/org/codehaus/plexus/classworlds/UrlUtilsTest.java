@@ -16,19 +16,16 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
-class UrlUtilsTest
-{
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class UrlUtilsTest {
 
     @Test
-    public void testNormalizeUrlPath()
-    {
-        assertEquals( "org/codehaus/Test.class", UrlUtils.normalizeUrlPath( "org/codehaus/Test.class" ) );
-        assertEquals( "org/Test.class", UrlUtils.normalizeUrlPath( "org/codehaus/../Test.class" ) );
-        assertEquals( "../../some.jar/org/Test.class", UrlUtils.normalizeUrlPath( "../../some.jar/org/Test.class" ) );
+    public void testNormalizeUrlPath() {
+        assertEquals("org/codehaus/Test.class", UrlUtils.normalizeUrlPath("org/codehaus/Test.class"));
+        assertEquals("org/Test.class", UrlUtils.normalizeUrlPath("org/codehaus/../Test.class"));
+        assertEquals("../../some.jar/org/Test.class", UrlUtils.normalizeUrlPath("../../some.jar/org/Test.class"));
     }
-
 }

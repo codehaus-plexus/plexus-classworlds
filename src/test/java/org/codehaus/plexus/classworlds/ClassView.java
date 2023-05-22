@@ -16,8 +16,7 @@ package org.codehaus.plexus.classworlds;
  * limitations under the License.
  */
 
-public class ClassView
-{
+public class ClassView {
     /**
      * * Formats Class information for debug output purposes.
      * *
@@ -25,23 +24,15 @@ public class ClassView
      * *
      * * @return a String describing the Class in detail
      */
-    public static String toString( Class<?> clz )
-    {
-        if ( clz.isPrimitive() )
-        {
+    public static String toString(Class<?> clz) {
+        if (clz.isPrimitive()) {
             return clz.toString();
-        }
-        else if ( clz.isArray() )
-        {
-            return "Array of " + toString( clz.getComponentType() );
-        }
-        else if ( clz.isInterface() )
-        {
-            return toInterfaceString( clz, "" );
-        }
-        else
-        {
-            return toClassString( clz, "" );
+        } else if (clz.isArray()) {
+            return "Array of " + toString(clz.getComponentType());
+        } else if (clz.isInterface()) {
+            return toInterfaceString(clz, "");
+        } else {
+            return toClassString(clz, "");
         }
     }
 
@@ -53,30 +44,25 @@ public class ClassView
      * *
      * * @return a String describing the Class in detail
      */
-    private static String toClassString( Class<?> clz, String sIndent )
-    {
+    private static String toClassString(Class<?> clz, String sIndent) {
         StringBuilder sb = new StringBuilder();
-        sb.append( sIndent )
-            .append( "Class " )
-            .append( clz.getName() )
-            .append( "  (" )
-            .append( toString( clz.getClassLoader() ) )
-            .append( ')' );
+        sb.append(sIndent)
+                .append("Class ")
+                .append(clz.getName())
+                .append("  (")
+                .append(toString(clz.getClassLoader()))
+                .append(')');
 
         sIndent += "  ";
 
         Class<?>[] aclz = clz.getInterfaces();
-        for ( Class<?> aClass : aclz )
-        {
-            sb.append( '\n' )
-                    .append( toInterfaceString( aClass, sIndent ) );
+        for (Class<?> aClass : aclz) {
+            sb.append('\n').append(toInterfaceString(aClass, sIndent));
         }
 
         clz = clz.getSuperclass();
-        if ( clz != null )
-        {
-            sb.append( '\n' )
-                .append( toClassString( clz, sIndent ) );
+        if (clz != null) {
+            sb.append('\n').append(toClassString(clz, sIndent));
         }
 
         return sb.toString();
@@ -90,23 +76,20 @@ public class ClassView
      * *
      * * @return a String describing the interface Class in detail
      */
-    private static String toInterfaceString( Class<?> clz, String sIndent )
-    {
+    private static String toInterfaceString(Class<?> clz, String sIndent) {
         StringBuilder sb = new StringBuilder();
-        sb.append( sIndent )
-            .append( "Interface " )
-            .append( clz.getName() )
-            .append( "  (" )
-            .append( toString( clz.getClassLoader() ) )
-            .append( ')' );
+        sb.append(sIndent)
+                .append("Interface ")
+                .append(clz.getName())
+                .append("  (")
+                .append(toString(clz.getClassLoader()))
+                .append(')');
 
         Class<?>[] aclz = clz.getInterfaces();
-        for ( Class<?> aClass : aclz )
-        {
+        for (Class<?> aClass : aclz) {
             clz = aClass;
 
-            sb.append( '\n' )
-                    .append( toInterfaceString( clz, sIndent + "  " ) );
+            sb.append('\n').append(toInterfaceString(clz, sIndent + "  "));
         }
 
         return sb.toString();
@@ -119,10 +102,8 @@ public class ClassView
      * *
      * * @return a String description of the ClassLoader
      */
-    private static String toString( ClassLoader loader )
-    {
-        if ( loader == null )
-        {
+    private static String toString(ClassLoader loader) {
+        if (loader == null) {
             return "System ClassLoader";
         }
 

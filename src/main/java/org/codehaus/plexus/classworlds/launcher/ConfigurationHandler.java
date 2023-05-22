@@ -27,43 +27,39 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  *
  * @author Igor Fedorenko
  */
-public interface ConfigurationHandler
-{
+public interface ConfigurationHandler {
 
     /**
      * Define the main class name
      * @param mainClassName the main class name
      * @param mainRealmName the main realm from which the main class is loaded
      */
-    void setAppMain( String mainClassName, String mainRealmName );
+    void setAppMain(String mainClassName, String mainRealmName);
 
     /**
      * Define a new realm
      * @param realmName the new realm name
      * @throws DuplicateRealmException when realm with name already exists
      */
-    void addRealm( String realmName )
-        throws DuplicateRealmException;
+    void addRealm(String realmName) throws DuplicateRealmException;
 
     /**
      * Add an import specification from a realm
      * @param realmName the realm name
      * @param importSpec the import specification
-     * @throws NoSuchRealmException if realm doesn't exist 
+     * @throws NoSuchRealmException if realm doesn't exist
      */
-    void addImportFrom( String realmName, String importSpec )
-        throws NoSuchRealmException;
+    void addImportFrom(String realmName, String importSpec) throws NoSuchRealmException;
 
     /**
      * Add a file to the realm
      * @param file the file to load content from
      */
-    void addLoadFile( File file );
+    void addLoadFile(File file);
 
     /**
      * Add an URL to the realm
      * @param url the url to load content from
      */
-    void addLoadURL( URL url );
-
+    void addLoadURL(URL url);
 }
