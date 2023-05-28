@@ -3,6 +3,12 @@
   <bannerLeft>
     <name>Plexus Classworlds</name>
   </bannerLeft>
+
+  <breadcrumbs>
+    <item name="Plexus" href="https://codehaus-plexus.github.io/"/>
+    <item name="Plexus Classworlds" href="https://codehaus-plexus.github.io/plexus-classworlds/"/>
+  </breadcrumbs>
+
   <body>
     <menu name="Overview">
       <item name="Introduction" href="index.html"/>

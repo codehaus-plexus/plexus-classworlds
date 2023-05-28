@@ -30,17 +30,18 @@
 
   <name>Plexus Classworlds</name>
   <description>A class loader framework</description>
+  <url>https://codehaus-plexus.github.io/plexus-classworlds/</url>
   <inceptionYear>2002</inceptionYear>
 
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
     <tag>master</tag>
-    <url>http://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
+    <url>https://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
   </scm>
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/codehaus-plexus/plexus-classworlds/issues</url>
+    <url>https://github.com/codehaus-plexus/plexus-classworlds/issues</url>
   </issueManagement>
 
   <distributionManagement>
