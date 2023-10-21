@@ -133,7 +133,7 @@
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <argLine>-ea:org.codehaus.classworlds:org.codehaus.plexus.classworlds</argLine>
-          <forkMode>once</forkMode>
+          <forkCount>1</forkCount>
         </configuration>
       </plugin>
       <plugin>
