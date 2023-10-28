@@ -1,0 +1,7 @@
+#!/bin/sh
+echo "removing class files and jar packages"
+rm src/*.class
+rm src/Cards/*.class
+rm src/Players/*.class
+rm bin/*.jar
+echo "finished"

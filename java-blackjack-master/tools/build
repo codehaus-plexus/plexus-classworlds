@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "compiling java files"
+cd src/
+javac Blackjack.java
+echo "producing jar package"
+jar -cfvm ../bin/Blackjack.jar ../tools/Blackjack.mf *.class card_images/*.png Cards/*.class Players/*.class
+cd ..
+echo "finished"

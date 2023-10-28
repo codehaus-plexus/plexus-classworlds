@@ -1,0 +1,32 @@
+Unix, Linux or Mac OS X
+=======================
+
+To compile on a Unix system, use:
+
+    % tools/build
+    
+This will generate class files in the src/ directory which you can run using:
+
+    % cd src/
+    % java Blackjack
+
+Also, a .jar file will be placed in bin/ that can be run independent of the location of the other source files. On Mac OS X, you can double click this file to run it. However, on some Unix systems, you can't and therefore will need to run it using the following:
+
+    % cd bin/
+    % java -jar Blackjack.jar
+
+Additionally, I've provided a 'clean' script for Unix that will remove all generated *.class and .jar files.
+
+    % tools/clean
+    
+Windows XP
+==========
+
+On a Windows system, to build:
+
+    % cd src
+    % javac Blackjack.java
+    
+To run the game;
+
+    % java Blackjack
