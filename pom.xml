@@ -169,7 +169,7 @@
                 <artifactItem>
                   <groupId>jakarta.xml.bind</groupId>
                   <artifactId>jakarta.xml.bind-api</artifactId>
-                  <version>4.0.0</version>
+                  <version>4.0.2</version>
                 </artifactItem>
               </artifactItems>
               <outputDirectory>${project.build.directory}/test-lib</outputDirectory>
