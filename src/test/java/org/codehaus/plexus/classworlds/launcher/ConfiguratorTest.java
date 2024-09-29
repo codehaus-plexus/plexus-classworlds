@@ -303,6 +303,40 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
         assertEquals(System.getProperty("user.home") + "/m2", System.getProperty("set.using.filtered.default"));
     }
 
+    @Test
+    void testFromFromFrom() throws Exception {
+        this.configurator.configure(getConfigPath("valid-from-from-from.conf"));
+
+        assertEquals("com.from.from.from.Main", this.launcher.getMainClassName());
+
+        assertEquals("from", this.launcher.getMainRealmName());
+
+        ClassWorld world = this.launcher.getWorld();
+
+        {
+            ClassRealm realm = world.getRealm("ant");
+            Collection<ClassRealm> importRealms = realm.getImportRealms();
+            assertEquals(1, importRealms.size());
+            assertEquals("from", importRealms.stream().findFirst().get().getId());
+        }
+        {
+            ClassRealm realm = world.getRealm("maven");
+            Collection<ClassRealm> importRealms = realm.getImportRealms();
+            assertEquals(1, importRealms.size());
+            assertEquals("from", importRealms.stream().findFirst().get().getId());
+        }
+        {
+            ClassRealm realm = world.getRealm("glob");
+            Collection<ClassRealm> importRealms = realm.getImportRealms();
+            assertEquals(0, importRealms.size());
+        }
+        {
+            ClassRealm realm = world.getRealm("from");
+            Collection<ClassRealm> importRealms = realm.getImportRealms();
+            assertEquals(0, importRealms.size());
+        }
+    }
+
     private FileInputStream getConfigPath(String name) throws Exception {
         return new FileInputStream(new File(new File(TestUtil.getBasedir(), "src/test/test-data"), name));
     }

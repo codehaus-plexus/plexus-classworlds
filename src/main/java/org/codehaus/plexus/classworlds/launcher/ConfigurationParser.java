@@ -54,9 +54,15 @@ public class ConfigurationParser {
      */
     public static final String OPTIONALLY_PREFIX = "optionally";
 
-    private ConfigurationHandler handler;
+    protected static final String FROM_SEPARATOR = " from ";
 
-    private Properties systemProperties;
+    protected static final String USING_SEPARATOR = " using ";
+
+    protected static final String DEFAULT_SEPARATOR = " default ";
+
+    private final ConfigurationHandler handler;
+
+    private final Properties systemProperties;
 
     public ConfigurationParser(ConfigurationHandler handler, Properties systemProperties) {
         this.handler = handler;
@@ -74,188 +80,225 @@ public class ConfigurationParser {
      */
     public void parse(InputStream is)
             throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
-        String line;
+            String line;
 
-        int lineNo = 0;
+            int lineNo = 0;
 
-        boolean mainSet = false;
+            boolean mainSet = false;
 
-        String curRealm = null;
+            String curRealm = null;
 
-        while (true) {
-            line = reader.readLine();
+            while (true) {
+                line = reader.readLine();
 
-            if (line == null) {
-                break;
-            }
-
-            ++lineNo;
-            line = line.trim();
-
-            if (canIgnore(line)) {
-                continue;
-            }
-
-            if (line.startsWith(MAIN_PREFIX)) {
-                if (mainSet) {
-                    throw new ConfigurationException("Duplicate main configuration", lineNo, line);
+                if (line == null) {
+                    break;
                 }
 
-                String conf = line.substring(MAIN_PREFIX.length()).trim();
+                ++lineNo;
+                line = line.trim();
 
-                int fromLoc = conf.indexOf("from");
-
-                if (fromLoc < 0) {
-                    throw new ConfigurationException("Missing from clause", lineNo, line);
-                }
-
-                String mainClassName = filter(conf.substring(0, fromLoc).trim());
-
-                String mainRealmName = filter(conf.substring(fromLoc + 4).trim());
-
-                this.handler.setAppMain(mainClassName, mainRealmName);
-
-                mainSet = true;
-            } else if (line.startsWith(SET_PREFIX)) {
-                String conf = line.substring(SET_PREFIX.length()).trim();
-
-                int usingLoc = conf.indexOf(" using") + 1;
-
-                String property = null;
-
-                String propertiesFileName = null;
-
-                if (usingLoc > 0) {
-                    property = conf.substring(0, usingLoc).trim();
-
-                    propertiesFileName = filter(conf.substring(usingLoc + 5).trim());
-
-                    conf = propertiesFileName;
-                }
-
-                String defaultValue = null;
-
-                int defaultLoc = conf.indexOf(" default") + 1;
-
-                if (defaultLoc > 0) {
-                    defaultValue = filter(conf.substring(defaultLoc + 7).trim());
-
-                    if (property == null) {
-                        property = conf.substring(0, defaultLoc).trim();
-                    } else {
-                        propertiesFileName = conf.substring(0, defaultLoc).trim();
-                    }
-                }
-
-                String value = systemProperties.getProperty(property);
-
-                if (value != null) {
+                if (canIgnore(line)) {
                     continue;
                 }
 
-                if (propertiesFileName != null) {
-                    File propertiesFile = new File(propertiesFileName);
+                char lineFirstChar = line.charAt(0);
+                switch (lineFirstChar) {
+                    case 'm': {
+                        if (line.startsWith(MAIN_PREFIX)) {
+                            if (mainSet) {
+                                throw new ConfigurationException("Duplicate main configuration", lineNo, line);
+                            }
 
-                    if (propertiesFile.exists()) {
-                        Properties properties = new Properties();
+                            int fromLoc = line.indexOf(FROM_SEPARATOR, MAIN_PREFIX.length());
 
-                        try {
-                            properties.load(Files.newInputStream(Paths.get(propertiesFileName)));
+                            if (fromLoc < 0) {
+                                throw new ConfigurationException("Missing from clause", lineNo, line);
+                            }
 
-                            value = properties.getProperty(property);
-                        } catch (Exception e) {
-                            // do nothing
+                            String mainClassName = filter(line.substring(MAIN_PREFIX.length(), fromLoc)
+                                    .trim());
+
+                            String mainRealmName = filter(line.substring(fromLoc + FROM_SEPARATOR.length())
+                                    .trim());
+
+                            this.handler.setAppMain(mainClassName, mainRealmName);
+
+                            mainSet = true;
+
+                            break;
                         }
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
                     }
-                }
+                    case 's': {
+                        if (line.startsWith(SET_PREFIX)) {
+                            String conf = line.substring(SET_PREFIX.length()).trim();
 
-                if (value == null && defaultValue != null) {
-                    value = defaultValue;
-                }
+                            int usingLoc = conf.indexOf(USING_SEPARATOR);
 
-                if (value != null) {
-                    value = filter(value);
-                    systemProperties.setProperty(property, value);
-                }
-            } else if (line.startsWith("[")) {
-                int rbrack = line.indexOf("]");
+                            String property = null;
 
-                if (rbrack < 0) {
-                    throw new ConfigurationException("Invalid realm specifier", lineNo, line);
-                }
+                            String propertiesFileName = null;
 
-                String realmName = line.substring(1, rbrack);
+                            if (usingLoc >= 0) {
+                                property = conf.substring(0, usingLoc).trim();
 
-                handler.addRealm(realmName);
+                                propertiesFileName = filter(conf.substring(usingLoc + USING_SEPARATOR.length())
+                                        .trim());
 
-                curRealm = realmName;
-            } else if (line.startsWith(IMPORT_PREFIX)) {
-                if (curRealm == null) {
-                    throw new ConfigurationException("Unhandled import", lineNo, line);
-                }
+                                conf = propertiesFileName;
+                            }
 
-                String conf = line.substring(IMPORT_PREFIX.length()).trim();
+                            String defaultValue = null;
 
-                int fromLoc = conf.indexOf("from");
+                            int defaultLoc = conf.indexOf(DEFAULT_SEPARATOR);
 
-                if (fromLoc < 0) {
-                    throw new ConfigurationException("Missing from clause", lineNo, line);
-                }
+                            if (defaultLoc >= 0) {
+                                defaultValue = filter(conf.substring(defaultLoc + DEFAULT_SEPARATOR.length())
+                                        .trim());
 
-                String importSpec = conf.substring(0, fromLoc).trim();
+                                if (property == null) {
+                                    property = conf.substring(0, defaultLoc).trim();
+                                } else {
+                                    propertiesFileName =
+                                            conf.substring(0, defaultLoc).trim();
+                                }
+                            }
 
-                String relamName = conf.substring(fromLoc + 4).trim();
+                            String value = systemProperties.getProperty(property);
 
-                handler.addImportFrom(relamName, importSpec);
+                            if (value != null) {
+                                continue;
+                            }
 
-            } else if (line.startsWith(LOAD_PREFIX)) {
-                String constituent = line.substring(LOAD_PREFIX.length()).trim();
+                            if (propertiesFileName != null) {
+                                File propertiesFile = new File(propertiesFileName);
 
-                constituent = filter(constituent);
+                                if (propertiesFile.exists()) {
+                                    Properties properties = new Properties();
 
-                if (constituent.contains("*")) {
-                    loadGlob(constituent, false /*not optionally*/);
-                } else {
-                    File file = new File(constituent);
+                                    try (InputStream inputStream =
+                                            Files.newInputStream(Paths.get(propertiesFileName))) {
+                                        properties.load(inputStream);
+                                        value = properties.getProperty(property);
+                                    } catch (Exception e) {
+                                        // do nothing
+                                    }
+                                }
+                            }
 
-                    if (file.exists()) {
-                        handler.addLoadFile(file);
-                    } else {
-                        try {
-                            handler.addLoadURL(new URL(constituent));
-                        } catch (MalformedURLException e) {
-                            throw new FileNotFoundException(constituent);
+                            if (value == null && defaultValue != null) {
+                                value = defaultValue;
+                            }
+
+                            if (value != null) {
+                                value = filter(value);
+                                systemProperties.setProperty(property, value);
+                            }
+
+                            break;
                         }
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
                     }
-                }
-            } else if (line.startsWith(OPTIONALLY_PREFIX)) {
-                String constituent = line.substring(OPTIONALLY_PREFIX.length()).trim();
+                    case '[': {
+                        int rbrack = line.indexOf("]");
 
-                constituent = filter(constituent);
-
-                if (constituent.contains("*")) {
-                    loadGlob(constituent, true /*optionally*/);
-                } else {
-                    File file = new File(constituent);
-
-                    if (file.exists()) {
-                        handler.addLoadFile(file);
-                    } else {
-                        try {
-                            handler.addLoadURL(new URL(constituent));
-                        } catch (MalformedURLException e) {
-                            // swallow
+                        if (rbrack < 0) {
+                            throw new ConfigurationException("Invalid realm specifier", lineNo, line);
                         }
+
+                        String realmName = line.substring(1, rbrack);
+
+                        handler.addRealm(realmName);
+
+                        curRealm = realmName;
+
+                        break;
                     }
+                    case 'i': {
+                        if (line.startsWith(IMPORT_PREFIX)) {
+                            if (curRealm == null) {
+                                throw new ConfigurationException("Unhandled import", lineNo, line);
+                            }
+                            int fromLoc = line.indexOf(FROM_SEPARATOR, IMPORT_PREFIX.length());
+
+                            if (fromLoc < 0) {
+                                throw new ConfigurationException("Missing from clause", lineNo, line);
+                            }
+
+                            String importSpec = line.substring(IMPORT_PREFIX.length(), fromLoc)
+                                    .trim();
+
+                            String relamName = line.substring(fromLoc + FROM_SEPARATOR.length())
+                                    .trim();
+
+                            handler.addImportFrom(relamName, importSpec);
+
+                            break;
+                        }
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
+                    }
+                    case 'l': {
+                        if (line.startsWith(LOAD_PREFIX)) {
+                            String constituent =
+                                    line.substring(LOAD_PREFIX.length()).trim();
+
+                            constituent = filter(constituent);
+
+                            if (constituent.contains("*")) {
+                                loadGlob(constituent, false /*not optionally*/);
+                            } else {
+                                File file = new File(constituent);
+
+                                if (file.exists()) {
+                                    handler.addLoadFile(file);
+                                } else {
+                                    try {
+                                        handler.addLoadURL(new URL(constituent));
+                                    } catch (MalformedURLException e) {
+                                        throw new FileNotFoundException(constituent);
+                                    }
+                                }
+                            }
+
+                            break;
+                        }
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
+                    }
+                    case 'o': {
+                        if (line.startsWith(OPTIONALLY_PREFIX)) {
+                            String constituent =
+                                    line.substring(OPTIONALLY_PREFIX.length()).trim();
+
+                            constituent = filter(constituent);
+
+                            if (constituent.contains("*")) {
+                                loadGlob(constituent, true /*optionally*/);
+                            } else {
+                                File file = new File(constituent);
+
+                                if (file.exists()) {
+                                    handler.addLoadFile(file);
+                                } else {
+                                    try {
+                                        handler.addLoadURL(new URL(constituent));
+                                    } catch (MalformedURLException e) {
+                                        // swallow
+                                    }
+                                }
+                            }
+
+                            break;
+                        }
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
+                    }
+                    default:
+                        throw new ConfigurationException("Unhandled configuration", lineNo, line);
                 }
-            } else {
-                throw new ConfigurationException("Unhandled configuration", lineNo, line);
             }
         }
-
-        reader.close();
     }
 
     /**
@@ -373,6 +416,6 @@ public class ConfigurationParser {
      *         otherwise <code>false</code>.
      */
     private boolean canIgnore(String line) {
-        return (line.length() == 0 || line.startsWith("#"));
+        return (line.isEmpty() || line.startsWith("#"));
     }
 }
