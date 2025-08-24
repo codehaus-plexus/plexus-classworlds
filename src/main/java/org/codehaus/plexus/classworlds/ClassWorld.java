@@ -37,7 +37,7 @@ import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  */
 public class ClassWorld implements Closeable {
-    private Map<String, ClassRealm> realms;
+    private final Map<String, ClassRealm> realms;
 
     private final List<ClassWorldListener> listeners = new ArrayList<>();
 
@@ -101,9 +101,10 @@ public class ClassWorld implements Closeable {
      * Closes all contained class realms.
      * @since 2.7.0
      */
+    @SuppressWarnings("RedundantThrows")
     @Override
     public synchronized void close() throws IOException {
-        realms.values().stream().forEach(this::disposeRealm);
+        realms.values().forEach(this::disposeRealm);
         realms.clear();
     }
 

@@ -315,6 +315,7 @@ public class Launcher {
 
             System.exit(exitCode);
         } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
 
             System.exit(100);

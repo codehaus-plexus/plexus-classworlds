@@ -24,6 +24,7 @@ import java.util.Collection;
  *
  * @author Andrew Williams
  */
+@SuppressWarnings("rawtypes")
 @Deprecated
 public class ClassWorld {
     private ClassWorldAdapter adapter;

@@ -106,60 +106,58 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void testImport() throws Exception {
-        ClassWorld world = new ClassWorld();
-
-        ClassRealm r0 = world.newRealm("r0");
-
-        ClassRealm r1 = world.newRealm("r1");
-
-        r0.addURL(getJarUrl("component0-1.0.jar"));
-
-        r1.importFrom("r0", "org.codehaus.plexus");
-
-        loadClass(r1, "org.codehaus.plexus.Component0");
+        try (ClassWorld world = new ClassWorld()) {
+            ClassRealm r0 = world.newRealm("r0");
+            ClassRealm r1 = world.newRealm("r1");
+            r0.addURL(getJarUrl("component0-1.0.jar"));
+            r1.importFrom("r0", "org.codehaus.plexus");
+            loadClass(r1, "org.codehaus.plexus.Component0");
+        }
     }
 
     @Test
     void testParentImport() throws Exception {
-        ClassWorld world = new ClassWorld();
+        try (ClassWorld world = new ClassWorld()) {
 
-        ClassRealm parent = world.newRealm("parent");
+            ClassRealm parent = world.newRealm("parent");
 
-        ClassRealm child = world.newRealm("child");
+            ClassRealm child = world.newRealm("child");
 
-        parent.addURL(getJarUrl("component0-1.0.jar"));
+            parent.addURL(getJarUrl("component0-1.0.jar"));
 
-        child.setParentRealm(parent);
+            child.setParentRealm(parent);
 
-        Class<?> type = loadClass(child, "org.codehaus.plexus.Component0");
+            Class<?> type = loadClass(child, "org.codehaus.plexus.Component0");
 
-        child.importFromParent("non-existing");
+            child.importFromParent("non-existing");
 
-        assertSame(null, loadClassOrNull(child, "org.codehaus.plexus.Component0"));
+            assertSame(null, loadClassOrNull(child, "org.codehaus.plexus.Component0"));
 
-        child.importFromParent("org.codehaus.plexus");
+            child.importFromParent("org.codehaus.plexus");
 
-        assertSame(type, loadClass(child, "org.codehaus.plexus.Component0"));
+            assertSame(type, loadClass(child, "org.codehaus.plexus.Component0"));
+        }
     }
 
     @Test
     void testLoadClassFromBaseClassLoaderBeforeSelf() throws Exception {
-        ClassWorld world = new ClassWorld();
+        try (ClassWorld world = new ClassWorld()) {
 
-        ClassRealm base = world.newRealm("base");
+            ClassRealm base = world.newRealm("base");
 
-        base.addURL(getJarUrl("a.jar"));
+            base.addURL(getJarUrl("a.jar"));
 
-        ClassRealm child = world.newRealm("child", base);
+            ClassRealm child = world.newRealm("child", base);
 
-        child.addURL(getJarUrl("a.jar"));
+            child.addURL(getJarUrl("a.jar"));
 
-        Class<?> baseClass = loadClass(base, "a.A");
-        Class<?> childClass = loadClass(child, "a.A");
+            Class<?> baseClass = loadClass(base, "a.A");
+            Class<?> childClass = loadClass(child, "a.A");
 
-        assertSame(base, baseClass.getClassLoader());
-        assertSame(base, childClass.getClassLoader());
-        assertSame(baseClass, childClass);
+            assertSame(base, baseClass.getClassLoader());
+            assertSame(base, childClass.getClassLoader());
+            assertSame(baseClass, childClass);
+        }
     }
 
     @Test
@@ -196,29 +194,31 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
         mainRealm.addURL(jarUrl);
 
-        ClassLoader officialClassLoader = new URLClassLoader(new URL[] {jarUrl});
+        try (URLClassLoader officialClassLoader = new URLClassLoader(new URL[] {jarUrl})) {
 
-        String resource = "META-INF/plexus/components.xml";
+            String resource = "META-INF/plexus/components.xml";
 
-        assertNotNull(mainRealm.getResource(resource));
-        assertNotNull(officialClassLoader.getResource(resource));
+            assertNotNull(mainRealm.getResource(resource));
+            assertNotNull(officialClassLoader.getResource(resource));
 
-        /*
-         * NOTE: Resource names with a leading slash are invalid when passed to a class loader and must not be found!
-         * One can use a leading slash in Class.getResource() but not in ClassLoader.getResource().
-         */
+            /*
+             * NOTE: Resource names with a leading slash are invalid when passed to a class loader and must not be found!
+             * One can use a leading slash in Class.getResource() but not in ClassLoader.getResource().
+             */
 
-        assertSame(null, mainRealm.getResource("/" + resource));
-        assertSame(null, officialClassLoader.getResource("/" + resource));
+            assertSame(null, mainRealm.getResource("/" + resource));
+            assertSame(null, officialClassLoader.getResource("/" + resource));
 
-        /*
-         * For backward-compat, legacy class realms have to support leading slashes.
-         */
+            /*
+             * For backward-compat, legacy class realms have to support leading slashes.
+             */
 
-        org.codehaus.classworlds.ClassRealm legacyRealm = ClassRealmAdapter.getInstance(mainRealm);
-        assertNotNull(legacyRealm.getResource("/" + resource));
-        assertNotNull(legacyRealm.getResourceAsStream("/" + resource));
-        assertTrue(legacyRealm.findResources("/" + resource).hasMoreElements());
+            @SuppressWarnings("deprecation")
+            org.codehaus.classworlds.ClassRealm legacyRealm = ClassRealmAdapter.getInstance(mainRealm);
+            assertNotNull(legacyRealm.getResource("/" + resource));
+            assertNotNull(legacyRealm.getResourceAsStream("/" + resource));
+            assertTrue(legacyRealm.findResources("/" + resource).hasMoreElements());
+        }
     }
 
     @Test

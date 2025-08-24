@@ -25,9 +25,10 @@ import java.util.Vector;
  *
  * @author Andrew Williams
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated
 public class ClassWorldReverseAdapter extends org.codehaus.plexus.classworlds.ClassWorld {
-    private static HashMap instances = new HashMap();
+    private static final HashMap instances = new HashMap();
 
     public static ClassWorldReverseAdapter getInstance(ClassWorld oldWorld) {
         if (instances.containsKey(oldWorld)) return (ClassWorldReverseAdapter) instances.get(oldWorld);
@@ -38,7 +39,7 @@ public class ClassWorldReverseAdapter extends org.codehaus.plexus.classworlds.Cl
         return adapter;
     }
 
-    private ClassWorld world;
+    private final ClassWorld world;
 
     private ClassWorldReverseAdapter(ClassWorld newWorld) {
         super();

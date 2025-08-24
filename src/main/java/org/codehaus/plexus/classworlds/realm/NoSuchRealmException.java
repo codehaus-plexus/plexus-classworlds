@@ -33,7 +33,7 @@ public class NoSuchRealmException extends ClassWorldException {
     /**
      * The realm id.
      */
-    private String id;
+    private final String id;
 
     // ------------------------------------------------------------
     //     Constructors

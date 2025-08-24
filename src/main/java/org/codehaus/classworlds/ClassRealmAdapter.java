@@ -26,6 +26,7 @@ import java.util.Enumeration;
  *
  * @author Andrew Williams
  */
+@SuppressWarnings({"UnnecessaryLocalVariable", "DeprecatedIsStillUsed", "rawtypes"})
 @Deprecated
 public class ClassRealmAdapter implements ClassRealm {
 
@@ -35,7 +36,7 @@ public class ClassRealmAdapter implements ClassRealm {
         return adapter;
     }
 
-    private org.codehaus.plexus.classworlds.realm.ClassRealm realm;
+    private final org.codehaus.plexus.classworlds.realm.ClassRealm realm;
 
     private ClassRealmAdapter(org.codehaus.plexus.classworlds.realm.ClassRealm newRealm) {
         this.realm = newRealm;

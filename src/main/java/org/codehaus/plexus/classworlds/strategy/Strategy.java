@@ -32,6 +32,7 @@ public interface Strategy {
 
     URL getResource(String name);
 
+    @SuppressWarnings("RedundantThrows")
     Enumeration<URL> getResources(String name) throws IOException;
 
     ClassRealm getRealm();

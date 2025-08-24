@@ -68,6 +68,7 @@ public class OsgiBundleStrategy extends AbstractStrategy {
         return resource;
     }
 
+    @SuppressWarnings("RedundantThrows")
     public Enumeration<URL> getResources(String name) throws IOException {
         Enumeration<URL> imports = realm.loadResourcesFromImport(name);
         Enumeration<URL> self = realm.loadResourcesFromSelf(name);

@@ -312,6 +312,7 @@ public class ConfigurationParser {
      *                               a valid path element in the filesystem.
      * @throws ConfigurationException will never occur (thrown for backwards compatibility)
      */
+    @SuppressWarnings("RedundantThrows")
     protected void loadGlob(String line, boolean optionally)
             throws MalformedURLException, FileNotFoundException, ConfigurationException {
         File globFile = new File(line);
@@ -333,20 +334,12 @@ public class ConfigurationParser {
 
         final String suffix = localName.substring(starLoc + 1);
 
-        File[] matches = dir.listFiles((dir1, name) -> {
-            if (!name.startsWith(prefix)) {
-                return false;
+        File[] matches = dir.listFiles((dir1, name) -> name.startsWith(prefix) || name.endsWith(suffix));
+
+        if (matches != null) {
+            for (File match : matches) {
+                handler.addLoadFile(match);
             }
-
-            if (!name.endsWith(suffix)) {
-                return false;
-            }
-
-            return true;
-        });
-
-        for (File match : matches) {
-            handler.addLoadFile(match);
         }
     }
 
@@ -390,7 +383,7 @@ public class ConfigurationParser {
             propValue = systemProperties.getProperty(propName);
 
             /* do our best if we are not running from surefire */
-            if (propName.equals("basedir") && (propValue == null || propValue.equals(""))) {
+            if (propName.equals("basedir") && (propValue == null || propValue.isEmpty())) {
                 propValue = (new File("")).getAbsolutePath();
             }
 

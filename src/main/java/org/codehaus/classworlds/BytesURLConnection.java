@@ -25,7 +25,7 @@ import java.net.URLConnection;
  */
 @Deprecated
 public class BytesURLConnection extends URLConnection {
-    protected byte[] content;
+    protected final byte[] content;
 
     protected int offset;
 

@@ -43,7 +43,7 @@ public class TestUtil {
         String basedir = System.getProperty("basedir");
 
         /* do our best if we are not running from surefire */
-        if (basedir == null || basedir.length() <= 0) {
+        if (basedir == null || basedir.isEmpty()) {
             basedir = (new File("")).getAbsolutePath();
         }
 

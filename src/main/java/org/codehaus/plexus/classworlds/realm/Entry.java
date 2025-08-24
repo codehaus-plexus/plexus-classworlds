@@ -82,7 +82,7 @@ class Entry implements Comparable<Entry> {
             }
 
             return pkgName.length() == pkg.length() - 2 && pkg.regionMatches(0, pkgName, 0, pkgName.length());
-        } else if (pkg.length() > 0) {
+        } else if (!pkg.isEmpty()) {
             if (name.indexOf('/') < 0) {
                 // a binary class name, e.g. java.lang.Object
 
@@ -93,7 +93,8 @@ class Entry implements Comparable<Entry> {
                     } else if (name.charAt(pkg.length()) == '.') {
                         // prefix match of package name
                         return true;
-                    } else if (name.charAt(pkg.length()) == '$') {
+                    } else //noinspection RedundantIfStatement
+                    if (name.charAt(pkg.length()) == '$') {
                         // prefix match of enclosing type
                         return true;
                     }
@@ -115,7 +116,8 @@ class Entry implements Comparable<Entry> {
                     } else if (name.charAt(pkg.length()) == '$') {
                         // prefix match of nested class file
                         return true;
-                    } else if (name.length() == pkg.length() + 6 && name.endsWith(".class")) {
+                    } else //noinspection RedundantIfStatement
+                    if (name.length() == pkg.length() + 6 && name.endsWith(".class")) {
                         // exact match of class file
                         return true;
                     }
