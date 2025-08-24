@@ -30,7 +30,7 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  */
 public abstract class AbstractStrategy implements Strategy {
 
-    protected ClassRealm realm;
+    protected final ClassRealm realm;
 
     public AbstractStrategy(ClassRealm realm) {
         this.realm = realm;

@@ -303,6 +303,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
         assertEquals(System.getProperty("user.home") + "/m2", System.getProperty("set.using.filtered.default"));
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void testFromFromFrom() throws Exception {
         this.configurator.configure(getConfigPath("valid-from-from-from.conf"));
@@ -343,6 +344,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
 
     private void assertArrayContains(URL[] array, URL url) {
         for (URL value : array) {
+            //noinspection UrlHashCode
             if (url.equals(value)) {
                 return;
             }

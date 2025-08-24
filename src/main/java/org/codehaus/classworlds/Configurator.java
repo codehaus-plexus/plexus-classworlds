@@ -29,7 +29,7 @@ import java.net.MalformedURLException;
  */
 @Deprecated
 public class Configurator {
-    private ConfiguratorAdapter config;
+    private final ConfiguratorAdapter config;
 
     /** Construct.
      *
@@ -108,6 +108,7 @@ public class Configurator {
      * @throws FileNotFoundException If the line does not represent
      *                               a valid path element in the filesystem.
      */
+    @SuppressWarnings("RedundantThrows")
     protected void loadGlob(String line, ClassRealm realm, boolean optionally)
             throws MalformedURLException, FileNotFoundException {
         config.loadGlob(line, realm, optionally);
@@ -121,6 +122,7 @@ public class Configurator {
      * @throws ConfigurationException If the property does not
      *                                exist or if there is a syntax error.
      */
+    @SuppressWarnings("RedundantThrows")
     protected String filter(String text) throws ConfigurationException {
         return config.filter(text);
     }

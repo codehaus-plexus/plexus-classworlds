@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class ConfigurationParserTest extends AbstractClassWorldsTestCase {
 
-    ConfigurationParser configurator = new ConfigurationParser(null, System.getProperties());
+    final ConfigurationParser configurator = new ConfigurationParser(null, System.getProperties());
 
     @Test
     void testFilter_Unterminated() {

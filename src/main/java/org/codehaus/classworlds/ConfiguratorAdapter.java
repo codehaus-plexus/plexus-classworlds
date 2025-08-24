@@ -27,19 +27,15 @@ public class ConfiguratorAdapter extends Configurator {
 
     public static ConfiguratorAdapter getInstance(
             org.codehaus.plexus.classworlds.launcher.Configurator newConfig, Launcher launcher) {
-        ConfiguratorAdapter adapter = new ConfiguratorAdapter(newConfig, launcher);
-
-        return adapter;
+        return new ConfiguratorAdapter(newConfig, launcher);
     }
 
     public static ConfiguratorAdapter getInstance(
             org.codehaus.plexus.classworlds.launcher.Configurator newConfig, ClassWorld world) {
-        ConfiguratorAdapter adapter = new ConfiguratorAdapter(newConfig, world);
-
-        return adapter;
+        return new ConfiguratorAdapter(newConfig, world);
     }
 
-    private org.codehaus.plexus.classworlds.launcher.Configurator config;
+    private final org.codehaus.plexus.classworlds.launcher.Configurator config;
 
     private ConfiguratorAdapter(org.codehaus.plexus.classworlds.launcher.Configurator config, Launcher launcher) {
         super(launcher);
@@ -55,6 +51,7 @@ public class ConfiguratorAdapter extends Configurator {
         config.associateRealms();
     }
 
+    @SuppressWarnings("DuplicateThrows")
     public void configureAdapter(InputStream is)
             throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException,
                     NoSuchRealmException {

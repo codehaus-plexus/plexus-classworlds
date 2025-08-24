@@ -29,9 +29,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
+@SuppressWarnings("rawtypes")
 @Deprecated
 public class DefaultClassRealm implements ClassRealm {
-    private ClassRealmAdapter adapter;
+    private final ClassRealmAdapter adapter;
 
     public DefaultClassRealm(ClassWorld world, String id) {
         this(world, id, null);

@@ -60,7 +60,7 @@ public class DuplicateRealmException extends ClassWorldException {
     /**
      * The realm id.
      */
-    private String id;
+    private final String id;
 
     // ------------------------------------------------------------
     //     Constructors

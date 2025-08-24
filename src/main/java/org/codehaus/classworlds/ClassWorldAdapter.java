@@ -24,6 +24,7 @@ import java.util.Vector;
  *
  * @author Andrew Williams
  */
+@SuppressWarnings("rawtypes")
 @Deprecated
 public class ClassWorldAdapter extends ClassWorld {
 
@@ -31,7 +32,7 @@ public class ClassWorldAdapter extends ClassWorld {
         return new ClassWorldAdapter(newWorld);
     }
 
-    private org.codehaus.plexus.classworlds.ClassWorld world;
+    private final org.codehaus.plexus.classworlds.ClassWorld world;
 
     private ClassWorldAdapter(org.codehaus.plexus.classworlds.ClassWorld newWorld) {
         super(false);

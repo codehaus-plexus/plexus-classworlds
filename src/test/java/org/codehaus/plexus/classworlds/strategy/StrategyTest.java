@@ -41,6 +41,7 @@ class StrategyTest extends AbstractClassWorldsTestCase {
 
     @BeforeEach
     public void setUp() throws Exception {
+        //noinspection resource
         this.realm = new ClassWorld().newRealm("realm");
         this.strategy = this.realm.getStrategy();
         realm.addURL(getJarUrl("component0-1.0.jar"));

@@ -27,7 +27,7 @@ import java.net.URLStreamHandler;
  */
 @Deprecated
 public class BytesURLStreamHandler extends URLStreamHandler {
-    byte[] content;
+    final byte[] content;
 
     int offset;
 

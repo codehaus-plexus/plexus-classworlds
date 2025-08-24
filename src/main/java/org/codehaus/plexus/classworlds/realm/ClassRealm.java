@@ -16,7 +16,6 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
@@ -48,19 +47,17 @@ import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
  */
 public class ClassRealm extends URLClassLoader {
 
-    private ClassWorld world;
+    private final ClassWorld world;
 
-    private String id;
+    private final String id;
 
-    private SortedSet<Entry> foreignImports;
+    private final SortedSet<Entry> foreignImports;
 
     private SortedSet<Entry> parentImports;
 
-    private Strategy strategy;
+    private final Strategy strategy;
 
     private ClassLoader parentClassLoader;
-
-    private static final boolean isParallelCapable = Closeable.class.isAssignableFrom(URLClassLoader.class);
 
     private final ConcurrentMap<String, Object> lockMap;
 
@@ -83,13 +80,10 @@ public class ClassRealm extends URLClassLoader {
 
         strategy = StrategyFactory.getStrategy(this);
 
-        lockMap = isParallelCapable ? new ConcurrentHashMap<>() : null;
-
-        if (isParallelCapable) {
-            // We must call super.getClassLoadingLock at least once
-            // to avoid NPE in super.loadClass.
-            super.getClassLoadingLock(getClass().getName());
-        }
+        lockMap = new ConcurrentHashMap<>();
+        // We must call super.getClassLoadingLock at least once
+        // to avoid NPE in super.loadClass.
+        super.getClassLoadingLock(getClass().getName());
     }
 
     public String getId() {
@@ -173,10 +167,8 @@ public class ClassRealm extends URLClassLoader {
     }
 
     public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
-        ClassRealm childRealm = getWorld().newRealm(id, (ClassLoader) null);
-
+        ClassRealm childRealm = getWorld().newRealm(id, null);
         childRealm.setParentRealm(this);
-
         return childRealm;
     }
 
@@ -189,6 +181,7 @@ public class ClassRealm extends URLClassLoader {
             try {
                 url = new URL(urlStr);
             } catch (MalformedURLException e) {
+                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
             }
         }
@@ -206,14 +199,7 @@ public class ClassRealm extends URLClassLoader {
     }
 
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        if (isParallelCapable) {
-            return unsynchronizedLoadClass(name, resolve);
-
-        } else {
-            synchronized (this) {
-                return unsynchronizedLoadClass(name, resolve);
-            }
-        }
+        return unsynchronizedLoadClass(name, resolve);
     }
 
     private Class<?> unsynchronizedLoadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -229,6 +215,7 @@ public class ClassRealm extends URLClassLoader {
     // overwrites
     // https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String)
     // introduced in Java9
+    @SuppressWarnings("Since15")
     protected Class<?> findClass(String moduleName, String name) {
         if (moduleName != null) {
             return null;
@@ -359,21 +346,14 @@ public class ClassRealm extends URLClassLoader {
     }
 
     private Object getClassRealmLoadingLock(String name) {
-        if (isParallelCapable) {
-            return getClassLoadingLock(name);
-        } else {
-            return this;
-        }
+        return getClassLoadingLock(name);
     }
 
     @Override
     protected Object getClassLoadingLock(String name) {
-        if (isParallelCapable) {
-            Object newLock = new Object();
-            Object lock = lockMap.putIfAbsent(name, newLock);
-            return (lock == null) ? newLock : lock;
-        }
-        return this;
+        Object newLock = new Object();
+        Object lock = lockMap.putIfAbsent(name, newLock);
+        return (lock == null) ? newLock : lock;
     }
 
     public Class<?> loadClassFromParent(String name) {
@@ -459,9 +439,6 @@ public class ClassRealm extends URLClassLoader {
     }
 
     static {
-        if (isParallelCapable) // Avoid running this method on older jdks
-        {
-            registerAsParallelCapable();
-        }
+        registerAsParallelCapable();
     }
 }

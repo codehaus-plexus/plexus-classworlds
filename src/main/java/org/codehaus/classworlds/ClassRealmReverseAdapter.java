@@ -26,6 +26,7 @@ import java.util.Enumeration;
  *
  * @author Andrew Williams
  */
+@SuppressWarnings({"UnnecessaryLocalVariable", "rawtypes"})
 @Deprecated
 public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.realm.ClassRealm {
 
@@ -35,7 +36,7 @@ public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.re
         return adapter;
     }
 
-    private ClassRealm realm;
+    private final ClassRealm realm;
 
     private ClassRealmReverseAdapter(ClassRealm oldRealm) {
         super(ClassWorldReverseAdapter.getInstance(oldRealm.getWorld()), oldRealm.getId(), oldRealm.getClassLoader());
@@ -100,6 +101,7 @@ public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.re
         return realm.getResource(name);
     }
 
+    @SuppressWarnings("unchecked")
     public Enumeration findResources(String name) throws IOException {
         return realm.findResources(name);
     }

@@ -59,7 +59,7 @@ public class ClassWorldException extends Exception {
     /**
      * The world.
      */
-    private ClassWorld world;
+    private final ClassWorld world;
 
     // ------------------------------------------------------------
     //     Constructors
