@@ -68,11 +68,6 @@
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.8.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
             <encoding>utf-8</encoding>
@@ -134,15 +129,6 @@
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <argLine>-ea:org.codehaus.classworlds:org.codehaus.plexus.classworlds</argLine>
           <forkCount>1</forkCount>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>org/codehaus/plexus/classworlds/event/*</exclude>
-          </excludes>
         </configuration>
       </plugin>
       <plugin>
