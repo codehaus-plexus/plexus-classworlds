@@ -438,6 +438,107 @@ public class ClassRealm extends URLClassLoader {
         return null;
     }
 
+    @Override
+    protected Package getPackage(String name) {
+        Package pkg = super.getPackage(name);
+
+        if (pkg == null) {
+            // Check imported packages from foreign imports
+            for (Entry entry : foreignImports) {
+                if (entry.matches(name + ".Dummy")) {
+                    ClassLoader importClassLoader = entry.getClassLoader();
+                    if (importClassLoader != null) {
+                        pkg = getPackageFromClassLoader(importClassLoader, name);
+                        if (pkg != null) {
+                            return pkg;
+                        }
+                    }
+                }
+            }
+
+            // Check imported packages from parent
+            ClassLoader parent = getParentClassLoader();
+            if (parent != null && isImportedFromParent(name + ".Dummy")) {
+                pkg = getPackageFromClassLoader(parent, name);
+            }
+        }
+
+        return pkg;
+    }
+
+    @Override
+    protected Package[] getPackages() {
+        Collection<Package> packages = new LinkedHashSet<>();
+
+        // Add packages from parent first
+        Collections.addAll(packages, super.getPackages());
+
+        // Add packages from foreign imports
+        for (Entry entry : foreignImports) {
+            ClassLoader importClassLoader = entry.getClassLoader();
+            if (importClassLoader != null) {
+                Package[] importedPackages = getPackagesFromClassLoader(importClassLoader);
+                for (Package pkg : importedPackages) {
+                    // Only include packages that match the import pattern
+                    if (entry.matches(pkg.getName() + ".Dummy")) {
+                        packages.add(pkg);
+                    }
+                }
+            }
+        }
+
+        // Add packages from parent classloader
+        ClassLoader parent = getParentClassLoader();
+        if (parent != null) {
+            Package[] parentPackages = getPackagesFromClassLoader(parent);
+            for (Package pkg : parentPackages) {
+                if (isImportedFromParent(pkg.getName() + ".Dummy")) {
+                    packages.add(pkg);
+                }
+            }
+        }
+
+        return packages.toArray(new Package[0]);
+    }
+
+    private static Package getPackageFromClassLoader(ClassLoader classLoader, String name) {
+        // Use reflection to call getDefinedPackage (Java 9+) or getPackage (pre-Java 9)
+        try {
+            java.lang.reflect.Method method = ClassLoader.class.getMethod("getDefinedPackage", String.class);
+            return (Package) method.invoke(classLoader, name);
+        } catch (NoSuchMethodException e) {
+            // Fall back to deprecated getPackage method (Java 8 and earlier)
+            try {
+                java.lang.reflect.Method method = ClassLoader.class.getDeclaredMethod("getPackage", String.class);
+                method.setAccessible(true);
+                return (Package) method.invoke(classLoader, name);
+            } catch (Exception ex) {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static Package[] getPackagesFromClassLoader(ClassLoader classLoader) {
+        // Use reflection to call getDefinedPackages (Java 9+) or getPackages (pre-Java 9)
+        try {
+            java.lang.reflect.Method method = ClassLoader.class.getMethod("getDefinedPackages");
+            return (Package[]) method.invoke(classLoader);
+        } catch (NoSuchMethodException e) {
+            // Fall back to deprecated getPackages method (Java 8 and earlier)
+            try {
+                java.lang.reflect.Method method = ClassLoader.class.getDeclaredMethod("getPackages");
+                method.setAccessible(true);
+                return (Package[]) method.invoke(classLoader);
+            } catch (Exception ex) {
+                return new Package[0];
+            }
+        } catch (Exception e) {
+            return new Package[0];
+        }
+    }
+
     static {
         registerAsParallelCapable();
     }
