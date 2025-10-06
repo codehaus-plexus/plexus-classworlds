@@ -16,9 +16,14 @@ package org.codehaus.plexus.classworlds.realm;
  * limitations under the License.
  */
 
+import javax.naming.Context;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.classworlds.ClassRealmAdapter;
@@ -262,6 +267,37 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
     void parallelDeadlockClassRealm() throws Exception {
         for (int i = 0; i < 100; i++) {
             doOneDeadlockAttempt();
+        }
+    }
+
+    /**
+     * Test that JDK internal classes from named modules (like com.sun.jndi.dns.DnsContextFactory)
+     * can be properly accessed when loaded through ClassRealm. This is crucial for JNDI to work
+     * correctly in Maven plugins.
+     */
+    @Test
+    void loadJdkModuleClassThroughJNDI() throws Exception {
+        // Use system classloader as base to ensure JDK module classes can be loaded
+        ClassRealm realm = new ClassRealm(new ClassWorld(), "test", ClassLoader.getSystemClassLoader());
+
+        // Set the thread's context classloader to the realm
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        try {
+            currentThread.setContextClassLoader(realm);
+
+            // Try to instantiate DnsContextFactory via JNDI with explicit factory class name
+            // This is how Netty uses JNDI under Windows
+            Hashtable<String, String> env = new Hashtable<>();
+            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.dns.DnsContextFactory");
+            env.put(Context.PROVIDER_URL, "dns:");
+
+            // This should succeed without IllegalAccessException
+            DirContext ctx = new InitialDirContext(env);
+            assertNotNull(ctx);
+            ctx.close();
+        } finally {
+            currentThread.setContextClassLoader(originalClassLoader);
         }
     }
 

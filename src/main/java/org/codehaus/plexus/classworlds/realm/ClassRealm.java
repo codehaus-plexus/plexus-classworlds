@@ -218,7 +218,23 @@ public class ClassRealm extends URLClassLoader {
     @SuppressWarnings("Since15")
     protected Class<?> findClass(String moduleName, String name) {
         if (moduleName != null) {
-            return null;
+            // Delegate to parent for module-aware class loading to maintain proper module context
+            // This is crucial for JDK internal classes like com.sun.jndi.dns.DnsContextFactory
+            ClassLoader parent = getParent();
+            if (parent != null) {
+                try {
+                    // Use the parent's module-aware findClass method
+                    return parent.loadClass(name);
+                } catch (ClassNotFoundException e) {
+                    return null;
+                }
+            }
+            // If no parent, delegate to system classloader for JDK module classes
+            try {
+                return ClassLoader.getSystemClassLoader().loadClass(name);
+            } catch (ClassNotFoundException e) {
+                return null;
+            }
         }
         try {
             return findClassInternal(name);
