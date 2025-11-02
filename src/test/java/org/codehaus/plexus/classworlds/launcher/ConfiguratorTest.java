@@ -42,13 +42,13 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     private Configurator configurator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.launcher = new Launcher();
         this.configurator = new Configurator(this.launcher);
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         this.launcher = null;
         this.configurator = null;
         System.getProperties().remove("set.using.existent");
@@ -60,7 +60,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_Nonexistent() throws Exception {
+    void configureNonexistent() throws Exception {
         try {
             this.configurator.configure(getConfigPath("notfound.conf"));
             fail("throw FileNotFoundException");
@@ -70,7 +70,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_DuplicateMain() throws Exception {
+    void configureDuplicateMain() throws Exception {
         try {
             this.configurator.configure(getConfigPath("dupe-main.conf"));
             fail("throw ConfigurationException");
@@ -81,7 +81,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_DuplicateRealm() throws Exception {
+    void configureDuplicateRealm() throws Exception {
         try {
             this.configurator.configure(getConfigPath("dupe-realm.conf"));
             fail("throw DuplicateRealmException");
@@ -92,7 +92,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_EarlyImport() throws Exception {
+    void configureEarlyImport() throws Exception {
         try {
             this.configurator.configure(getConfigPath("early-import.conf"));
             fail("throw ConfigurationException");
@@ -103,7 +103,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_RealmSyntax() throws Exception {
+    void configureRealmSyntax() throws Exception {
         try {
             this.configurator.configure(getConfigPath("realm-syntax.conf"));
             fail("throw ConfigurationException");
@@ -114,7 +114,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_Valid() throws Exception {
+    void configureValid() throws Exception {
         this.configurator.configure(getConfigPath("valid.conf"));
 
         assertEquals("org.apache.maven.app.App", this.launcher.getMainClassName());
@@ -161,7 +161,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_Optionally_NonExistent() throws Exception {
+    void configureOptionallyNonExistent() throws Exception {
         this.configurator.configure(getConfigPath("optionally-nonexistent.conf"));
 
         assertEquals("org.apache.maven.app.App", this.launcher.getMainClassName());
@@ -184,7 +184,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_Optionally_Existent() throws Exception {
+    void configureOptionallyExistent() throws Exception {
         this.configurator.configure(getConfigPath("optionally-existent.conf"));
 
         assertEquals("org.apache.maven.app.App", this.launcher.getMainClassName());
@@ -209,7 +209,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testConfigure_Unhandled() throws Exception {
+    void configureUnhandled() throws Exception {
         try {
             this.configurator.configure(getConfigPath("unhandled.conf"));
             fail("throw ConfigurationException");
@@ -220,7 +220,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Existent() throws Exception {
+    void setUsingExistent() throws Exception {
         assertNull(System.getProperty("set.using.existent"));
 
         this.configurator.configure(getConfigPath("set-using-existent.conf"));
@@ -229,7 +229,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_NonExistent() throws Exception {
+    void setUsingNonExistent() throws Exception {
         assertNull(System.getProperty("set.using.nonexistent"));
 
         this.configurator.configure(getConfigPath("set-using-nonexistent.conf"));
@@ -238,7 +238,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_NonExistent_Default() throws Exception {
+    void setUsingNonExistentDefault() throws Exception {
         assertNull(System.getProperty("set.using.nonexistent.default"));
 
         this.configurator.configure(getConfigPath("set-using-nonexistent.conf"));
@@ -247,7 +247,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_NonExistent_Override() throws Exception {
+    void setUsingNonExistentOverride() throws Exception {
         assertNull(System.getProperty("set.using.default"));
         System.setProperty("set.using.default", "testSet_Using_NonExistent_Override");
 
@@ -257,7 +257,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Existent_Override() throws Exception {
+    void setUsingExistentOverride() throws Exception {
         assertNull(System.getProperty("set.using.existent"));
         System.setProperty("set.using.existent", "testSet_Using_Existent_Override");
 
@@ -267,7 +267,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Existent_Default() throws Exception {
+    void setUsingExistentDefault() throws Exception {
         assertNull(System.getProperty("set.using.default"));
 
         this.configurator.configure(getConfigPath("set-using-existent.conf"));
@@ -276,7 +276,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Missing_Default() throws Exception {
+    void setUsingMissingDefault() throws Exception {
         assertNull(System.getProperty("set.using.missing"));
 
         this.configurator.configure(getConfigPath("set-using-missing.conf"));
@@ -285,7 +285,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Missing_Override() throws Exception {
+    void setUsingMissingOverride() throws Exception {
         assertNull(System.getProperty("set.using.missing"));
         System.setProperty("set.using.missing", "testSet_Using_Missing_Override");
 
@@ -295,7 +295,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testSet_Using_Filtered_Default() throws Exception {
+    void setUsingFilteredDefault() throws Exception {
         assertNull(System.getProperty("set.using.filtered.default"));
 
         this.configurator.configure(getConfigPath("set-using-missing.conf"));
@@ -305,7 +305,7 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void testFromFromFrom() throws Exception {
+    void fromFromFrom() throws Exception {
         this.configurator.configure(getConfigPath("valid-from-from-from.conf"));
 
         assertEquals("com.from.from.from.Main", this.launcher.getMainClassName());

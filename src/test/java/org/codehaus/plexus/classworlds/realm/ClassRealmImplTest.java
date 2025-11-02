@@ -33,17 +33,17 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     private ClassWorld world;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.world = new ClassWorld();
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         this.world = null;
     }
 
     @Test
-    void testNewRealm() throws Exception {
+    void newRealm() throws Exception {
         ClassRealm realm = this.world.newRealm("foo");
 
         assertNotNull(realm);
@@ -54,14 +54,14 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLocateSourceRealm_NoImports() {
+    void locateSourceRealmNoImports() {
         ClassRealm realm = new ClassRealm(this.world, "foo", null);
 
         assertSame(null, realm.getImportClassLoader("com.werken.Stuff"));
     }
 
     @Test
-    void testLocateSourceRealm_SimpleImport() throws Exception {
+    void locateSourceRealmSimpleImport() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         ClassRealm werkflowRealm = this.world.newRealm("werkflow");
@@ -82,7 +82,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLocateSourceRealm_MultipleImport() throws Exception {
+    void locateSourceRealmMultipleImport() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         ClassRealm werkflowRealm = this.world.newRealm("werkflow");
@@ -107,7 +107,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLocateSourceRealm_Hierachy() throws Exception {
+    void locateSourceRealmHierachy() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         ClassRealm fooRealm = this.world.newRealm("foo");
@@ -140,7 +140,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLocateSourceRealm_Hierachy_Reverse() throws Exception {
+    void locateSourceRealmHierachyReverse() throws Exception {
         ClassRealm fooBarBazRealm = this.world.newRealm("fooBarBaz");
 
         ClassRealm fooBarRealm = this.world.newRealm("fooBar");
@@ -173,7 +173,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_SystemClass() throws Exception {
+    void loadClassSystemClass() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         Class<?> cls = mainRealm.loadClass("java.lang.Object");
@@ -182,7 +182,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_NonSystemClass() throws Exception {
+    void loadClassNonSystemClass() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         try {
@@ -197,7 +197,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_ClassWorldsClass() throws Exception {
+    void loadClassClassWorldsClass() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         Class<?> cls = mainRealm.loadClass("org.codehaus.plexus.classworlds.ClassWorld");
@@ -208,7 +208,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_Local() throws Exception {
+    void loadClassLocal() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         try {
@@ -233,7 +233,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_Imported() throws Exception {
+    void loadClassImported() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         ClassRealm realmA = this.world.newRealm("realmA");
@@ -274,7 +274,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_Package() throws Exception {
+    void loadClassPackage() throws Exception {
         ClassRealm realmA = this.world.newRealm("realmA");
         realmA.addURL(getJarUrl("a.jar"));
 
@@ -288,7 +288,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_Complex() throws Exception {
+    void loadClassComplex() throws Exception {
         ClassRealm realmA = this.world.newRealm("realmA");
         ClassRealm realmB = this.world.newRealm("realmB");
         ClassRealm realmC = this.world.newRealm("realmC");
@@ -370,7 +370,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass_ClassWorldsClassRepeatedly() throws Exception {
+    void loadClassClassWorldsClassRepeatedly() throws Exception {
         ClassRealm mainRealm = this.world.newRealm("main");
 
         for (int i = 0; i < 100; i++) {
@@ -383,14 +383,14 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClassWithModuleName_Java9() {
+    void loadClassWithModuleNameJava9() {
         final ExtendedClassRealm mainRealm = new ExtendedClassRealm(world);
         mainRealm.addURL(getJarUrl("a.jar"));
         assertNotNull(mainRealm.simulateLoadClassFromModule("a.A"));
     }
 
     @Test
-    void testGetResources_BaseBeforeSelf() throws Exception {
+    void getResourcesBaseBeforeSelf() throws Exception {
         String resource = "common.properties";
 
         ClassRealm base = this.world.newRealm("realmA");
@@ -417,7 +417,7 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testGetResources_SelfBeforeParent() throws Exception {
+    void getResourcesSelfBeforeParent() throws Exception {
         String resource = "common.properties";
 
         ClassRealm parent = this.world.newRealm("realmA");

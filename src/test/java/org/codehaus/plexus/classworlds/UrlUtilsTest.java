@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UrlUtilsTest {
 
     @Test
-    public void testNormalizeUrlPath() {
+    void normalizeUrlPath() {
         assertEquals("org/codehaus/Test.class", UrlUtils.normalizeUrlPath("org/codehaus/Test.class"));
         assertEquals("org/Test.class", UrlUtils.normalizeUrlPath("org/codehaus/../Test.class"));
         assertEquals("../../some.jar/org/Test.class", UrlUtils.normalizeUrlPath("../../some.jar/org/Test.class"));
