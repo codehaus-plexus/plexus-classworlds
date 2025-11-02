@@ -18,7 +18,6 @@
  */
 package org.codehaus.plexus.classworlds.realm;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -39,7 +38,7 @@ class FilteredClassRealmTest extends AbstractClassWorldsTestCase {
     private ClassRealm realmA;
 
     @BeforeEach
-    public void setUp() throws DuplicateRealmException {
+    void setUp() throws DuplicateRealmException {
         this.world = new ClassWorld();
         // only allow loading resources whose names start with "a."
         Set<String> allowedResourcePrefixes = new HashSet<>();
@@ -50,7 +49,7 @@ class FilteredClassRealmTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadResources() throws Exception {
+    void loadResources() throws Exception {
         realmA.addURL(getJarUrl("a.jar"));
         assertNull(realmA.getResource("common.properties"));
         assertFalse(realmA.getResources("common.properties").hasMoreElements());
@@ -60,7 +59,7 @@ class FilteredClassRealmTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClass() throws ClassNotFoundException {
+    void loadClass() throws Exception {
         assertThrows(ClassNotFoundException.class, () -> realmA.loadClass("a.Aa"));
         realmA.addURL(getJarUrl("a.jar"));
 
@@ -72,7 +71,7 @@ class FilteredClassRealmTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClassWithModule() throws IOException {
+    void loadClassWithModule() throws Exception {
         try (ExtendedFilteredClassRealm realmA = new ExtendedFilteredClassRealm(world, s -> s.startsWith("a/Aa"))) {
             realmA.addURL(getJarUrl("a.jar"));
             assertNotNull(realmA.simulateLoadClassFromModule("a.Aa"));

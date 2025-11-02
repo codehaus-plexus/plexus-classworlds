@@ -36,36 +36,36 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     private ClassWorld world;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.world = new ClassWorld();
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         this.world = null;
     }
 
     @Test
-    void testEmpty() {
+    void empty() {
         assertTrue(this.world.getRealms().isEmpty());
     }
 
     @Test
-    void testNewRealm() throws Exception {
+    void newRealm() throws Exception {
         ClassRealm realm = this.world.newRealm("foo");
 
         assertNotNull(realm);
     }
 
     @Test
-    void testGetRealm() throws Exception {
+    void getRealm() throws Exception {
         ClassRealm realm = this.world.newRealm("foo");
 
         assertSame(realm, this.world.getRealm("foo"));
     }
 
     @Test
-    void testNewRealm_Duplicate() {
+    void newRealmDuplicate() {
         try {
             this.world.newRealm("foo");
             this.world.newRealm("foo");
@@ -81,7 +81,7 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testGetRealm_NoSuch() {
+    void getRealmNoSuch() {
         try {
             this.world.getRealm("foo");
             fail("throw NoSuchRealmException");
@@ -95,7 +95,7 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testGetRealms() throws Exception {
+    void getRealms() throws Exception {
         assertTrue(this.world.getRealms().isEmpty());
 
         ClassRealm foo = this.world.newRealm("foo");
@@ -112,7 +112,7 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testPLX334() throws Exception {
+    void plx334() throws Exception {
         ClassLoader loader = new URLClassLoader(new URL[] {getJarUrl("component1-1.0.jar")});
         world.newRealm("netbeans", loader);
         ClassRealm plexus = world.newRealm("plexus");

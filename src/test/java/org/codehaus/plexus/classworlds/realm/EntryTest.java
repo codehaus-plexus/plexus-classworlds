@@ -15,8 +15,6 @@ package org.codehaus.plexus.classworlds.realm;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.IOException;
-
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.junit.jupiter.api.Test;
@@ -31,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class EntryTest extends AbstractClassWorldsTestCase {
 
     @Test
-    void testCompareTo() throws Exception {
+    void checkCompareTo() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -46,7 +44,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
      * Tests the equality is realm independant
      */
     @Test
-    void testEquals() throws DuplicateRealmException, IOException {
+    void chckEquals() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r1 = cw.newRealm("test1");
             ClassRealm r2 = cw.newRealm("test2");
@@ -60,7 +58,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesClassByPackageImport() throws Exception {
+    void matchesClassByPackageImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -75,7 +73,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesClassByClassImport() throws Exception {
+    void matchesClassByClassImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -89,7 +87,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesResourceByPackageImport() throws Exception {
+    void matchesResourceByPackageImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -104,7 +102,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesResourceByClassImport() throws Exception {
+    void matchesResourceByClassImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -118,7 +116,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesAllImport() throws Exception {
+    void matchesAllImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -132,7 +130,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesResourceByResourceImport() throws Exception {
+    void matchesResourceByResourceImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -149,7 +147,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesClassByExactPackageImport() throws Exception {
+    void matchesClassByExactPackageImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 
@@ -164,7 +162,7 @@ class EntryTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testMatchesResourceByExactPackageImport() throws Exception {
+    void matchesResourceByExactPackageImport() throws Exception {
         try (ClassWorld cw = new ClassWorld()) {
             ClassRealm r = cw.newRealm("test1");
 

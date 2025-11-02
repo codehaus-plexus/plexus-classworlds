@@ -12,7 +12,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     final ConfigurationParser configurator = new ConfigurationParser(null, System.getProperties());
 
     @Test
-    void testFilter_Unterminated() {
+    void filterUnterminated() {
         try {
             this.configurator.filter("${cheese");
             fail("throw ConfigurationException");
@@ -23,7 +23,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_Solitary() throws Exception {
+    void filterSolitary() throws Exception {
         System.setProperty("classworlds.test.prop", "test prop value");
 
         String result = this.configurator.filter("${classworlds.test.prop}");
@@ -32,7 +32,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_AtStart() throws Exception {
+    void filterAtStart() throws Exception {
         System.setProperty("classworlds.test.prop", "test prop value");
 
         String result = this.configurator.filter("${classworlds.test.prop}cheese");
@@ -41,7 +41,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_AtEnd() throws Exception {
+    void filterAtEnd() throws Exception {
         System.setProperty("classworlds.test.prop", "test prop value");
 
         String result = this.configurator.filter("cheese${classworlds.test.prop}");
@@ -50,7 +50,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_Multiple() throws Exception {
+    void filterMultiple() throws Exception {
         System.setProperty("classworlds.test.prop.one", "test prop value one");
 
         System.setProperty("classworlds.test.prop.two", "test prop value two");
@@ -62,7 +62,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_NonExistent() {
+    void filterNonExistent() {
         try {
             this.configurator.filter("${gollygeewillikers}");
             fail("throw ConfigurationException");
@@ -73,7 +73,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testFilter_InMiddle() throws Exception {
+    void filterInMiddle() throws Exception {
         System.setProperty("classworlds.test.prop", "test prop value");
 
         String result = this.configurator.filter("cheese${classworlds.test.prop}toast");

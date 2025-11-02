@@ -32,7 +32,7 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     private Launcher launcher;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         System.setProperty("java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol");
 
         this.launcher = new Launcher();
@@ -41,12 +41,12 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         this.launcher = null;
     }
 
     @Test
-    void testConfigure_Valid() throws Exception {
+    void configureValid() throws Exception {
         launcher.configure(getConfigPath("valid-launch.conf"));
 
         Class<?> mainClass = launcher.getMainClass();
@@ -59,14 +59,14 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLaunch_ValidStandard() throws Exception {
+    void launchValidStandard() throws Exception {
         launcher.configure(getConfigPath("valid-launch.conf"));
 
         launcher.launch(new String[] {});
     }
 
     @Test
-    void testLaunch_ValidStandardExitCode() throws Exception {
+    void launchValidStandardExitCode() throws Exception {
         launcher.configure(getConfigPath("valid-launch-exitCode.conf"));
 
         launcher.launch(new String[] {});
@@ -75,14 +75,14 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLaunch_ValidEnhanced() throws Exception {
+    void launchValidEnhanced() throws Exception {
         launcher.configure(getConfigPath("valid-enh-launch.conf"));
 
         launcher.launch(new String[] {});
     }
 
     @Test
-    void testLaunch_ValidEnhancedExitCode() throws Exception {
+    void launchValidEnhancedExitCode() throws Exception {
         launcher.configure(getConfigPath("valid-enh-launch-exitCode.conf"));
 
         launcher.launch(new String[] {});
@@ -91,7 +91,7 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLaunch_NoSuchMethod() throws Exception {
+    void launchNoSuchMethod() throws Exception {
         launcher.configure(getConfigPath("launch-nomethod.conf"));
 
         try {
@@ -103,7 +103,7 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLaunch_ClassNotFound() throws Exception {
+    void launchClassNotFound() throws Exception {
         launcher.configure(getConfigPath("launch-noclass.conf"));
 
         try {
