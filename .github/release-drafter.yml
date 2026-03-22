@@ -1,2 +1,0 @@
-_extends: .github
-tag-template: plexus-classworlds-$NEXT_MINOR_VERSION
