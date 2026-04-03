@@ -17,7 +17,9 @@ package org.codehaus.plexus.classworlds;
  */
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
@@ -28,7 +30,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -136,5 +140,121 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
         assertEquals(1, resourceCount);
         Class<?> c = plexus.loadClass("org.codehaus.plexus.Component1");
         assertNotNull(c);
+    }
+
+    @Test
+    void testConstructorWithRealmId() throws Exception {
+        ClassWorld world = new ClassWorld("bootstrap", getClass().getClassLoader());
+        assertNotNull(world.getRealm("bootstrap"));
+        assertEquals(1, world.getRealms().size());
+    }
+
+    @Test
+    void testNewRealmWithClassLoader() throws Exception {
+        ClassLoader customLoader = new URLClassLoader(new URL[0]);
+        ClassRealm realm = world.newRealm("custom", customLoader);
+        assertNotNull(realm);
+    }
+
+    @Test
+    void testNewRealmWithNullClassLoader() throws Exception {
+        ClassRealm realm = world.newRealm("nullLoader", null);
+        assertNotNull(realm);
+        assertNull(realm.getParentClassLoader());
+    }
+
+    @Test
+    void testNewRealmWithFilter() throws Exception {
+        Predicate<String> filter = name -> name.startsWith("org/");
+        ClassRealm realm = world.newRealm("filtered", null, filter);
+        assertNotNull(realm);
+        assertTrue(world.getRealms().contains(realm));
+    }
+
+    @Test
+    void testNewRealmWithNullFilter() throws Exception {
+        ClassRealm realm = world.newRealm("unfiltered", null, null);
+        assertNotNull(realm);
+        assertEquals("unfiltered", realm.getId());
+    }
+
+    @Test
+    void testDisposeRealm() throws Exception {
+        ClassRealm realm = world.newRealm("temp");
+        assertEquals(1, world.getRealms().size());
+        world.disposeRealm("temp");
+        assertEquals(0, world.getRealms().size());
+    }
+
+    @Test
+    void testDisposeNoSuchRealm() {
+        assertThrows(NoSuchRealmException.class, () -> world.disposeRealm("nonExistent"));
+    }
+
+    @Test
+    void testClose() throws Exception {
+        world.newRealm("realm1");
+        world.newRealm("realm2");
+        world.newRealm("realm3");
+        assertEquals(3, world.getRealms().size());
+        world.close();
+        assertEquals(0, world.getRealms().size());
+    }
+
+    @Test
+    void testGetClassRealm() throws Exception {
+        ClassRealm realm = world.newRealm("test");
+        assertSame(realm, world.getClassRealm("test"));
+    }
+
+    @Test
+    void testGetClassRealmNonExistent() {
+        assertNull(world.getClassRealm("nonExistent"));
+    }
+
+    @Test
+    void testGetClassRealmAfterDispose() throws Exception {
+        world.newRealm("temp");
+        world.disposeRealm("temp");
+        assertNull(world.getClassRealm("temp"));
+    }
+
+    @Test
+    void testAddListener() throws Exception {
+        TestListener listener = new TestListener();
+        world.addListener(listener);
+        ClassRealm realm = world.newRealm("test");
+        assertEquals(1, listener.realmCreatedCount);
+    }
+
+    @Test
+    void testRemoveListener() throws Exception {
+        TestListener listener = new TestListener();
+        world.addListener(listener);
+        world.removeListener(listener);
+        world.newRealm("test");
+        assertEquals(0, listener.realmCreatedCount);
+    }
+
+    @Test
+    void testGetRealmsIsUnmodifiable() throws Exception {
+        world.newRealm("realm1");
+        Collection<ClassRealm> realms = world.getRealms();
+        assertThrows(UnsupportedOperationException.class, () -> realms.add(null));
+    }
+
+    static class TestListener implements ClassWorldListener {
+        int realmCreatedCount = 0;
+        int realmDisposedCount = 0;
+
+        @Override
+        public void realmCreated(ClassRealm realm) {
+            realmCreatedCount++;
+        }
+
+        @Override
+        public void realmDisposed(ClassRealm realm) {
+            realmDisposedCount++;
+        }
     }
 }
