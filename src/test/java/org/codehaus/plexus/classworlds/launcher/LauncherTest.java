@@ -33,8 +33,6 @@ class LauncherTest extends AbstractClassWorldsTestCase {
 
     @BeforeEach
     void setUp() {
-        System.setProperty("java.protocol.handler.pkgs", "org.codehaus.classworlds.protocol");
-
         this.launcher = new Launcher();
 
         this.launcher.setSystemClassLoader(Thread.currentThread().getContextClassLoader());
