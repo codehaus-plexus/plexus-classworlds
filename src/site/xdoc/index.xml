@@ -18,7 +18,7 @@
     much headache and confusion for certain types of application
     developers.  Projects which involve dynamic loading of components
     or otherwise represent a 'container' can benefit from the classloading
-    control provided by <b>Classworlds</b>.  
+    control provided by <b>Classworlds</b>.
     </p>
 
     <p>
@@ -47,7 +47,7 @@
     </p>
 
     <p>
-    This model allows for fine-grained control of which 
+    This model allows for fine-grained control of which
     classloader loads any particular class.  This form of
     partial isolation can reduce the myriad strange errors
     that are produced by loading classes from multiple
@@ -60,12 +60,6 @@
     to assist in the creation of classloaders and <code>ClassRealm</code>s
     from a configuration file and the launching of the application's <code>main</code>
     method from the correct class loaded through the correct classloader.
-    </p>
-
-    <p>
-    And for seamless transition from <a href="https://github.com/codehaus/classworlds">older <b>Classworlds</b> up to 1.1</a>,
-    <b>Plexus Classworlds</b> provides
-    <a href="apidocs/index.html?org/codehaus/classworlds/package-summary.html">a compatibility layer</a>.
     </p>
   </section>
 

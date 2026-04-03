@@ -107,7 +107,7 @@
         <configuration>
           <instructions>
             <_nouses>true</_nouses>
-            <Export-Package>org.codehaus.classworlds.*;org.codehaus.plexus.classworlds.*</Export-Package>
+            <Export-Package>org.codehaus.plexus.classworlds.*</Export-Package>
           </instructions>
         </configuration>
       </plugin>
@@ -127,7 +127,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <argLine>-ea:org.codehaus.classworlds:org.codehaus.plexus.classworlds</argLine>
+          <argLine>-ea:org.codehaus.plexus.classworlds</argLine>
           <forkCount>1</forkCount>
         </configuration>
       </plugin>
