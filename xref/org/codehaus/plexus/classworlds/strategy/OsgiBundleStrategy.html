@@ -76,16 +76,17 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          <strong class="jxr_keyword">return</strong> resource;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">public</strong> Enumeration&lt;URL&gt; getResources(String name) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          Enumeration&lt;URL&gt; imports = realm.loadResourcesFromImport(name);
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>          Enumeration&lt;URL&gt; self = realm.loadResourcesFromSelf(name);
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>          Enumeration&lt;URL&gt; parent = realm.loadResourcesFromParent(name);
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">return</strong> combineResources(imports, self, parent);
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      @SuppressWarnings(<span class="jxr_string">"RedundantThrows"</span>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">public</strong> Enumeration&lt;URL&gt; getResources(String name) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          Enumeration&lt;URL&gt; imports = realm.loadResourcesFromImport(name);
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          Enumeration&lt;URL&gt; self = realm.loadResourcesFromSelf(name);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          Enumeration&lt;URL&gt; parent = realm.loadResourcesFromParent(name);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          <strong class="jxr_keyword">return</strong> combineResources(imports, self, parent);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      }
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  }
 </pre>
 <hr/>
-<div id="footer">© 2002–2025 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
+<div id="footer">© 2002–2026 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
 </body>
 </html>

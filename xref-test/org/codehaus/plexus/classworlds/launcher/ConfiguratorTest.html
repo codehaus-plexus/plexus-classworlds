@@ -50,13 +50,13 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> Configurator configurator;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      @BeforeEach
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">void</strong> setUp() {
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>          <strong class="jxr_keyword">this</strong>.launcher = <strong class="jxr_keyword">new</strong> Launcher();
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">this</strong>.configurator = <strong class="jxr_keyword">new</strong> Configurator(<strong class="jxr_keyword">this</strong>.launcher);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      @AfterEach
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> tearDown() {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">void</strong> tearDown() {
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>          <strong class="jxr_keyword">this</strong>.launcher = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>          <strong class="jxr_keyword">this</strong>.configurator = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>          System.getProperties().remove(<span class="jxr_string">"set.using.existent"</span>);
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      }
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      @Test
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">void</strong> testConfigure_Nonexistent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">void</strong> configureNonexistent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>              <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"notfound.conf"</span>));
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>              fail(<span class="jxr_string">"throw FileNotFoundException"</span>);
@@ -78,7 +78,7 @@
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>      }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      @Test
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">void</strong> testConfigure_DuplicateMain() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">void</strong> configureDuplicateMain() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>              <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"dupe-main.conf"</span>));
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>              fail(<span class="jxr_string">"throw ConfigurationException"</span>);
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      @Test
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">void</strong> testConfigure_DuplicateRealm() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">void</strong> configureDuplicateRealm() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>              <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"dupe-realm.conf"</span>));
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>              fail(<span class="jxr_string">"throw DuplicateRealmException"</span>);
@@ -100,7 +100,7 @@
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      @Test
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">void</strong> testConfigure_EarlyImport() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <strong class="jxr_keyword">void</strong> configureEarlyImport() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>              <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"early-import.conf"</span>));
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>              fail(<span class="jxr_string">"throw ConfigurationException"</span>);
@@ -111,7 +111,7 @@
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
 <a class="jxr_linenumber" name="L104" href="#L104">104</a> 
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>     @Test
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">void</strong> testConfigure_RealmSyntax() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <strong class="jxr_keyword">void</strong> configureRealmSyntax() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L108" href="#L108">108</a>             <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"realm-syntax.conf"</span>));
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>             fail(<span class="jxr_string">"throw ConfigurationException"</span>);
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>     }
 <a class="jxr_linenumber" name="L115" href="#L115">115</a> 
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>     @Test
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">void</strong> testConfigure_Valid() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <strong class="jxr_keyword">void</strong> configureValid() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"valid.conf"</span>));
 <a class="jxr_linenumber" name="L119" href="#L119">119</a> 
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>         assertEquals(<span class="jxr_string">"org.apache.maven.app.App"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainClassName());
@@ -169,7 +169,7 @@
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>     }
 <a class="jxr_linenumber" name="L162" href="#L162">162</a> 
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>     @Test
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">void</strong> testConfigure_Optionally_NonExistent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">void</strong> configureOptionallyNonExistent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"optionally-nonexistent.conf"</span>));
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>         assertEquals(<span class="jxr_string">"org.apache.maven.app.App"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainClassName());
@@ -192,7 +192,7 @@
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     }
 <a class="jxr_linenumber" name="L185" href="#L185">185</a> 
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>     @Test
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">void</strong> testConfigure_Optionally_Existent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">void</strong> configureOptionallyExistent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"optionally-existent.conf"</span>));
 <a class="jxr_linenumber" name="L189" href="#L189">189</a> 
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         assertEquals(<span class="jxr_string">"org.apache.maven.app.App"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainClassName());
@@ -217,7 +217,7 @@
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>     }
 <a class="jxr_linenumber" name="L210" href="#L210">210</a> 
 <a class="jxr_linenumber" name="L211" href="#L211">211</a>     @Test
-<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">void</strong> testConfigure_Unhandled() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>     <strong class="jxr_keyword">void</strong> configureUnhandled() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L213" href="#L213">213</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>             <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"unhandled.conf"</span>));
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>             fail(<span class="jxr_string">"throw ConfigurationException"</span>);
@@ -228,7 +228,7 @@
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>     }
 <a class="jxr_linenumber" name="L221" href="#L221">221</a> 
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>     @Test
-<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Existent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>     <strong class="jxr_keyword">void</strong> setUsingExistent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.existent"</span>));
 <a class="jxr_linenumber" name="L225" href="#L225">225</a> 
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-existent.conf"</span>));
@@ -237,7 +237,7 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>     }
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> 
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>     @Test
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">void</strong> testSet_Using_NonExistent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">void</strong> setUsingNonExistent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.nonexistent"</span>));
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> 
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-nonexistent.conf"</span>));
@@ -246,7 +246,7 @@
 <a class="jxr_linenumber" name="L238" href="#L238">238</a>     }
 <a class="jxr_linenumber" name="L239" href="#L239">239</a> 
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>     @Test
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">void</strong> testSet_Using_NonExistent_Default() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L241" href="#L241">241</a>     <strong class="jxr_keyword">void</strong> setUsingNonExistentDefault() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L242" href="#L242">242</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.nonexistent.default"</span>));
 <a class="jxr_linenumber" name="L243" href="#L243">243</a> 
 <a class="jxr_linenumber" name="L244" href="#L244">244</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-nonexistent.conf"</span>));
@@ -255,7 +255,7 @@
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>     }
 <a class="jxr_linenumber" name="L248" href="#L248">248</a> 
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>     @Test
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">void</strong> testSet_Using_NonExistent_Override() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">void</strong> setUsingNonExistentOverride() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.default"</span>));
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>         System.setProperty(<span class="jxr_string">"set.using.default"</span>, <span class="jxr_string">"testSet_Using_NonExistent_Override"</span>);
 <a class="jxr_linenumber" name="L253" href="#L253">253</a> 
@@ -265,7 +265,7 @@
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>     }
 <a class="jxr_linenumber" name="L258" href="#L258">258</a> 
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>     @Test
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Existent_Override() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>     <strong class="jxr_keyword">void</strong> setUsingExistentOverride() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L261" href="#L261">261</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.existent"</span>));
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>         System.setProperty(<span class="jxr_string">"set.using.existent"</span>, <span class="jxr_string">"testSet_Using_Existent_Override"</span>);
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 
@@ -275,7 +275,7 @@
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>     }
 <a class="jxr_linenumber" name="L268" href="#L268">268</a> 
 <a class="jxr_linenumber" name="L269" href="#L269">269</a>     @Test
-<a class="jxr_linenumber" name="L270" href="#L270">270</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Existent_Default() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L270" href="#L270">270</a>     <strong class="jxr_keyword">void</strong> setUsingExistentDefault() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L271" href="#L271">271</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.default"</span>));
 <a class="jxr_linenumber" name="L272" href="#L272">272</a> 
 <a class="jxr_linenumber" name="L273" href="#L273">273</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-existent.conf"</span>));
@@ -284,7 +284,7 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>     }
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> 
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>     @Test
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Missing_Default() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>     <strong class="jxr_keyword">void</strong> setUsingMissingDefault() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.missing"</span>));
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> 
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-missing.conf"</span>));
@@ -293,7 +293,7 @@
 <a class="jxr_linenumber" name="L285" href="#L285">285</a>     }
 <a class="jxr_linenumber" name="L286" href="#L286">286</a> 
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>     @Test
-<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Missing_Override() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L288" href="#L288">288</a>     <strong class="jxr_keyword">void</strong> setUsingMissingOverride() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L289" href="#L289">289</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.missing"</span>));
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>         System.setProperty(<span class="jxr_string">"set.using.missing"</span>, <span class="jxr_string">"testSet_Using_Missing_Override"</span>);
 <a class="jxr_linenumber" name="L291" href="#L291">291</a> 
@@ -303,7 +303,7 @@
 <a class="jxr_linenumber" name="L295" href="#L295">295</a>     }
 <a class="jxr_linenumber" name="L296" href="#L296">296</a> 
 <a class="jxr_linenumber" name="L297" href="#L297">297</a>     @Test
-<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">void</strong> testSet_Using_Filtered_Default() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L298" href="#L298">298</a>     <strong class="jxr_keyword">void</strong> setUsingFilteredDefault() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L299" href="#L299">299</a>         assertNull(System.getProperty(<span class="jxr_string">"set.using.filtered.default"</span>));
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> 
 <a class="jxr_linenumber" name="L301" href="#L301">301</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"set-using-missing.conf"</span>));
@@ -311,55 +311,57 @@
 <a class="jxr_linenumber" name="L303" href="#L303">303</a>         assertEquals(System.getProperty(<span class="jxr_string">"user.home"</span>) + <span class="jxr_string">"/m2"</span>, System.getProperty(<span class="jxr_string">"set.using.filtered.default"</span>));
 <a class="jxr_linenumber" name="L304" href="#L304">304</a>     }
 <a class="jxr_linenumber" name="L305" href="#L305">305</a> 
-<a class="jxr_linenumber" name="L306" href="#L306">306</a>     @Test
-<a class="jxr_linenumber" name="L307" href="#L307">307</a>     <strong class="jxr_keyword">void</strong> testFromFromFrom() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L308" href="#L308">308</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"valid-from-from-from.conf"</span>));
-<a class="jxr_linenumber" name="L309" href="#L309">309</a> 
-<a class="jxr_linenumber" name="L310" href="#L310">310</a>         assertEquals(<span class="jxr_string">"com.from.from.from.Main"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainClassName());
-<a class="jxr_linenumber" name="L311" href="#L311">311</a> 
-<a class="jxr_linenumber" name="L312" href="#L312">312</a>         assertEquals(<span class="jxr_string">"from"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainRealmName());
-<a class="jxr_linenumber" name="L313" href="#L313">313</a> 
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>         ClassWorld world = <strong class="jxr_keyword">this</strong>.launcher.getWorld();
-<a class="jxr_linenumber" name="L315" href="#L315">315</a> 
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>         {
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"ant"</span>);
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>             assertEquals(1, importRealms.size());
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>             assertEquals(<span class="jxr_string">"from"</span>, importRealms.stream().findFirst().get().getId());
-<a class="jxr_linenumber" name="L321" href="#L321">321</a>         }
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>         {
-<a class="jxr_linenumber" name="L323" href="#L323">323</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"maven"</span>);
-<a class="jxr_linenumber" name="L324" href="#L324">324</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
-<a class="jxr_linenumber" name="L325" href="#L325">325</a>             assertEquals(1, importRealms.size());
-<a class="jxr_linenumber" name="L326" href="#L326">326</a>             assertEquals(<span class="jxr_string">"from"</span>, importRealms.stream().findFirst().get().getId());
-<a class="jxr_linenumber" name="L327" href="#L327">327</a>         }
-<a class="jxr_linenumber" name="L328" href="#L328">328</a>         {
-<a class="jxr_linenumber" name="L329" href="#L329">329</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"glob"</span>);
-<a class="jxr_linenumber" name="L330" href="#L330">330</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
-<a class="jxr_linenumber" name="L331" href="#L331">331</a>             assertEquals(0, importRealms.size());
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>         }
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>         {
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"from"</span>);
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>             assertEquals(0, importRealms.size());
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>         }
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>     }
-<a class="jxr_linenumber" name="L339" href="#L339">339</a> 
-<a class="jxr_linenumber" name="L340" href="#L340">340</a>     <strong class="jxr_keyword">private</strong> FileInputStream getConfigPath(String name) <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> FileInputStream(<strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(TestUtil.getBasedir(), <span class="jxr_string">"src/test/test-data"</span>), name));
-<a class="jxr_linenumber" name="L342" href="#L342">342</a>     }
-<a class="jxr_linenumber" name="L343" href="#L343">343</a> 
-<a class="jxr_linenumber" name="L344" href="#L344">344</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertArrayContains(URL[] array, URL url) {
-<a class="jxr_linenumber" name="L345" href="#L345">345</a>         <strong class="jxr_keyword">for</strong> (URL value : array) {
-<a class="jxr_linenumber" name="L346" href="#L346">346</a>             <strong class="jxr_keyword">if</strong> (url.equals(value)) {
-<a class="jxr_linenumber" name="L347" href="#L347">347</a>                 <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L348" href="#L348">348</a>             }
-<a class="jxr_linenumber" name="L349" href="#L349">349</a>         }
-<a class="jxr_linenumber" name="L350" href="#L350">350</a>         fail(<span class="jxr_string">"URL ("</span> + url + <span class="jxr_string">") not found in array of URLs"</span>);
-<a class="jxr_linenumber" name="L351" href="#L351">351</a>     }
-<a class="jxr_linenumber" name="L352" href="#L352">352</a> }
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>     @SuppressWarnings(<span class="jxr_string">"OptionalGetWithoutIsPresent"</span>)
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>     @Test
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>     <strong class="jxr_keyword">void</strong> fromFromFrom() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>         <strong class="jxr_keyword">this</strong>.configurator.configure(getConfigPath(<span class="jxr_string">"valid-from-from-from.conf"</span>));
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> 
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         assertEquals(<span class="jxr_string">"com.from.from.from.Main"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainClassName());
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         assertEquals(<span class="jxr_string">"from"</span>, <strong class="jxr_keyword">this</strong>.launcher.getMainRealmName());
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 
+<a class="jxr_linenumber" name="L315" href="#L315">315</a>         ClassWorld world = <strong class="jxr_keyword">this</strong>.launcher.getWorld();
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> 
+<a class="jxr_linenumber" name="L317" href="#L317">317</a>         {
+<a class="jxr_linenumber" name="L318" href="#L318">318</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"ant"</span>);
+<a class="jxr_linenumber" name="L319" href="#L319">319</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
+<a class="jxr_linenumber" name="L320" href="#L320">320</a>             assertEquals(1, importRealms.size());
+<a class="jxr_linenumber" name="L321" href="#L321">321</a>             assertEquals(<span class="jxr_string">"from"</span>, importRealms.stream().findFirst().get().getId());
+<a class="jxr_linenumber" name="L322" href="#L322">322</a>         }
+<a class="jxr_linenumber" name="L323" href="#L323">323</a>         {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"maven"</span>);
+<a class="jxr_linenumber" name="L325" href="#L325">325</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
+<a class="jxr_linenumber" name="L326" href="#L326">326</a>             assertEquals(1, importRealms.size());
+<a class="jxr_linenumber" name="L327" href="#L327">327</a>             assertEquals(<span class="jxr_string">"from"</span>, importRealms.stream().findFirst().get().getId());
+<a class="jxr_linenumber" name="L328" href="#L328">328</a>         }
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>         {
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"glob"</span>);
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             assertEquals(0, importRealms.size());
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>         }
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>         {
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>             ClassRealm realm = world.getRealm(<span class="jxr_string">"from"</span>);
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>             Collection&lt;ClassRealm&gt; importRealms = realm.getImportRealms();
+<a class="jxr_linenumber" name="L337" href="#L337">337</a>             assertEquals(0, importRealms.size());
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>         }
+<a class="jxr_linenumber" name="L339" href="#L339">339</a>     }
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
+<a class="jxr_linenumber" name="L341" href="#L341">341</a>     <strong class="jxr_keyword">private</strong> FileInputStream getConfigPath(String name) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L342" href="#L342">342</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> FileInputStream(<strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(TestUtil.getBasedir(), <span class="jxr_string">"src/test/test-data"</span>), name));
+<a class="jxr_linenumber" name="L343" href="#L343">343</a>     }
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> 
+<a class="jxr_linenumber" name="L345" href="#L345">345</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> assertArrayContains(URL[] array, URL url) {
+<a class="jxr_linenumber" name="L346" href="#L346">346</a>         <strong class="jxr_keyword">for</strong> (URL value : array) {
+<a class="jxr_linenumber" name="L347" href="#L347">347</a>             <em class="jxr_comment">//noinspection UrlHashCode</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>             <strong class="jxr_keyword">if</strong> (url.equals(value)) {
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>                 <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>             }
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>         }
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>         fail(<span class="jxr_string">"URL ("</span> + url + <span class="jxr_string">") not found in array of URLs"</span>);
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>     }
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> }
 </pre>
 <hr/>
-<div id="footer">© 2002–2025 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
+<div id="footer">© 2002–2026 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
 </body>
 </html>

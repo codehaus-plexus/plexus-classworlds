@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassWorld.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.plexus.classworlds</a> &gt; <span class="el_source">ClassWorld.java</span></div><h1>ClassWorld.java</h1><pre class="source lang-java linenums">package org.codehaus.plexus.classworlds;
+
+/*
+ * Copyright 2001-2006 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.FilteredClassRealm;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+
+/**
+ * A collection of &lt;code&gt;ClassRealm&lt;/code&gt;s, indexed by id.
+ *
+ * @author &lt;a href=&quot;mailto:bob@eng.werken.com&quot;&gt;bob mcwhirter&lt;/a&gt;
+ */
+public class ClassWorld implements Closeable {
+    private final Map&lt;String, ClassRealm&gt; realms;
+
+<span class="fc" id="L42">    private final List&lt;ClassWorldListener&gt; listeners = new ArrayList&lt;&gt;();</span>
+
+    public ClassWorld(String realmId, ClassLoader classLoader) {
+<span class="fc" id="L45">        this();</span>
+
+        try {
+<span class="fc" id="L48">            newRealm(realmId, classLoader);</span>
+<span class="nc" id="L49">        } catch (DuplicateRealmException e) {</span>
+            // Will never happen as we are just creating the world.
+<span class="fc" id="L51">        }</span>
+<span class="fc" id="L52">    }</span>
+
+<span class="fc" id="L54">    public ClassWorld() {</span>
+<span class="fc" id="L55">        this.realms = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L56">    }</span>
+
+    public ClassRealm newRealm(String id) throws DuplicateRealmException {
+<span class="fc" id="L59">        return newRealm(id, getClass().getClassLoader());</span>
+    }
+
+    public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
+<span class="fc" id="L63">        return newRealm(id, classLoader, null);</span>
+    }
+
+    /**
+     * Adds a class realm with filtering.
+     * Only resources/classes whose name matches a given predicate are exposed.
+     * @param id The identifier for this realm, must not be &lt;code&gt;null&lt;/code&gt;.
+     * @param classLoader The base class loader for this realm, may be &lt;code&gt;null&lt;/code&gt; to use the bootstrap class
+     *            loader.
+     * @param filter a predicate to apply to each resource name to determine if it should be loaded through this class loader
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
+     * @since 2.7.0
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm(String id, ClassLoader classLoader, Predicate&lt;String&gt; filter)
+            throws DuplicateRealmException {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (realms.containsKey(id)) {</span>
+<span class="fc" id="L81">            throw new DuplicateRealmException(this, id);</span>
+        }
+
+        ClassRealm realm;
+
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (filter == null) {</span>
+<span class="fc" id="L87">            realm = new ClassRealm(this, id, classLoader);</span>
+        } else {
+<span class="fc" id="L89">            realm = new FilteredClassRealm(filter, this, id, classLoader);</span>
+        }
+<span class="fc" id="L91">        realms.put(id, realm);</span>
+
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        for (ClassWorldListener listener : listeners) {</span>
+<span class="fc" id="L94">            listener.realmCreated(realm);</span>
+<span class="fc" id="L95">        }</span>
+
+<span class="fc" id="L97">        return realm;</span>
+    }
+
+    /**
+     * Closes all contained class realms.
+     * @since 2.7.0
+     */
+    @SuppressWarnings(&quot;RedundantThrows&quot;)
+    @Override
+    public synchronized void close() throws IOException {
+<span class="fc" id="L107">        realms.values().forEach(this::disposeRealm);</span>
+<span class="fc" id="L108">        realms.clear();</span>
+<span class="fc" id="L109">    }</span>
+
+    public synchronized void disposeRealm(String id) throws NoSuchRealmException {
+<span class="fc" id="L112">        ClassRealm realm = realms.remove(id);</span>
+
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (realm != null) {</span>
+<span class="fc" id="L115">            disposeRealm(realm);</span>
+        } else {
+<span class="fc" id="L117">            throw new NoSuchRealmException(this, id);</span>
+        }
+<span class="fc" id="L119">    }</span>
+
+    private void disposeRealm(ClassRealm realm) {
+        try {
+<span class="fc" id="L123">            realm.close();</span>
+<span class="nc" id="L124">        } catch (IOException ignore) {</span>
+<span class="fc" id="L125">        }</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        for (ClassWorldListener listener : listeners) {</span>
+<span class="fc" id="L127">            listener.realmDisposed(realm);</span>
+<span class="fc" id="L128">        }</span>
+<span class="fc" id="L129">    }</span>
+
+    public synchronized ClassRealm getRealm(String id) throws NoSuchRealmException {
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (realms.containsKey(id)) {</span>
+<span class="fc" id="L133">            return realms.get(id);</span>
+        }
+
+<span class="fc" id="L136">        throw new NoSuchRealmException(this, id);</span>
+    }
+
+    public synchronized Collection&lt;ClassRealm&gt; getRealms() {
+<span class="fc" id="L140">        return Collections.unmodifiableList(new ArrayList&lt;&gt;(realms.values()));</span>
+    }
+
+    // from exports branch
+    public synchronized ClassRealm getClassRealm(String id) {
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (realms.containsKey(id)) {</span>
+<span class="fc" id="L146">            return realms.get(id);</span>
+        }
+
+<span class="fc" id="L149">        return null;</span>
+    }
+
+    public synchronized void addListener(ClassWorldListener listener) {
+        // TODO ideally, use object identity, not equals
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        if (!listeners.contains(listener)) {</span>
+<span class="fc" id="L155">            listeners.add(listener);</span>
+        }
+<span class="fc" id="L157">    }</span>
+
+    public synchronized void removeListener(ClassWorldListener listener) {
+<span class="fc" id="L160">        listeners.remove(listener);</span>
+<span class="fc" id="L161">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

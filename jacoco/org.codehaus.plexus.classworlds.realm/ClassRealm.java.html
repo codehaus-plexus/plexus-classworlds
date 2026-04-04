@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassRealm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.plexus.classworlds.realm</a> &gt; <span class="el_source">ClassRealm.java</span></div><h1>ClassRealm.java</h1><pre class="source lang-java linenums">package org.codehaus.plexus.classworlds.realm;
+
+/*
+ * Copyright 2001-2006 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.strategy.Strategy;
+import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
+
+/**
+ * The class loading gateway. Each class realm has access to a base class loader, imports form zero or more other class
+ * loaders, an optional parent class loader and of course its own class path. When queried for a class/resource, a class
+ * realm will always query its base class loader first before it delegates to a pluggable strategy. The strategy in turn
+ * controls the order in which imported class loaders, the parent class loader and the realm itself are searched. The
+ * base class loader is assumed to be capable of loading of the bootstrap classes.
+ *
+ * @author &lt;a href=&quot;mailto:bob@eng.werken.com&quot;&gt;bob mcwhirter&lt;/a&gt;
+ * @author Jason van Zyl
+ */
+public class ClassRealm extends URLClassLoader {
+
+    private final ClassWorld world;
+
+    private final String id;
+
+    private final SortedSet&lt;Entry&gt; foreignImports;
+
+    private SortedSet&lt;Entry&gt; parentImports;
+
+    private final Strategy strategy;
+
+    private ClassLoader parentClassLoader;
+
+    private final ConcurrentMap&lt;String, Object&gt; lockMap;
+
+    /**
+     * Creates a new class realm.
+     *
+     * @param world           The class world this realm belongs to, must not be &lt;code&gt;null&lt;/code&gt;.
+     * @param id              The identifier for this realm, must not be &lt;code&gt;null&lt;/code&gt;.
+     * @param baseClassLoader The base class loader for this realm, may be &lt;code&gt;null&lt;/code&gt; to use the bootstrap class
+     *                        loader.
+     */
+    public ClassRealm(ClassWorld world, String id, ClassLoader baseClassLoader) {
+<span class="fc" id="L73">        super(new URL[0], baseClassLoader);</span>
+
+<span class="fc" id="L75">        this.world = world;</span>
+
+<span class="fc" id="L77">        this.id = id;</span>
+
+<span class="fc" id="L79">        foreignImports = new TreeSet&lt;&gt;();</span>
+
+<span class="fc" id="L81">        strategy = StrategyFactory.getStrategy(this);</span>
+
+<span class="fc" id="L83">        lockMap = new ConcurrentHashMap&lt;&gt;();</span>
+        // We must call super.getClassLoadingLock at least once
+        // to avoid NPE in super.loadClass.
+<span class="fc" id="L86">        super.getClassLoadingLock(getClass().getName());</span>
+<span class="fc" id="L87">    }</span>
+
+    public String getId() {
+<span class="fc" id="L90">        return this.id;</span>
+    }
+
+    public ClassWorld getWorld() {
+<span class="fc" id="L94">        return this.world;</span>
+    }
+
+    public void importFromParent(String packageName) {
+<span class="fc bfc" id="L98" title="All 2 branches covered.">        if (parentImports == null) {</span>
+<span class="fc" id="L99">            parentImports = new TreeSet&lt;&gt;();</span>
+        }
+
+<span class="fc" id="L102">        parentImports.add(new Entry(null, packageName));</span>
+<span class="fc" id="L103">    }</span>
+
+    boolean isImportedFromParent(String name) {
+<span class="pc bpc" id="L106" title="1 of 4 branches missed.">        if (parentImports != null &amp;&amp; !parentImports.isEmpty()) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            for (Entry entry : parentImports) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">                if (entry.matches(name)) {</span>
+<span class="fc" id="L109">                    return true;</span>
+                }
+<span class="fc" id="L111">            }</span>
+
+<span class="fc" id="L113">            return false;</span>
+        }
+
+<span class="fc" id="L116">        return true;</span>
+    }
+
+    public void importFrom(String realmId, String packageName) throws NoSuchRealmException {
+<span class="fc" id="L120">        importFrom(getWorld().getRealm(realmId), packageName);</span>
+<span class="fc" id="L121">    }</span>
+
+    public void importFrom(ClassLoader classLoader, String packageName) {
+<span class="fc" id="L124">        foreignImports.add(new Entry(classLoader, packageName));</span>
+<span class="fc" id="L125">    }</span>
+
+    public ClassLoader getImportClassLoader(String name) {
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        for (Entry entry : foreignImports) {</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">            if (entry.matches(name)) {</span>
+<span class="fc" id="L130">                return entry.getClassLoader();</span>
+            }
+<span class="fc" id="L132">        }</span>
+
+<span class="fc" id="L134">        return null;</span>
+    }
+
+    public Collection&lt;ClassRealm&gt; getImportRealms() {
+<span class="fc" id="L138">        Collection&lt;ClassRealm&gt; importRealms = new HashSet&lt;&gt;();</span>
+
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (Entry entry : foreignImports) {</span>
+<span class="pc bpc" id="L141" title="1 of 2 branches missed.">            if (entry.getClassLoader() instanceof ClassRealm) {</span>
+<span class="fc" id="L142">                importRealms.add((ClassRealm) entry.getClassLoader());</span>
+            }
+<span class="fc" id="L144">        }</span>
+
+<span class="fc" id="L146">        return importRealms;</span>
+    }
+
+    public Strategy getStrategy() {
+<span class="fc" id="L150">        return strategy;</span>
+    }
+
+    public void setParentClassLoader(ClassLoader parentClassLoader) {
+<span class="nc" id="L154">        this.parentClassLoader = parentClassLoader;</span>
+<span class="nc" id="L155">    }</span>
+
+    public ClassLoader getParentClassLoader() {
+<span class="fc" id="L158">        return parentClassLoader;</span>
+    }
+
+    public void setParentRealm(ClassRealm realm) {
+<span class="fc" id="L162">        this.parentClassLoader = realm;</span>
+<span class="fc" id="L163">    }</span>
+
+    public ClassRealm getParentRealm() {
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        return (parentClassLoader instanceof ClassRealm) ? (ClassRealm) parentClassLoader : null;</span>
+    }
+
+    public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
+<span class="fc" id="L170">        ClassRealm childRealm = getWorld().newRealm(id, null);</span>
+<span class="fc" id="L171">        childRealm.setParentRealm(this);</span>
+<span class="fc" id="L172">        return childRealm;</span>
+    }
+
+    public void addURL(URL url) {
+<span class="fc" id="L176">        String urlStr = url.toExternalForm();</span>
+
+<span class="pc bpc" id="L178" title="3 of 4 branches missed.">        if (urlStr.startsWith(&quot;jar:&quot;) &amp;&amp; urlStr.endsWith(&quot;!/&quot;)) {</span>
+<span class="nc" id="L179">            urlStr = urlStr.substring(4, urlStr.length() - 2);</span>
+
+            try {
+<span class="nc" id="L182">                url = new URL(urlStr);</span>
+<span class="nc" id="L183">            } catch (MalformedURLException e) {</span>
+                //noinspection CallToPrintStackTrace
+<span class="nc" id="L185">                e.printStackTrace();</span>
+<span class="nc" id="L186">            }</span>
+        }
+
+<span class="fc" id="L189">        super.addURL(url);</span>
+<span class="fc" id="L190">    }</span>
+
+    // ----------------------------------------------------------------------
+    // We delegate to the Strategy here so that we can change the behavior
+    // of any existing ClassRealm.
+    // ----------------------------------------------------------------------
+
+    public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+<span class="fc" id="L198">        return loadClass(name, false);</span>
+    }
+
+    protected Class&lt;?&gt; loadClass(String name, boolean resolve) throws ClassNotFoundException {
+<span class="fc" id="L202">        return unsynchronizedLoadClass(name, resolve);</span>
+    }
+
+    private Class&lt;?&gt; unsynchronizedLoadClass(String name, boolean resolve) throws ClassNotFoundException {
+        try {
+            // first, try loading bootstrap classes
+<span class="fc" id="L208">            return super.loadClass(name, resolve);</span>
+<span class="fc" id="L209">        } catch (ClassNotFoundException e) {</span>
+            // next, try loading via imports, self and parent as controlled by strategy
+<span class="fc" id="L211">            return strategy.loadClass(name);</span>
+        }
+    }
+
+    // overwrites
+    // https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#findClass(java.lang.String,java.lang.String)
+    // introduced in Java9
+    @SuppressWarnings(&quot;Since15&quot;)
+    protected Class&lt;?&gt; findClass(String moduleName, String name) {
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (moduleName != null) {</span>
+<span class="nc" id="L221">            return null;</span>
+        }
+        try {
+<span class="fc" id="L224">            return findClassInternal(name);</span>
+<span class="fc" id="L225">        } catch (ClassNotFoundException e) {</span>
+            try {
+<span class="nc" id="L227">                return strategy.getRealm().findClass(name);</span>
+<span class="fc" id="L228">            } catch (ClassNotFoundException nestedException) {</span>
+<span class="fc" id="L229">                return null;</span>
+            }
+        }
+    }
+
+    protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
+        /*
+         * NOTE: This gets only called from ClassLoader.loadClass(Class, boolean) while we try to check for bootstrap
+         * stuff. Don't scan our class path yet, loadClassFromSelf() will do this later when called by the strategy.
+         */
+<span class="fc" id="L239">        throw new ClassNotFoundException(name);</span>
+    }
+
+    protected Class&lt;?&gt; findClassInternal(String name) throws ClassNotFoundException {
+<span class="fc" id="L243">        return super.findClass(name);</span>
+    }
+
+    public URL getResource(String name) {
+<span class="fc" id="L247">        URL resource = super.getResource(name);</span>
+<span class="fc bfc" id="L248" title="All 2 branches covered.">        return resource != null ? resource : strategy.getResource(name);</span>
+    }
+
+    public URL findResource(String name) {
+<span class="fc" id="L252">        return super.findResource(name);</span>
+    }
+
+    public Enumeration&lt;URL&gt; getResources(String name) throws IOException {
+<span class="fc" id="L256">        Collection&lt;URL&gt; resources = new LinkedHashSet&lt;&gt;(Collections.list(super.getResources(name)));</span>
+<span class="fc" id="L257">        resources.addAll(Collections.list(strategy.getResources(name)));</span>
+<span class="fc" id="L258">        return Collections.enumeration(resources);</span>
+    }
+
+    public Enumeration&lt;URL&gt; findResources(String name) throws IOException {
+<span class="fc" id="L262">        return super.findResources(name);</span>
+    }
+
+    // ----------------------------------------------------------------------------
+    // Display methods
+    // ----------------------------------------------------------------------------
+
+    public void display() {
+<span class="nc" id="L270">        display(System.out);</span>
+<span class="nc" id="L271">    }</span>
+
+    public void display(PrintStream out) {
+<span class="nc" id="L274">        out.println(&quot;-----------------------------------------------------&quot;);</span>
+
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        for (ClassRealm cr = this; cr != null; cr = cr.getParentRealm()) {</span>
+<span class="nc" id="L277">            out.println(&quot;realm =    &quot; + cr.getId());</span>
+<span class="nc" id="L278">            out.println(&quot;strategy = &quot; + cr.getStrategy().getClass().getName());</span>
+
+<span class="nc" id="L280">            showUrls(cr, out);</span>
+
+<span class="nc" id="L282">            out.println();</span>
+        }
+
+<span class="nc" id="L285">        out.println(&quot;-----------------------------------------------------&quot;);</span>
+<span class="nc" id="L286">    }</span>
+
+    private static void showUrls(ClassRealm classRealm, PrintStream out) {
+<span class="nc" id="L289">        URL[] urls = classRealm.getURLs();</span>
+
+<span class="nc bnc" id="L291" title="All 2 branches missed.">        for (int i = 0; i &lt; urls.length; i++) {</span>
+<span class="nc" id="L292">            out.println(&quot;urls[&quot; + i + &quot;] = &quot; + urls[i]);</span>
+        }
+
+<span class="nc" id="L295">        out.println(&quot;Number of foreign imports: &quot; + classRealm.foreignImports.size());</span>
+
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        for (Entry entry : classRealm.foreignImports) {</span>
+<span class="nc" id="L298">            out.println(&quot;import: &quot; + entry);</span>
+<span class="nc" id="L299">        }</span>
+
+<span class="nc bnc" id="L301" title="All 2 branches missed.">        if (classRealm.parentImports != null) {</span>
+<span class="nc" id="L302">            out.println(&quot;Number of parent imports: &quot; + classRealm.parentImports.size());</span>
+
+<span class="nc bnc" id="L304" title="All 2 branches missed.">            for (Entry entry : classRealm.parentImports) {</span>
+<span class="nc" id="L305">                out.println(&quot;import: &quot; + entry);</span>
+<span class="nc" id="L306">            }</span>
+        }
+<span class="nc" id="L308">    }</span>
+
+    public String toString() {
+<span class="nc" id="L311">        return &quot;ClassRealm[&quot; + getId() + &quot;, parent: &quot; + getParentClassLoader() + &quot;]&quot;;</span>
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies to load a class
+    // ---------------------------------------------------------------------------------------------
+
+    public Class&lt;?&gt; loadClassFromImport(String name) {
+<span class="fc" id="L319">        ClassLoader importClassLoader = getImportClassLoader(name);</span>
+
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (importClassLoader != null) {</span>
+            try {
+<span class="fc" id="L323">                return importClassLoader.loadClass(name);</span>
+<span class="nc" id="L324">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L325">                return null;</span>
+            }
+        }
+
+<span class="fc" id="L329">        return null;</span>
+    }
+
+    public Class&lt;?&gt; loadClassFromSelf(String name) {
+<span class="fc" id="L333">        synchronized (getClassRealmLoadingLock(name)) {</span>
+            try {
+<span class="fc" id="L335">                Class&lt;?&gt; clazz = findLoadedClass(name);</span>
+
+<span class="fc bfc" id="L337" title="All 2 branches covered.">                if (clazz == null) {</span>
+<span class="fc" id="L338">                    clazz = findClassInternal(name);</span>
+                }
+
+<span class="fc" id="L341">                return clazz;</span>
+<span class="fc" id="L342">            } catch (ClassNotFoundException e) {</span>
+<span class="fc" id="L343">                return null;</span>
+            }
+        }
+    }
+
+    private Object getClassRealmLoadingLock(String name) {
+<span class="fc" id="L349">        return getClassLoadingLock(name);</span>
+    }
+
+    @Override
+    protected Object getClassLoadingLock(String name) {
+<span class="fc" id="L354">        Object newLock = new Object();</span>
+<span class="fc" id="L355">        Object lock = lockMap.putIfAbsent(name, newLock);</span>
+<span class="fc bfc" id="L356" title="All 2 branches covered.">        return (lock == null) ? newLock : lock;</span>
+    }
+
+    public Class&lt;?&gt; loadClassFromParent(String name) {
+<span class="fc" id="L360">        ClassLoader parent = getParentClassLoader();</span>
+
+<span class="fc bfc" id="L362" title="All 4 branches covered.">        if (parent != null &amp;&amp; isImportedFromParent(name)) {</span>
+            try {
+<span class="fc" id="L364">                return parent.loadClass(name);</span>
+<span class="nc" id="L365">            } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L366">                return null;</span>
+            }
+        }
+
+<span class="fc" id="L370">        return null;</span>
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies to get a resource
+    // ---------------------------------------------------------------------------------------------
+
+    public URL loadResourceFromImport(String name) {
+<span class="fc" id="L378">        ClassLoader importClassLoader = getImportClassLoader(name);</span>
+
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">        if (importClassLoader != null) {</span>
+<span class="nc" id="L381">            return importClassLoader.getResource(name);</span>
+        }
+
+<span class="fc" id="L384">        return null;</span>
+    }
+
+    public URL loadResourceFromSelf(String name) {
+<span class="fc" id="L388">        return findResource(name);</span>
+    }
+
+    public URL loadResourceFromParent(String name) {
+<span class="fc" id="L392">        ClassLoader parent = getParentClassLoader();</span>
+
+<span class="pc bpc" id="L394" title="1 of 4 branches missed.">        if (parent != null &amp;&amp; isImportedFromParent(name)) {</span>
+<span class="fc" id="L395">            return parent.getResource(name);</span>
+        } else {
+<span class="fc" id="L397">            return null;</span>
+        }
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Search methods that can be ordered by strategies to get resources
+    // ---------------------------------------------------------------------------------------------
+
+    public Enumeration&lt;URL&gt; loadResourcesFromImport(String name) {
+<span class="fc" id="L406">        ClassLoader importClassLoader = getImportClassLoader(name);</span>
+
+<span class="fc bfc" id="L408" title="All 2 branches covered.">        if (importClassLoader != null) {</span>
+            try {
+<span class="fc" id="L410">                return importClassLoader.getResources(name);</span>
+<span class="nc" id="L411">            } catch (IOException e) {</span>
+<span class="nc" id="L412">                return null;</span>
+            }
+        }
+
+<span class="fc" id="L416">        return null;</span>
+    }
+
+    public Enumeration&lt;URL&gt; loadResourcesFromSelf(String name) {
+        try {
+<span class="fc" id="L421">            return findResources(name);</span>
+<span class="nc" id="L422">        } catch (IOException e) {</span>
+<span class="nc" id="L423">            return null;</span>
+        }
+    }
+
+    public Enumeration&lt;URL&gt; loadResourcesFromParent(String name) {
+<span class="fc" id="L428">        ClassLoader parent = getParentClassLoader();</span>
+
+<span class="pc bpc" id="L430" title="1 of 4 branches missed.">        if (parent != null &amp;&amp; isImportedFromParent(name)) {</span>
+            try {
+<span class="fc" id="L432">                return parent.getResources(name);</span>
+<span class="nc" id="L433">            } catch (IOException e) {</span>
+                // eat it
+            }
+        }
+
+<span class="fc" id="L438">        return null;</span>
+    }
+
+    static {
+<span class="fc" id="L442">        registerAsParallelCapable();</span>
+<span class="fc" id="L443">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigurationParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.plexus.classworlds.launcher</a> &gt; <span class="el_source">ConfigurationParser.java</span></div><h1>ConfigurationParser.java</h1><pre class="source lang-java linenums">package org.codehaus.plexus.classworlds.launcher;
+
+/*
+ * Copyright 2001-2006 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Properties;
+
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+
+/**
+ * Event based launcher configuration parser, delegating effective configuration handling to ConfigurationHandler.
+ *
+ * @author &lt;a href=&quot;mailto:bob@eng.werken.com&quot;&gt;bob mcwhirter&lt;/a&gt;
+ * @author Jason van Zyl
+ * @author Igor Fedorenko
+ * @see ConfigurationHandler
+ */
+public class ConfigurationParser {
+    public static final String MAIN_PREFIX = &quot;main is&quot;;
+
+    public static final String SET_PREFIX = &quot;set&quot;;
+
+    public static final String IMPORT_PREFIX = &quot;import&quot;;
+
+    public static final String LOAD_PREFIX = &quot;load&quot;;
+
+    /**
+     * Optionally spec prefix.
+     */
+    public static final String OPTIONALLY_PREFIX = &quot;optionally&quot;;
+
+    protected static final String FROM_SEPARATOR = &quot; from &quot;;
+
+    protected static final String USING_SEPARATOR = &quot; using &quot;;
+
+    protected static final String DEFAULT_SEPARATOR = &quot; default &quot;;
+
+    private final ConfigurationHandler handler;
+
+    private final Properties systemProperties;
+
+<span class="fc" id="L67">    public ConfigurationParser(ConfigurationHandler handler, Properties systemProperties) {</span>
+<span class="fc" id="L68">        this.handler = handler;</span>
+<span class="fc" id="L69">        this.systemProperties = systemProperties;</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Parse launcher configuration file and send events to the handler.
+     *
+     * @param is the inputstream
+     * @throws IOException when IOException occurs
+     * @throws ConfigurationException when ConfigurationException occurs
+     * @throws DuplicateRealmException when realm already exists
+     * @throws NoSuchRealmException when realm doesn't exist
+     */
+    public void parse(InputStream is)
+            throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException {
+<span class="fc" id="L83">        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {</span>
+
+            String line;
+
+<span class="fc" id="L87">            int lineNo = 0;</span>
+
+<span class="fc" id="L89">            boolean mainSet = false;</span>
+
+<span class="fc" id="L91">            String curRealm = null;</span>
+
+            while (true) {
+<span class="fc" id="L94">                line = reader.readLine();</span>
+
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                if (line == null) {</span>
+<span class="fc" id="L97">                    break;</span>
+                }
+
+<span class="fc" id="L100">                ++lineNo;</span>
+<span class="fc" id="L101">                line = line.trim();</span>
+
+<span class="fc bfc" id="L103" title="All 2 branches covered.">                if (canIgnore(line)) {</span>
+<span class="fc" id="L104">                    continue;</span>
+                }
+
+<span class="fc" id="L107">                char lineFirstChar = line.charAt(0);</span>
+<span class="fc bfc" id="L108" title="All 7 branches covered.">                switch (lineFirstChar) {</span>
+                    case 'm': {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                        if (line.startsWith(MAIN_PREFIX)) {</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">                            if (mainSet) {</span>
+<span class="fc" id="L112">                                throw new ConfigurationException(&quot;Duplicate main configuration&quot;, lineNo, line);</span>
+                            }
+
+<span class="fc" id="L115">                            int fromLoc = line.indexOf(FROM_SEPARATOR, MAIN_PREFIX.length());</span>
+
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">                            if (fromLoc &lt; 0) {</span>
+<span class="nc" id="L118">                                throw new ConfigurationException(&quot;Missing from clause&quot;, lineNo, line);</span>
+                            }
+
+<span class="fc" id="L121">                            String mainClassName = filter(line.substring(MAIN_PREFIX.length(), fromLoc)</span>
+<span class="fc" id="L122">                                    .trim());</span>
+
+<span class="fc" id="L124">                            String mainRealmName = filter(line.substring(fromLoc + FROM_SEPARATOR.length())</span>
+<span class="fc" id="L125">                                    .trim());</span>
+
+<span class="fc" id="L127">                            this.handler.setAppMain(mainClassName, mainRealmName);</span>
+
+<span class="fc" id="L129">                            mainSet = true;</span>
+
+<span class="fc" id="L131">                            break;</span>
+                        }
+<span class="nc" id="L133">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                    }
+                    case 's': {
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">                        if (line.startsWith(SET_PREFIX)) {</span>
+<span class="fc" id="L137">                            String conf = line.substring(SET_PREFIX.length()).trim();</span>
+
+<span class="fc" id="L139">                            int usingLoc = conf.indexOf(USING_SEPARATOR);</span>
+
+<span class="fc" id="L141">                            String property = null;</span>
+
+<span class="fc" id="L143">                            String propertiesFileName = null;</span>
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">                            if (usingLoc &gt;= 0) {</span>
+<span class="fc" id="L146">                                property = conf.substring(0, usingLoc).trim();</span>
+
+<span class="fc" id="L148">                                propertiesFileName = filter(conf.substring(usingLoc + USING_SEPARATOR.length())</span>
+<span class="fc" id="L149">                                        .trim());</span>
+
+<span class="fc" id="L151">                                conf = propertiesFileName;</span>
+                            }
+
+<span class="fc" id="L154">                            String defaultValue = null;</span>
+
+<span class="fc" id="L156">                            int defaultLoc = conf.indexOf(DEFAULT_SEPARATOR);</span>
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">                            if (defaultLoc &gt;= 0) {</span>
+<span class="fc" id="L159">                                defaultValue = filter(conf.substring(defaultLoc + DEFAULT_SEPARATOR.length())</span>
+<span class="fc" id="L160">                                        .trim());</span>
+
+<span class="fc bfc" id="L162" title="All 2 branches covered.">                                if (property == null) {</span>
+<span class="fc" id="L163">                                    property = conf.substring(0, defaultLoc).trim();</span>
+                                } else {
+<span class="fc" id="L165">                                    propertiesFileName =</span>
+<span class="fc" id="L166">                                            conf.substring(0, defaultLoc).trim();</span>
+                                }
+                            }
+
+<span class="fc" id="L170">                            String value = systemProperties.getProperty(property);</span>
+
+<span class="fc bfc" id="L172" title="All 2 branches covered.">                            if (value != null) {</span>
+<span class="fc" id="L173">                                continue;</span>
+                            }
+
+<span class="fc bfc" id="L176" title="All 2 branches covered.">                            if (propertiesFileName != null) {</span>
+<span class="fc" id="L177">                                File propertiesFile = new File(propertiesFileName);</span>
+
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                                if (propertiesFile.exists()) {</span>
+<span class="fc" id="L180">                                    Properties properties = new Properties();</span>
+
+<span class="fc" id="L182">                                    try (InputStream inputStream =</span>
+<span class="fc" id="L183">                                            Files.newInputStream(Paths.get(propertiesFileName))) {</span>
+<span class="fc" id="L184">                                        properties.load(inputStream);</span>
+<span class="fc" id="L185">                                        value = properties.getProperty(property);</span>
+<span class="nc" id="L186">                                    } catch (Exception e) {</span>
+                                        // do nothing
+<span class="fc" id="L188">                                    }</span>
+                                }
+                            }
+
+<span class="fc bfc" id="L192" title="All 4 branches covered.">                            if (value == null &amp;&amp; defaultValue != null) {</span>
+<span class="fc" id="L193">                                value = defaultValue;</span>
+                            }
+
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                            if (value != null) {</span>
+<span class="fc" id="L197">                                value = filter(value);</span>
+<span class="fc" id="L198">                                systemProperties.setProperty(property, value);</span>
+                            }
+
+                            break;
+                        }
+<span class="nc" id="L203">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                    }
+                    case '[': {
+<span class="fc" id="L206">                        int rbrack = line.indexOf(&quot;]&quot;);</span>
+
+<span class="fc bfc" id="L208" title="All 2 branches covered.">                        if (rbrack &lt; 0) {</span>
+<span class="fc" id="L209">                            throw new ConfigurationException(&quot;Invalid realm specifier&quot;, lineNo, line);</span>
+                        }
+
+<span class="fc" id="L212">                        String realmName = line.substring(1, rbrack);</span>
+
+<span class="fc" id="L214">                        handler.addRealm(realmName);</span>
+
+<span class="fc" id="L216">                        curRealm = realmName;</span>
+
+<span class="fc" id="L218">                        break;</span>
+                    }
+                    case 'i': {
+<span class="pc bpc" id="L221" title="1 of 2 branches missed.">                        if (line.startsWith(IMPORT_PREFIX)) {</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                            if (curRealm == null) {</span>
+<span class="fc" id="L223">                                throw new ConfigurationException(&quot;Unhandled import&quot;, lineNo, line);</span>
+                            }
+<span class="fc" id="L225">                            int fromLoc = line.indexOf(FROM_SEPARATOR, IMPORT_PREFIX.length());</span>
+
+<span class="pc bpc" id="L227" title="1 of 2 branches missed.">                            if (fromLoc &lt; 0) {</span>
+<span class="nc" id="L228">                                throw new ConfigurationException(&quot;Missing from clause&quot;, lineNo, line);</span>
+                            }
+
+<span class="fc" id="L231">                            String importSpec = line.substring(IMPORT_PREFIX.length(), fromLoc)</span>
+<span class="fc" id="L232">                                    .trim();</span>
+
+<span class="fc" id="L234">                            String relamName = line.substring(fromLoc + FROM_SEPARATOR.length())</span>
+<span class="fc" id="L235">                                    .trim();</span>
+
+<span class="fc" id="L237">                            handler.addImportFrom(relamName, importSpec);</span>
+
+<span class="fc" id="L239">                            break;</span>
+                        }
+<span class="nc" id="L241">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                    }
+                    case 'l': {
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">                        if (line.startsWith(LOAD_PREFIX)) {</span>
+<span class="fc" id="L245">                            String constituent =</span>
+<span class="fc" id="L246">                                    line.substring(LOAD_PREFIX.length()).trim();</span>
+
+<span class="fc" id="L248">                            constituent = filter(constituent);</span>
+
+<span class="fc bfc" id="L250" title="All 2 branches covered.">                            if (constituent.contains(&quot;*&quot;)) {</span>
+<span class="fc" id="L251">                                loadGlob(constituent, false /*not optionally*/);</span>
+                            } else {
+<span class="fc" id="L253">                                File file = new File(constituent);</span>
+
+<span class="pc bpc" id="L255" title="1 of 2 branches missed.">                                if (file.exists()) {</span>
+<span class="fc" id="L256">                                    handler.addLoadFile(file);</span>
+                                } else {
+                                    try {
+<span class="nc" id="L259">                                        handler.addLoadURL(new URL(constituent));</span>
+<span class="nc" id="L260">                                    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L261">                                        throw new FileNotFoundException(constituent);</span>
+<span class="nc" id="L262">                                    }</span>
+                                }
+                            }
+
+<span class="fc" id="L266">                            break;</span>
+                        }
+<span class="nc" id="L268">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                    }
+                    case 'o': {
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">                        if (line.startsWith(OPTIONALLY_PREFIX)) {</span>
+<span class="fc" id="L272">                            String constituent =</span>
+<span class="fc" id="L273">                                    line.substring(OPTIONALLY_PREFIX.length()).trim();</span>
+
+<span class="fc" id="L275">                            constituent = filter(constituent);</span>
+
+<span class="fc bfc" id="L277" title="All 2 branches covered.">                            if (constituent.contains(&quot;*&quot;)) {</span>
+<span class="fc" id="L278">                                loadGlob(constituent, true /*optionally*/);</span>
+                            } else {
+<span class="fc" id="L280">                                File file = new File(constituent);</span>
+
+<span class="pc bpc" id="L282" title="1 of 2 branches missed.">                                if (file.exists()) {</span>
+<span class="fc" id="L283">                                    handler.addLoadFile(file);</span>
+                                } else {
+                                    try {
+<span class="nc" id="L286">                                        handler.addLoadURL(new URL(constituent));</span>
+<span class="nc" id="L287">                                    } catch (MalformedURLException e) {</span>
+                                        // swallow
+<span class="nc" id="L289">                                    }</span>
+                                }
+                            }
+
+<span class="fc" id="L293">                            break;</span>
+                        }
+<span class="nc" id="L295">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                    }
+                    default:
+<span class="fc" id="L298">                        throw new ConfigurationException(&quot;Unhandled configuration&quot;, lineNo, line);</span>
+                }
+<span class="fc" id="L300">            }</span>
+        }
+<span class="fc" id="L302">    }</span>
+
+    /**
+     * Load a glob into the specified classloader.
+     *
+     * @param line       The path configuration line.
+     * @param optionally Whether the path is optional or required
+     * @throws MalformedURLException If the line does not represent
+     *                               a valid path element.
+     * @throws FileNotFoundException If the line does not represent
+     *                               a valid path element in the filesystem.
+     * @throws ConfigurationException will never occur (thrown for backwards compatibility)
+     */
+    @SuppressWarnings(&quot;RedundantThrows&quot;)
+    protected void loadGlob(String line, boolean optionally)
+            throws MalformedURLException, FileNotFoundException, ConfigurationException {
+<span class="fc" id="L318">        File globFile = new File(line);</span>
+
+<span class="fc" id="L320">        File dir = globFile.getParentFile();</span>
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (!dir.exists()) {</span>
+<span class="pc bpc" id="L322" title="1 of 2 branches missed.">            if (optionally) {</span>
+<span class="fc" id="L323">                return;</span>
+            } else {
+<span class="nc" id="L325">                throw new FileNotFoundException(dir.toString());</span>
+            }
+        }
+
+<span class="fc" id="L329">        String localName = globFile.getName();</span>
+
+<span class="fc" id="L331">        int starLoc = localName.indexOf(&quot;*&quot;);</span>
+
+<span class="fc" id="L333">        final String prefix = localName.substring(0, starLoc);</span>
+
+<span class="fc" id="L335">        final String suffix = localName.substring(starLoc + 1);</span>
+
+<span class="pc bpc" id="L337" title="3 of 4 branches missed.">        File[] matches = dir.listFiles((dir1, name) -&gt; name.startsWith(prefix) || name.endsWith(suffix));</span>
+
+<span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (matches != null) {</span>
+<span class="fc bfc" id="L340" title="All 2 branches covered.">            for (File match : matches) {</span>
+<span class="fc" id="L341">                handler.addLoadFile(match);</span>
+            }
+        }
+<span class="fc" id="L344">    }</span>
+
+    /**
+     * Filter a string for system properties.
+     *
+     * @param text The text to filter.
+     * @return The filtered text.
+     * @throws ConfigurationException If the property does not
+     *                                exist or if there is a syntax error.
+     */
+    protected String filter(String text) throws ConfigurationException {
+<span class="fc" id="L355">        StringBuilder result = new StringBuilder();</span>
+
+<span class="fc" id="L357">        int cur = 0;</span>
+<span class="fc" id="L358">        int textLen = text.length();</span>
+
+        int propStart;
+        int propStop;
+
+        String propName;
+        String propValue;
+
+<span class="fc bfc" id="L366" title="All 2 branches covered.">        while (cur &lt; textLen) {</span>
+<span class="fc" id="L367">            propStart = text.indexOf(&quot;${&quot;, cur);</span>
+
+<span class="fc bfc" id="L369" title="All 2 branches covered.">            if (propStart &lt; 0) {</span>
+<span class="fc" id="L370">                break;</span>
+            }
+
+<span class="fc" id="L373">            result.append(text, cur, propStart);</span>
+
+<span class="fc" id="L375">            propStop = text.indexOf(&quot;}&quot;, propStart);</span>
+
+<span class="fc bfc" id="L377" title="All 2 branches covered.">            if (propStop &lt; 0) {</span>
+<span class="fc" id="L378">                throw new ConfigurationException(&quot;Unterminated property: &quot; + text.substring(propStart));</span>
+            }
+
+<span class="fc" id="L381">            propName = text.substring(propStart + 2, propStop);</span>
+
+<span class="fc" id="L383">            propValue = systemProperties.getProperty(propName);</span>
+
+            /* do our best if we are not running from surefire */
+<span class="pc bpc" id="L386" title="2 of 6 branches missed.">            if (propName.equals(&quot;basedir&quot;) &amp;&amp; (propValue == null || propValue.isEmpty())) {</span>
+<span class="nc" id="L387">                propValue = (new File(&quot;&quot;)).getAbsolutePath();</span>
+            }
+
+<span class="fc bfc" id="L390" title="All 2 branches covered.">            if (propValue == null) {</span>
+<span class="fc" id="L391">                throw new ConfigurationException(&quot;No such property: &quot; + propName);</span>
+            }
+<span class="fc" id="L393">            result.append(propValue);</span>
+
+<span class="fc" id="L395">            cur = propStop + 1;</span>
+        }
+
+<span class="fc" id="L398">        result.append(text.substring(cur));</span>
+
+<span class="fc" id="L400">        return result.toString();</span>
+    }
+
+    /**
+     * Determine if a line can be ignored because it is
+     * a comment or simply blank.
+     *
+     * @param line The line to test.
+     * @return &lt;code&gt;true&lt;/code&gt; if the line is ignorable,
+     *         otherwise &lt;code&gt;false&lt;/code&gt;.
+     */
+    private boolean canIgnore(String line) {
+<span class="fc bfc" id="L412" title="All 4 branches covered.">        return (line.isEmpty() || line.startsWith(&quot;#&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

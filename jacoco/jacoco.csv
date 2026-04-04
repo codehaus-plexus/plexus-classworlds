@@ -1,0 +1,18 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Plexus Classworlds,org.codehaus.plexus.classworlds.realm,NoSuchRealmException,0,11,0,0,0,4,0,2,0,2
+Plexus Classworlds,org.codehaus.plexus.classworlds.realm,FilteredClassRealm,0,52,0,6,0,13,0,7,0,4
+Plexus Classworlds,org.codehaus.plexus.classworlds.realm,Entry,21,178,5,33,1,40,6,21,1,7
+Plexus Classworlds,org.codehaus.plexus.classworlds.realm,ClassRealm,224,397,21,39,44,104,20,52,6,36
+Plexus Classworlds,org.codehaus.plexus.classworlds.realm,DuplicateRealmException,0,11,0,0,0,4,0,2,0,2
+Plexus Classworlds,org.codehaus.plexus.classworlds.strategy,SelfFirstStrategy,0,74,1,9,0,20,1,8,0,4
+Plexus Classworlds,org.codehaus.plexus.classworlds.strategy,OsgiBundleStrategy,0,74,3,7,0,20,3,6,0,4
+Plexus Classworlds,org.codehaus.plexus.classworlds.strategy,AbstractStrategy,3,41,0,4,1,13,1,6,1,4
+Plexus Classworlds,org.codehaus.plexus.classworlds.strategy,ParentFirstStrategy,0,74,4,6,0,20,4,5,0,4
+Plexus Classworlds,org.codehaus.plexus.classworlds.strategy,StrategyFactory,3,9,0,0,1,2,1,2,1,2
+Plexus Classworlds,org.codehaus.plexus.classworlds.launcher,ConfigurationParser,90,550,16,71,17,141,15,37,0,6
+Plexus Classworlds,org.codehaus.plexus.classworlds.launcher,Configurator,46,129,8,8,14,37,10,8,3,7
+Plexus Classworlds,org.codehaus.plexus.classworlds.launcher,ConfigurationException,0,25,0,0,0,6,0,3,0,3
+Plexus Classworlds,org.codehaus.plexus.classworlds.launcher,Launcher,144,217,18,14,38,56,14,21,2,17
+Plexus Classworlds,org.codehaus.plexus.classworlds,ClassWorldException,0,16,0,0,0,7,0,3,0,3
+Plexus Classworlds,org.codehaus.plexus.classworlds,ClassWorld,2,190,0,16,2,46,0,21,0,13
+Plexus Classworlds,org.codehaus.plexus.classworlds,UrlUtils,3,48,0,6,1,9,1,5,1,2

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Launcher.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.plexus.classworlds.launcher</a> &gt; <span class="el_source">Launcher.java</span></div><h1>Launcher.java</h1><pre class="source lang-java linenums">package org.codehaus.plexus.classworlds.launcher;
+
+/*
+ * Copyright 2001-2006 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
+import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+
+/**
+ * &lt;p&gt;Command-line invokable application launcher.&lt;/p&gt;
+ *
+ * &lt;p&gt;This launcher class assists in the creation of classloaders and &lt;code&gt;ClassRealm&lt;/code&gt;s
+ * from a configuration file and the launching of the application's &lt;code&gt;main&lt;/code&gt;
+ * method from the correct class loaded through the correct classloader.&lt;/p&gt;
+ *
+ * &lt;p&gt; The path to the configuration file is specified using the &lt;code&gt;classworlds.conf&lt;/code&gt;
+ * system property, typically specified using the &lt;code&gt;-D&lt;/code&gt; switch to
+ * &lt;code&gt;java&lt;/code&gt;.&lt;/p&gt;
+ *
+ * @author &lt;a href=&quot;mailto:bob@eng.werken.com&quot;&gt;bob mcwhirter&lt;/a&gt;
+ */
+public class Launcher {
+    protected static final String CLASSWORLDS_CONF = &quot;classworlds.conf&quot;;
+
+    protected static final String UBERJAR_CONF_DIR = &quot;WORLDS-INF/conf/&quot;;
+
+    protected ClassLoader systemClassLoader;
+
+    protected String mainClassName;
+
+    protected String mainRealmName;
+
+    protected ClassWorld world;
+
+<span class="fc" id="L60">    private int exitCode = 0;</span>
+
+<span class="fc" id="L62">    public Launcher() {</span>
+<span class="fc" id="L63">        this.systemClassLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="fc" id="L64">    }</span>
+
+    public void setSystemClassLoader(ClassLoader loader) {
+<span class="fc" id="L67">        this.systemClassLoader = loader;</span>
+<span class="fc" id="L68">    }</span>
+
+    public ClassLoader getSystemClassLoader() {
+<span class="fc" id="L71">        return this.systemClassLoader;</span>
+    }
+
+    public int getExitCode() {
+<span class="fc" id="L75">        return exitCode;</span>
+    }
+
+    public void setAppMain(String mainClassName, String mainRealmName) {
+<span class="fc" id="L79">        this.mainClassName = mainClassName;</span>
+
+<span class="fc" id="L81">        this.mainRealmName = mainRealmName;</span>
+<span class="fc" id="L82">    }</span>
+
+    public String getMainRealmName() {
+<span class="fc" id="L85">        return this.mainRealmName;</span>
+    }
+
+    public String getMainClassName() {
+<span class="fc" id="L89">        return this.mainClassName;</span>
+    }
+
+    public void setWorld(ClassWorld world) {
+<span class="fc" id="L93">        this.world = world;</span>
+<span class="fc" id="L94">    }</span>
+
+    public ClassWorld getWorld() {
+<span class="fc" id="L97">        return this.world;</span>
+    }
+
+    /**
+     * Configure from a file.
+     *
+     * @param is The config input stream.
+     * @throws IOException             If an error occurs reading the config file.
+     * @throws MalformedURLException   If the config file contains invalid URLs.
+     * @throws ConfigurationException  If the config file is corrupt.
+     * @throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException If the config file defines two realms
+     *                                 with the same id.
+     * @throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException    If the config file defines a main entry
+     *                                 point in a non-existent realm.
+     */
+    public void configure(InputStream is)
+            throws IOException, ConfigurationException, DuplicateRealmException, NoSuchRealmException {
+<span class="fc" id="L114">        Configurator configurator = new Configurator(this);</span>
+
+<span class="fc" id="L116">        configurator.configure(is);</span>
+<span class="fc" id="L117">    }</span>
+
+    /**
+     * Retrieve the main entry class.
+     *
+     * @return The main entry class.
+     * @throws ClassNotFoundException If the class cannot be found.
+     * @throws NoSuchRealmException   If the specified main entry realm does not exist.
+     */
+    public Class&lt;?&gt; getMainClass() throws ClassNotFoundException, NoSuchRealmException {
+<span class="fc" id="L127">        return getMainRealm().loadClass(getMainClassName());</span>
+    }
+
+    /**
+     * Retrieve the main entry realm.
+     *
+     * @return The main entry realm.
+     * @throws NoSuchRealmException If the specified main entry realm does not exist.
+     */
+    public ClassRealm getMainRealm() throws NoSuchRealmException {
+<span class="fc" id="L137">        return getWorld().getRealm(getMainRealmName());</span>
+    }
+
+    /**
+     * Retrieve the enhanced main entry method.
+     *
+     * @return The enhanced main entry method.
+     * @throws ClassNotFoundException If the main entry class cannot be found.
+     * @throws NoSuchMethodException  If the main entry method cannot be found.
+     * @throws NoSuchRealmException   If the main entry realm cannot be found.
+     */
+    protected Method getEnhancedMainMethod()
+            throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException {
+<span class="fc" id="L150">        Class&lt;?&gt; cwClass = getMainRealm().loadClass(ClassWorld.class.getName());</span>
+
+<span class="fc" id="L152">        Method m = getMainClass().getMethod(&quot;main&quot;, String[].class, cwClass);</span>
+
+<span class="fc" id="L154">        int modifiers = m.getModifiers();</span>
+
+<span class="pc bpc" id="L156" title="2 of 4 branches missed.">        if (Modifier.isStatic(modifiers) &amp;&amp; Modifier.isPublic(modifiers)) {</span>
+<span class="pc bpc" id="L157" title="1 of 4 branches missed.">            if (m.getReturnType() == Integer.TYPE || m.getReturnType() == Void.TYPE) {</span>
+<span class="fc" id="L158">                return m;</span>
+            }
+        }
+
+<span class="nc" id="L162">        throw new NoSuchMethodException(&quot;public static void main(String[] args, ClassWorld world)&quot;);</span>
+    }
+
+    /**
+     * Retrieve the main entry method.
+     *
+     * @return The main entry method.
+     * @throws ClassNotFoundException If the main entry class cannot be found.
+     * @throws NoSuchMethodException  If the main entry method cannot be found.
+     * @throws NoSuchRealmException   If the main entry realm cannot be found.
+     */
+    protected Method getMainMethod() throws ClassNotFoundException, NoSuchMethodException, NoSuchRealmException {
+<span class="fc" id="L174">        Method m = getMainClass().getMethod(&quot;main&quot;, String[].class);</span>
+
+<span class="fc" id="L176">        int modifiers = m.getModifiers();</span>
+
+<span class="pc bpc" id="L178" title="2 of 4 branches missed.">        if (Modifier.isStatic(modifiers) &amp;&amp; Modifier.isPublic(modifiers)) {</span>
+<span class="pc bpc" id="L179" title="1 of 4 branches missed.">            if (m.getReturnType() == Integer.TYPE || m.getReturnType() == Void.TYPE) {</span>
+<span class="fc" id="L180">                return m;</span>
+            }
+        }
+
+<span class="nc" id="L184">        throw new NoSuchMethodException(&quot;public static void main(String[] args) in &quot; + getMainClass());</span>
+    }
+
+    /**
+     * Launch the application.
+     *
+     * @param args The application args.
+     * @throws ClassNotFoundException    If the main entry class cannot be found.
+     * @throws IllegalAccessException    If the method cannot be accessed.
+     * @throws InvocationTargetException If the target of the invokation is invalid.
+     * @throws NoSuchMethodException     If the main entry method cannot be found.
+     * @throws NoSuchRealmException      If the main entry realm cannot be found.
+     */
+    public void launch(String[] args)
+            throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+                    NoSuchRealmException {
+        try {
+<span class="fc" id="L201">            launchEnhanced(args);</span>
+
+<span class="fc" id="L203">            return;</span>
+<span class="fc" id="L204">        } catch (NoSuchMethodException e) {</span>
+            // ignore
+        }
+
+<span class="fc" id="L208">        launchStandard(args);</span>
+<span class="fc" id="L209">    }</span>
+
+    /**
+     * &lt;p&gt;Attempt to launch the application through the enhanced main method.&lt;/p&gt;
+     *
+     * &lt;p&gt;This will seek a method with the exact signature of:&lt;/p&gt;
+     * &lt;pre&gt;
+     *  public static void main(String[] args, ClassWorld world)
+     *  &lt;/pre&gt;
+     *
+     * @param args The application args.
+     * @throws ClassNotFoundException    If the main entry class cannot be found.
+     * @throws IllegalAccessException    If the method cannot be accessed.
+     * @throws InvocationTargetException If the target of the invokation is
+     *                                   invalid.
+     * @throws NoSuchMethodException     If the main entry method cannot be found.
+     * @throws NoSuchRealmException      If the main entry realm cannot be found.
+     */
+    protected void launchEnhanced(String[] args)
+            throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+                    NoSuchRealmException {
+<span class="fc" id="L230">        ClassRealm mainRealm = getMainRealm();</span>
+
+<span class="fc" id="L232">        Class&lt;?&gt; mainClass = getMainClass();</span>
+
+<span class="fc" id="L234">        Method mainMethod = getEnhancedMainMethod();</span>
+
+<span class="fc" id="L236">        ClassLoader cl = mainRealm;</span>
+
+        // ----------------------------------------------------------------------
+        // This is what the classloader for the main realm looks like when we
+        // boot from the command line:
+        // ----------------------------------------------------------------------
+        // [ AppLauncher$AppClassLoader ] : $CLASSPATH envar
+        //           ^
+        //           |
+        //           |
+        // [ AppLauncher$ExtClassLoader ] : ${java.home}/jre/lib/ext/*.jar
+        //           ^
+        //           |
+        //           |
+        // [ Strategy ]
+        // ----------------------------------------------------------------------
+
+<span class="fc" id="L253">        Thread.currentThread().setContextClassLoader(cl);</span>
+
+<span class="fc" id="L255">        Object ret = mainMethod.invoke(mainClass, args, getWorld());</span>
+
+<span class="fc bfc" id="L257" title="All 2 branches covered.">        if (ret instanceof Integer) {</span>
+<span class="fc" id="L258">            exitCode = (Integer) ret;</span>
+        }
+
+<span class="fc" id="L261">        Thread.currentThread().setContextClassLoader(systemClassLoader);</span>
+<span class="fc" id="L262">    }</span>
+
+    /**
+     * &lt;p&gt;Attempt to launch the application through the standard main method.&lt;/p&gt;
+     *
+     * &lt;p&gt;This will seek a method with the exact signature of:&lt;/p&gt;
+     *
+     * &lt;pre&gt;
+     *  public static void main(String[] args)
+     *  &lt;/pre&gt;
+     *
+     * @param args The application args.
+     * @throws ClassNotFoundException    If the main entry class cannot be found.
+     * @throws IllegalAccessException    If the method cannot be accessed.
+     * @throws InvocationTargetException If the target of the invokation is
+     *                                   invalid.
+     * @throws NoSuchMethodException     If the main entry method cannot be found.
+     * @throws NoSuchRealmException      If the main entry realm cannot be found.
+     */
+    protected void launchStandard(String[] args)
+            throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+                    NoSuchRealmException {
+<span class="fc" id="L284">        ClassRealm mainRealm = getMainRealm();</span>
+
+<span class="fc" id="L286">        Class&lt;?&gt; mainClass = getMainClass();</span>
+
+<span class="fc" id="L288">        Method mainMethod = getMainMethod();</span>
+
+<span class="fc" id="L290">        Thread.currentThread().setContextClassLoader(mainRealm);</span>
+
+<span class="fc" id="L292">        Object ret = mainMethod.invoke(mainClass, new Object[] {args});</span>
+
+<span class="fc bfc" id="L294" title="All 2 branches covered.">        if (ret instanceof Integer) {</span>
+<span class="fc" id="L295">            exitCode = (Integer) ret;</span>
+        }
+
+<span class="fc" id="L298">        Thread.currentThread().setContextClassLoader(systemClassLoader);</span>
+<span class="fc" id="L299">    }</span>
+
+    // ------------------------------------------------------------
+    //     Class methods
+    // ------------------------------------------------------------
+
+    /**
+     * Launch the launcher from the command line.
+     * Will exit using System.exit with an exit code of 0 for success, 100 if there was an unknown exception,
+     * or some other code for an application error.
+     *
+     * @param args The application command-line arguments.
+     */
+    public static void main(String[] args) {
+        try {
+<span class="nc" id="L314">            int exitCode = mainWithExitCode(args);</span>
+
+<span class="nc" id="L316">            System.exit(exitCode);</span>
+<span class="nc" id="L317">        } catch (Exception e) {</span>
+            //noinspection CallToPrintStackTrace
+<span class="nc" id="L319">            e.printStackTrace();</span>
+
+<span class="nc" id="L321">            System.exit(100);</span>
+<span class="nc" id="L322">        }</span>
+<span class="nc" id="L323">    }</span>
+
+    /**
+     * Launch the launcher.
+     *
+     * @param args The application command-line arguments.
+     * @return an integer exit code
+     * @throws Exception If an error occurs.
+     */
+    public static int mainWithExitCode(String[] args) throws Exception {
+<span class="nc" id="L333">        String classworldsConf = System.getProperty(CLASSWORLDS_CONF);</span>
+
+        InputStream is;
+
+<span class="nc" id="L337">        Launcher launcher = new Launcher();</span>
+
+<span class="nc" id="L339">        ClassLoader cl = Thread.currentThread().getContextClassLoader();</span>
+
+<span class="nc" id="L341">        launcher.setSystemClassLoader(cl);</span>
+
+<span class="nc bnc" id="L343" title="All 2 branches missed.">        if (classworldsConf != null) {</span>
+<span class="nc" id="L344">            is = Files.newInputStream(Paths.get(classworldsConf));</span>
+        } else {
+<span class="nc bnc" id="L346" title="All 2 branches missed.">            if (&quot;true&quot;.equals(System.getProperty(&quot;classworlds.bootstrapped&quot;))) {</span>
+<span class="nc" id="L347">                is = cl.getResourceAsStream(UBERJAR_CONF_DIR + CLASSWORLDS_CONF);</span>
+            } else {
+<span class="nc" id="L349">                is = cl.getResourceAsStream(CLASSWORLDS_CONF);</span>
+            }
+        }
+
+<span class="nc bnc" id="L353" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L354">            throw new Exception(&quot;classworlds configuration not specified nor found in the classpath&quot;);</span>
+        }
+
+<span class="nc" id="L357">        launcher.configure(is);</span>
+
+<span class="nc" id="L359">        is.close();</span>
+
+        try {
+<span class="nc" id="L362">            launcher.launch(args);</span>
+<span class="nc" id="L363">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L364">            ClassRealm realm = launcher.getWorld().getRealm(launcher.getMainRealmName());</span>
+
+<span class="nc" id="L366">            URL[] constituents = realm.getURLs();</span>
+
+<span class="nc" id="L368">            System.out.println(&quot;---------------------------------------------------&quot;);</span>
+
+<span class="nc bnc" id="L370" title="All 2 branches missed.">            for (int i = 0; i &lt; constituents.length; i++) {</span>
+<span class="nc" id="L371">                System.out.println(&quot;constituent[&quot; + i + &quot;]: &quot; + constituents[i]);</span>
+            }
+
+<span class="nc" id="L374">            System.out.println(&quot;---------------------------------------------------&quot;);</span>
+
+            // Decode ITE (if we can)
+<span class="nc" id="L377">            Throwable t = e.getTargetException();</span>
+
+<span class="nc bnc" id="L379" title="All 2 branches missed.">            if (t instanceof Exception) {</span>
+<span class="nc" id="L380">                throw (Exception) t;</span>
+            }
+<span class="nc bnc" id="L382" title="All 2 branches missed.">            if (t instanceof Error) {</span>
+<span class="nc" id="L383">                throw (Error) t;</span>
+            }
+
+            // Else just toss the ITE
+<span class="nc" id="L387">            throw e;</span>
+<span class="nc" id="L388">        }</span>
+
+<span class="nc" id="L390">        return launcher.getExitCode();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

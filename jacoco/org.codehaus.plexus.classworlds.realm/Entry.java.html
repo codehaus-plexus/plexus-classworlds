@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Entry.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.plexus.classworlds.realm</a> &gt; <span class="el_source">Entry.java</span></div><h1>Entry.java</h1><pre class="source lang-java linenums">package org.codehaus.plexus.classworlds.realm;
+
+/*
+ * Copyright 2001-2006 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Import description entry.
+ *
+ * @author &lt;a href=&quot;mailto:bob@eng.werken.com&quot;&gt;bob mcwhirter&lt;/a&gt;
+ */
+class Entry implements Comparable&lt;Entry&gt; {
+
+    final ClassLoader classLoader;
+
+    final String pkgName;
+
+<span class="fc" id="L30">    Entry(ClassLoader realm, String pkgName) {</span>
+<span class="fc" id="L31">        this.classLoader = realm;</span>
+
+<span class="fc" id="L33">        this.pkgName = pkgName;</span>
+<span class="fc" id="L34">    }</span>
+
+    // ------------------------------------------------------------
+    //     Instance methods
+    // ------------------------------------------------------------
+
+    /**
+     * Retrieve the class loader.
+     *
+     * @return The class loader.
+     */
+    ClassLoader getClassLoader() {
+<span class="fc" id="L46">        return this.classLoader;</span>
+    }
+
+    /**
+     * Retrieve the package name.
+     *
+     * @return The package name.
+     */
+    String getPackageName() {
+<span class="fc" id="L55">        return this.pkgName;</span>
+    }
+
+    /**
+     * Determine if the class/resource name matches the package
+     * described by this entry.
+     *
+     * @param name The class or resource name to test, must not be &lt;code&gt;null&lt;/code&gt;.
+     * @return &lt;code&gt;true&lt;/code&gt; if this entry matches the
+     *         classname, otherwise &lt;code&gt;false&lt;/code&gt;.
+     */
+    boolean matches(String name) {
+<span class="fc" id="L67">        String pkg = getPackageName();</span>
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (pkg.endsWith(&quot;.*&quot;)) {</span>
+            String pkgName;
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (name.indexOf('/') &lt; 0) {</span>
+                // a binary class name, e.g. java.lang.Object
+
+<span class="fc" id="L75">                int index = name.lastIndexOf('.');</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                pkgName = (index &lt; 0) ? &quot;&quot; : name.substring(0, index);</span>
+<span class="fc" id="L77">            } else {</span>
+                // a resource name, e.g. java/lang/Object.class
+
+<span class="fc" id="L80">                int index = name.lastIndexOf('/');</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">                pkgName = (index &lt; 0) ? &quot;&quot; : name.substring(0, index).replace('/', '.');</span>
+            }
+
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">            return pkgName.length() == pkg.length() - 2 &amp;&amp; pkg.regionMatches(0, pkgName, 0, pkgName.length());</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        } else if (!pkg.isEmpty()) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            if (name.indexOf('/') &lt; 0) {</span>
+                // a binary class name, e.g. java.lang.Object
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                if (name.startsWith(pkg)) {</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">                    if (name.length() == pkg.length()) {</span>
+                        // exact match of class name
+<span class="fc" id="L92">                        return true;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">                    } else if (name.charAt(pkg.length()) == '.') {</span>
+                        // prefix match of package name
+<span class="fc" id="L95">                        return true;</span>
+                    } else //noinspection RedundantIfStatement
+<span class="fc bfc" id="L97" title="All 2 branches covered.">                    if (name.charAt(pkg.length()) == '$') {</span>
+                        // prefix match of enclosing type
+<span class="fc" id="L99">                        return true;</span>
+                    }
+                }
+            } else {
+                // a resource name, e.g. java/lang/Object.class
+
+<span class="fc bfc" id="L105" title="All 2 branches covered.">                if (name.equals(pkg)) {</span>
+                    // exact match of resource name
+<span class="fc" id="L107">                    return true;</span>
+                }
+
+<span class="fc" id="L110">                pkg = pkg.replace('.', '/');</span>
+
+<span class="pc bpc" id="L112" title="1 of 4 branches missed.">                if (name.startsWith(pkg) &amp;&amp; name.length() &gt; pkg.length()) {</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                    if (name.charAt(pkg.length()) == '/') {</span>
+                        // prefix match of package directory
+<span class="fc" id="L115">                        return true;</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                    } else if (name.charAt(pkg.length()) == '$') {</span>
+                        // prefix match of nested class file
+<span class="fc" id="L118">                        return true;</span>
+                    } else //noinspection RedundantIfStatement
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">                    if (name.length() == pkg.length() + 6 &amp;&amp; name.endsWith(&quot;.class&quot;)) {</span>
+                        // exact match of class file
+<span class="fc" id="L122">                        return true;</span>
+                    }
+                }
+            }
+
+<span class="fc" id="L127">            return false;</span>
+        } else {
+<span class="fc" id="L129">            return true;</span>
+        }
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //     java.lang.Comparable
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    /**
+     * Compare this entry to another for relative ordering.
+     * &lt;p/&gt;
+     * &lt;p/&gt;
+     * The natural ordering of Entry objects is reverse-alphabetical
+     * based upon package name.
+     * &lt;/p&gt;
+     *
+     * @param that The object to compare.
+     * @return -1 if this object sorts before that object, 0
+     *         if they are equal, or 1 if this object sorts
+     *         after that object.
+     */
+    public int compareTo(Entry that) {
+        // We are reverse sorting this list, so that
+        // we get longer matches first:
+        //
+        //     com.werken.foo.bar
+        //     com.werken.foo
+        //     com.werken
+
+<span class="fc" id="L158">        return -(getPackageName().compareTo(that.getPackageName()));</span>
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    //     java.lang.Object
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    /**
+     * Test this entry for equality to another.
+     * &lt;p/&gt;
+     * &lt;p/&gt;
+     * Consistent with {@link #compareTo}, this method tests
+     * for equality purely on the package name.
+     * &lt;/p&gt;
+     *
+     * @param thatObj The object to compare
+     * @return &lt;code&gt;true&lt;/code&gt; if the two objects are
+     *         semantically equivalent, otherwise &lt;code&gt;false&lt;/code&gt;.
+     */
+    public boolean equals(Object thatObj) {
+<span class="fc" id="L178">        Entry that = (Entry) thatObj;</span>
+
+<span class="fc" id="L180">        return getPackageName().equals(that.getPackageName());</span>
+    }
+
+    /**
+     * &lt;p/&gt;
+     * Consistent with {@link #equals}, this method creates a hashCode
+     * based on the packagename.
+     * &lt;/p&gt;
+     */
+    public int hashCode() {
+<span class="fc" id="L190">        return getPackageName().hashCode();</span>
+    }
+
+    public String toString() {
+<span class="nc" id="L194">        return &quot;Entry[import &quot; + getPackageName() + &quot; from realm &quot; + getClassLoader() + &quot;]&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

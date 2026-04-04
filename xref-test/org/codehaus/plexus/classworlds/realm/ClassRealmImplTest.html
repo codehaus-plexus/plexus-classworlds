@@ -41,17 +41,17 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">private</strong> ClassWorld world;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      @BeforeEach
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setUp() {
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">void</strong> setUp() {
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>          <strong class="jxr_keyword">this</strong>.world = <strong class="jxr_keyword">new</strong> ClassWorld();
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>      }
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>      @AfterEach
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> tearDown() {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">void</strong> tearDown() {
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>          <strong class="jxr_keyword">this</strong>.world = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      @Test
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">void</strong> testNewRealm() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">void</strong> newRealm() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          ClassRealm realm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"foo"</span>);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>  
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>          assertNotNull(realm);
@@ -62,14 +62,14 @@
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      }
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      @Test
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">void</strong> testLocateSourceRealm_NoImports() {
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      <strong class="jxr_keyword">void</strong> locateSourceRealmNoImports() {
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          ClassRealm realm = <strong class="jxr_keyword">new</strong> ClassRealm(<strong class="jxr_keyword">this</strong>.world, <span class="jxr_string">"foo"</span>, <strong class="jxr_keyword">null</strong>);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>          assertSame(<strong class="jxr_keyword">null</strong>, realm.getImportClassLoader(<span class="jxr_string">"com.werken.Stuff"</span>));
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>  
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      @Test
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">void</strong> testLocateSourceRealm_SimpleImport() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">void</strong> locateSourceRealmSimpleImport() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          ClassRealm werkflowRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"werkflow"</span>);
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      }
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      @Test
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">void</strong> testLocateSourceRealm_MultipleImport() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">void</strong> locateSourceRealmMultipleImport() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          ClassRealm werkflowRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"werkflow"</span>);
@@ -115,7 +115,7 @@
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>     }
 <a class="jxr_linenumber" name="L108" href="#L108">108</a> 
 <a class="jxr_linenumber" name="L109" href="#L109">109</a>     @Test
-<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">void</strong> testLocateSourceRealm_Hierachy() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <strong class="jxr_keyword">void</strong> locateSourceRealmHierachy() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L112" href="#L112">112</a> 
 <a class="jxr_linenumber" name="L113" href="#L113">113</a>         ClassRealm fooRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"foo"</span>);
@@ -148,7 +148,7 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     }
 <a class="jxr_linenumber" name="L141" href="#L141">141</a> 
 <a class="jxr_linenumber" name="L142" href="#L142">142</a>     @Test
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">void</strong> testLocateSourceRealm_Hierachy_Reverse() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">void</strong> locateSourceRealmHierachyReverse() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>         ClassRealm fooBarBazRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"fooBarBaz"</span>);
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> 
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         ClassRealm fooBarRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"fooBar"</span>);
@@ -181,7 +181,7 @@
 <a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
 <a class="jxr_linenumber" name="L174" href="#L174">174</a> 
 <a class="jxr_linenumber" name="L175" href="#L175">175</a>     @Test
-<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">void</strong> testLoadClass_SystemClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     <strong class="jxr_keyword">void</strong> loadClassSystemClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L178" href="#L178">178</a> 
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>         Class&lt;?&gt; cls = mainRealm.loadClass(<span class="jxr_string">"java.lang.Object"</span>);
@@ -190,7 +190,7 @@
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>     }
 <a class="jxr_linenumber" name="L183" href="#L183">183</a> 
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>     @Test
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">void</strong> testLoadClass_NonSystemClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">void</strong> loadClassNonSystemClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L186" href="#L186">186</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L187" href="#L187">187</a> 
 <a class="jxr_linenumber" name="L188" href="#L188">188</a>         <strong class="jxr_keyword">try</strong> {
@@ -205,7 +205,7 @@
 <a class="jxr_linenumber" name="L197" href="#L197">197</a>     }
 <a class="jxr_linenumber" name="L198" href="#L198">198</a> 
 <a class="jxr_linenumber" name="L199" href="#L199">199</a>     @Test
-<a class="jxr_linenumber" name="L200" href="#L200">200</a>     <strong class="jxr_keyword">void</strong> testLoadClass_ClassWorldsClass() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     <strong class="jxr_keyword">void</strong> loadClassClassWorldsClass() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L201" href="#L201">201</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L202" href="#L202">202</a> 
 <a class="jxr_linenumber" name="L203" href="#L203">203</a>         Class&lt;?&gt; cls = mainRealm.loadClass(<span class="jxr_string">"org.codehaus.plexus.classworlds.ClassWorld"</span>);
@@ -216,7 +216,7 @@
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>     }
 <a class="jxr_linenumber" name="L209" href="#L209">209</a> 
 <a class="jxr_linenumber" name="L210" href="#L210">210</a>     @Test
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">void</strong> testLoadClass_Local() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>     <strong class="jxr_keyword">void</strong> loadClassLocal() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>         <strong class="jxr_keyword">try</strong> {
@@ -241,7 +241,7 @@
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>     }
 <a class="jxr_linenumber" name="L234" href="#L234">234</a> 
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>     @Test
-<a class="jxr_linenumber" name="L236" href="#L236">236</a>     <strong class="jxr_keyword">void</strong> testLoadClass_Imported() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L236" href="#L236">236</a>     <strong class="jxr_keyword">void</strong> loadClassImported() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L238" href="#L238">238</a> 
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>         ClassRealm realmA = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmA"</span>);
@@ -282,7 +282,7 @@
 <a class="jxr_linenumber" name="L274" href="#L274">274</a>     }
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> 
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>     @Test
-<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">void</strong> testLoadClass_Package() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L277" href="#L277">277</a>     <strong class="jxr_keyword">void</strong> loadClassPackage() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>         ClassRealm realmA = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmA"</span>);
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>         realmA.addURL(getJarUrl(<span class="jxr_string">"a.jar"</span>));
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> 
@@ -296,7 +296,7 @@
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>     }
 <a class="jxr_linenumber" name="L289" href="#L289">289</a> 
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>     @Test
-<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">void</strong> testLoadClass_Complex() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L291" href="#L291">291</a>     <strong class="jxr_keyword">void</strong> loadClassComplex() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>         ClassRealm realmA = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmA"</span>);
 <a class="jxr_linenumber" name="L293" href="#L293">293</a>         ClassRealm realmB = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmB"</span>);
 <a class="jxr_linenumber" name="L294" href="#L294">294</a>         ClassRealm realmC = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmC"</span>);
@@ -378,7 +378,7 @@
 <a class="jxr_linenumber" name="L370" href="#L370">370</a>     }
 <a class="jxr_linenumber" name="L371" href="#L371">371</a> 
 <a class="jxr_linenumber" name="L372" href="#L372">372</a>     @Test
-<a class="jxr_linenumber" name="L373" href="#L373">373</a>     <strong class="jxr_keyword">void</strong> testLoadClass_ClassWorldsClassRepeatedly() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>     <strong class="jxr_keyword">void</strong> loadClassClassWorldsClassRepeatedly() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L374" href="#L374">374</a>         ClassRealm mainRealm = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"main"</span>);
 <a class="jxr_linenumber" name="L375" href="#L375">375</a> 
 <a class="jxr_linenumber" name="L376" href="#L376">376</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; 100; i++) {
@@ -391,14 +391,14 @@
 <a class="jxr_linenumber" name="L383" href="#L383">383</a>     }
 <a class="jxr_linenumber" name="L384" href="#L384">384</a> 
 <a class="jxr_linenumber" name="L385" href="#L385">385</a>     @Test
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>     <strong class="jxr_keyword">void</strong> testLoadClassWithModuleName_Java9() {
+<a class="jxr_linenumber" name="L386" href="#L386">386</a>     <strong class="jxr_keyword">void</strong> loadClassWithModuleNameJava9() {
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>         <strong class="jxr_keyword">final</strong> ExtendedClassRealm mainRealm = <strong class="jxr_keyword">new</strong> ExtendedClassRealm(world);
 <a class="jxr_linenumber" name="L388" href="#L388">388</a>         mainRealm.addURL(getJarUrl(<span class="jxr_string">"a.jar"</span>));
 <a class="jxr_linenumber" name="L389" href="#L389">389</a>         assertNotNull(mainRealm.simulateLoadClassFromModule(<span class="jxr_string">"a.A"</span>));
 <a class="jxr_linenumber" name="L390" href="#L390">390</a>     }
 <a class="jxr_linenumber" name="L391" href="#L391">391</a> 
 <a class="jxr_linenumber" name="L392" href="#L392">392</a>     @Test
-<a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">void</strong> testGetResources_BaseBeforeSelf() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">void</strong> getResourcesBaseBeforeSelf() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L394" href="#L394">394</a>         String resource = <span class="jxr_string">"common.properties"</span>;
 <a class="jxr_linenumber" name="L395" href="#L395">395</a> 
 <a class="jxr_linenumber" name="L396" href="#L396">396</a>         ClassRealm base = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmA"</span>);
@@ -425,7 +425,7 @@
 <a class="jxr_linenumber" name="L417" href="#L417">417</a>     }
 <a class="jxr_linenumber" name="L418" href="#L418">418</a> 
 <a class="jxr_linenumber" name="L419" href="#L419">419</a>     @Test
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>     <strong class="jxr_keyword">void</strong> testGetResources_SelfBeforeParent() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L420" href="#L420">420</a>     <strong class="jxr_keyword">void</strong> getResourcesSelfBeforeParent() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L421" href="#L421">421</a>         String resource = <span class="jxr_string">"common.properties"</span>;
 <a class="jxr_linenumber" name="L422" href="#L422">422</a> 
 <a class="jxr_linenumber" name="L423" href="#L423">423</a>         ClassRealm parent = <strong class="jxr_keyword">this</strong>.world.newRealm(<span class="jxr_string">"realmA"</span>);
@@ -469,6 +469,6 @@
 <a class="jxr_linenumber" name="L461" href="#L461">461</a> }
 </pre>
 <hr/>
-<div id="footer">© 2002–2025 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
+<div id="footer">© 2002–2026 <a href="https://codehaus-plexus.github.io/">Codehaus Plexus</a></div>
 </body>
 </html>
