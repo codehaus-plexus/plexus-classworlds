@@ -25,7 +25,7 @@
   </parent>
 
   <artifactId>plexus-classworlds</artifactId>
-  <version>2.10.0</version>
+  <version>2.10.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Plexus Classworlds</name>
@@ -36,7 +36,7 @@
   <scm>
     <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
     <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
-    <tag>plexus-classworlds-2.10.0</tag>
+    <tag>master</tag>
     <url>https://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
   </scm>
   <issueManagement>
@@ -52,7 +52,7 @@
   </distributionManagement>
 
   <properties>
-    <project.build.outputTimestamp>2026-04-04T18:10:09Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2026-04-04T18:10:18Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
