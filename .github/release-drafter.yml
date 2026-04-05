@@ -1,2 +1,2 @@
 _extends: .github:/.github/release-drafter.yml
-tag-template: plexus-classworlds-$NEXT_MINOR_VERSION
+tag-template: plexus-classworlds-$RESOLVED_VERSION
