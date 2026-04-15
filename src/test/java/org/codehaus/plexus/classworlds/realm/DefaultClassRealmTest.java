@@ -40,7 +40,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void loadClassFromRealm() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component0-1.0.jar"));
 
@@ -49,7 +49,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void loadClassFromChildRealmWhereClassIsLocatedInParentRealm() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component0-1.0.jar"));
 
@@ -60,7 +60,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void loadClassFromChildRealmWhereClassIsLocatedInGrantParentRealm() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component0-1.0.jar"));
 
@@ -73,7 +73,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void loadClassFromChildRealmWhereClassIsLocatedInBothChildRealmAndParentRealm() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "parent", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component5-1.0.jar"));
 
@@ -89,8 +89,8 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void loadNonExistentClass() {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+    void loadNonExistentClass() throws DuplicateRealmException {
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component0-1.0.jar"));
 
@@ -161,7 +161,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void loadClassFromRealmWithCircularClassReferences() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("circular-0.1.jar"));
 
@@ -178,7 +178,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void resource() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("component0-1.0.jar"));
 
@@ -189,7 +189,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
     void malformedResource() throws Exception {
         URL jarUrl = getJarUrl("component0-1.0.jar");
 
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(jarUrl);
 
@@ -212,7 +212,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void findResourceOnlyScansSelf() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("a.jar"));
 
@@ -230,7 +230,7 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
 
     @Test
     void findResourcesOnlyScansSelf() throws Exception {
-        ClassRealm mainRealm = new ClassRealm(new ClassWorld(), "main", null);
+        ClassRealm mainRealm = new ClassWorld().newRealm("main", null);
 
         mainRealm.addURL(getJarUrl("a.jar"));
 
@@ -254,10 +254,10 @@ class DefaultClassRealmTest extends AbstractClassWorldsTestCase {
         }
     }
 
-    private void doOneDeadlockAttempt() throws InterruptedException {
+    private void doOneDeadlockAttempt() throws DuplicateRealmException, InterruptedException {
         // Deadlock sample graciously ripped from http://docs.oracle.com/javase/7/docs/technotes/guides/lang/cl-mt.html
-        final ClassRealm cl1 = new ClassRealm(new ClassWorld(), "cl1", null);
-        final ClassRealm cl2 = new ClassRealm(new ClassWorld(), "cl2", cl1);
+        final ClassRealm cl1 = new ClassWorld().newRealm("cl1", null);
+        final ClassRealm cl2 = new ClassWorld().newRealm("cl2", cl1);
         cl1.setParentRealm(cl2);
         cl1.addURL(getJarUrl("deadlock.jar"));
         cl2.addURL(getJarUrl("deadlock.jar"));
