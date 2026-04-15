@@ -25,11 +25,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.classworlds.realm.FilteredClassRealm;
 import org.codehaus.plexus.classworlds.realm.NoSuchRealmException;
+import org.codehaus.plexus.classworlds.realm.TransformerClassRealm;
 
 /**
  * A collection of <code>ClassRealm</code>s, indexed by id.
@@ -75,25 +77,46 @@ public class ClassWorld implements Closeable {
      * @since 2.7.0
      * @see FilteredClassRealm
      */
-    public synchronized ClassRealm newRealm(String id, ClassLoader classLoader, Predicate<String> filter)
+    public ClassRealm newRealm(String id, ClassLoader classLoader, Predicate<String> filter)
             throws DuplicateRealmException {
-        if (realms.containsKey(id)) {
-            throw new DuplicateRealmException(this, id);
+        return newRealm(() -> {
+            if (filter == null) {
+                // return new ClassRealm(this, id, classLoader);
+                return TransformerClassRealm.newJakartaTransformerClassRealm(this, id, classLoader);
+            } else {
+                return new FilteredClassRealm(filter, this, id, classLoader);
+            }
+        });
+    }
+
+    /**
+     * Adds a class realm using caller supplied factory.
+     *
+     * @param factory The factory to create realm instance.
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
+     * @since TBD
+     * @see FilteredClassRealm
+     */
+    public synchronized ClassRealm newRealm(Supplier<ClassRealm> factory) throws DuplicateRealmException {
+        ClassRealm realm = factory.get();
+        if (realms.containsKey(realm.getId())) {
+            Exception closeEx = null;
+            try {
+                realm.close();
+            } catch (Exception e) {
+                closeEx = e;
+            }
+            DuplicateRealmException ex = new DuplicateRealmException(this, realm.getId());
+            if (closeEx != null) {
+                ex.addSuppressed(closeEx);
+            }
+            throw ex;
         }
-
-        ClassRealm realm;
-
-        if (filter == null) {
-            realm = new ClassRealm(this, id, classLoader);
-        } else {
-            realm = new FilteredClassRealm(filter, this, id, classLoader);
-        }
-        realms.put(id, realm);
-
+        realms.put(realm.getId(), realm);
         for (ClassWorldListener listener : listeners) {
             listener.realmCreated(realm);
         }
-
         return realm;
     }
 
