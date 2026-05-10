@@ -108,6 +108,7 @@
           <instructions>
             <_nouses>true</_nouses>
             <Export-Package>org.codehaus.plexus.classworlds.*</Export-Package>
+            <Automatic-Module-Name>org.codehaus.plexus.classworlds</Automatic-Module-Name>
           </instructions>
         </configuration>
       </plugin>
@@ -119,6 +120,9 @@
             <manifest>
               <mainClass>org.codehaus.plexus.classworlds.launcher.Launcher</mainClass>
             </manifest>
+            <manifestEntries>
+              <Automatic-Module-Name>org.codehaus.plexus.classworlds</Automatic-Module-Name>
+            </manifestEntries>
           </archive>
         </configuration>
       </plugin>
