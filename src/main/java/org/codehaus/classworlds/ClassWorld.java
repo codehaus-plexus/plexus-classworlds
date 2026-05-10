@@ -19,10 +19,14 @@ package org.codehaus.classworlds;
 import java.util.Collection;
 
 /**
- * A compatibility wrapper for org.codehaus.plexus.classworlds.ClassWorld
- * provided for legacy code
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.ClassWorld}
+ * provided for legacy code.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.ClassWorld}.</p>
  *
  * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.ClassWorld}
  */
 @SuppressWarnings("rawtypes")
 @Deprecated

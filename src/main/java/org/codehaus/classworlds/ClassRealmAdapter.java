@@ -22,9 +22,16 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * An adapter for ClassRealms
+ * Adapter that wraps a modern {@link org.codehaus.plexus.classworlds.realm.ClassRealm} and exposes
+ * it as the legacy {@link ClassRealm} interface.
+ *
+ * <p>This class is referenced directly by the compiled bytecode of
+ * {@code org.eclipse.sisu:org.eclipse.sisu.plexus} and must remain on the classpath for
+ * Maven 3+ to function. Do not remove or rename it. New code should not use this adapter;
+ * use {@link org.codehaus.plexus.classworlds.realm.ClassRealm} directly.</p>
  *
  * @author Andrew Williams
+ * @deprecated Legacy adapter retained for Sisu binary compatibility.
  */
 @SuppressWarnings({"UnnecessaryLocalVariable", "DeprecatedIsStillUsed", "rawtypes"})
 @Deprecated

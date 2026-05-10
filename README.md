@@ -7,3 +7,20 @@ Plexus-Classworlds
 ![Build Status](https://github.com/codehaus-plexus/plexus-classworlds/workflows/GitHub%20CI/badge.svg)
 
 Current master is now at https://github.com/codehaus-plexus/plexus-classworlds
+
+Backward Compatibility
+----------------------
+
+This project maintains a legacy compatibility layer in the `org.codehaus.classworlds` package.
+This package **cannot be removed** without coordinating with the Eclipse Sisu and Apache Maven teams.
+
+The compiled bytecode of `org.eclipse.sisu:org.eclipse.sisu.plexus` directly references
+`org.codehaus.classworlds.ClassRealm`, `ClassRealmAdapter`, and `ClassRealmReverseAdapter`.
+Removing this package causes `ClassNotFoundException` at runtime for any application using Sisu
+(which includes all Maven 3+ builds).
+
+PR #141 removed this package and had to be reverted immediately (see commit 223416e).
+
+New code should use the `org.codehaus.plexus.classworlds` package.
+See [COMPATIBILITY.md](COMPATIBILITY.md) for the full picture, including what Sisu references
+and what is required before any future removal can be considered.

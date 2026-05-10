@@ -21,6 +21,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 /**
+ * An adapter for Configurators.
+ *
+ * <p><b>Note:</b> This is a legacy internal class provided for backward compatibility with Maven 2.
+ * New code should avoid using this adapter.</p>
+ *
+ * @deprecated This is a legacy internal class.
  */
 @Deprecated
 public class ConfiguratorAdapter extends Configurator {

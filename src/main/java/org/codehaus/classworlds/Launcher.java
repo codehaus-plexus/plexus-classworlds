@@ -17,10 +17,14 @@ package org.codehaus.classworlds;
  */
 
 /**
- * A compatibility wrapper for org.codehaus.plexus.classworlds.launcher.Launcher
- * provided for legacy code
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.launcher.Launcher}
+ * provided for legacy code.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.launcher.Launcher}.</p>
  *
  * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.launcher.Launcher}
  */
 @Deprecated
 public class Launcher extends org.codehaus.plexus.classworlds.launcher.Launcher {

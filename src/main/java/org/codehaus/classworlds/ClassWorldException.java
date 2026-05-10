@@ -48,7 +48,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * Base exception for <code>ClassWorld</code> errors.
  *
+ * <p><b>Note:</b> This is a legacy exception provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.ClassWorldException}.</p>
+ *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.ClassWorldException}
  */
 @Deprecated
 public class ClassWorldException extends Exception {

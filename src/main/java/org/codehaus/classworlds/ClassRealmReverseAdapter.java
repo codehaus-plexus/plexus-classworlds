@@ -22,18 +22,20 @@ import java.net.URL;
 import java.util.Enumeration;
 
 /**
- * A reverse adapter for ClassRealms
+ * A reverse adapter for ClassRealms.
+ *
+ * <p><b>Note:</b> This is a legacy internal class provided for backward compatibility with Maven 2.
+ * New code should avoid using this adapter.</p>
  *
  * @author Andrew Williams
+ * @deprecated This is a legacy internal class.
  */
-@SuppressWarnings({"UnnecessaryLocalVariable", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated
 public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.realm.ClassRealm {
 
     public static ClassRealmReverseAdapter getInstance(ClassRealm oldRealm) {
-        ClassRealmReverseAdapter adapter = new ClassRealmReverseAdapter(oldRealm);
-
-        return adapter;
+        return new ClassRealmReverseAdapter(oldRealm);
     }
 
     private final ClassRealm realm;

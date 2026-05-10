@@ -66,6 +66,10 @@
     And for seamless transition from <a href="https://github.com/codehaus/classworlds">older <b>Classworlds</b> up to 1.1</a>,
     <b>Plexus Classworlds</b> provides
     <a href="apidocs/index.html?org/codehaus/classworlds/package-summary.html">a compatibility layer</a>.
+    This package is deprecated for new code but must remain on the classpath because
+    <code>org.eclipse.sisu:org.eclipse.sisu.plexus</code> references it in its compiled bytecode.
+    See <a href="https://github.com/codehaus-plexus/plexus-classworlds/blob/master/COMPATIBILITY.md">COMPATIBILITY.md</a>
+    for details.
     </p>
   </section>
 

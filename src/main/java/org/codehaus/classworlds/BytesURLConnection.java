@@ -22,6 +22,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
+ * URLConnection implementation for byte arrays.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should avoid using this internal implementation detail.</p>
+ *
+ * @deprecated This is a legacy internal class.
  */
 @Deprecated
 public class BytesURLConnection extends URLConnection {

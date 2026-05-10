@@ -22,10 +22,14 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 /**
- * A compatibility wrapper for org.codehaus.plexus.classworlds.launcher.Configurator
- * provided for legacy code
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.launcher.Configurator}
+ * provided for legacy code.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.launcher.Configurator}.</p>
  *
  * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.launcher.Configurator}
  */
 @Deprecated
 public class Configurator {

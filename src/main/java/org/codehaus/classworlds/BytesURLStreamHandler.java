@@ -21,9 +21,13 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 /**
- * @author Hani Suleiman (hani@formicary.net)
- *         Date: Oct 20, 2003
- *         Time: 12:45:18 AM
+ * URLStreamHandler implementation for byte arrays.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should avoid using this internal implementation detail.</p>
+ *
+ * @author Hani Suleiman (hani@formicary.net) Date: Oct 20, 2003 12:45:18 AM
+ * @deprecated This is a legacy internal class.
  */
 @Deprecated
 public class BytesURLStreamHandler extends URLStreamHandler {

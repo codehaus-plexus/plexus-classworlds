@@ -49,7 +49,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  * Indicates an attempt to add a <code>ClassRealm</code> to a
  * <code>ClassWorld</code> with a duplicate id.
  *
+ * <p><b>Note:</b> This is a legacy exception provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.realm.DuplicateRealmException}.</p>
+ *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.realm.DuplicateRealmException}
  */
 @Deprecated
 public class DuplicateRealmException extends ClassWorldException {

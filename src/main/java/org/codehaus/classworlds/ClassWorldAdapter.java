@@ -20,9 +20,13 @@ import java.util.Collection;
 import java.util.Vector;
 
 /**
- * An adapter for ClassWorlds
+ * An adapter for ClassWorlds.
+ *
+ * <p><b>Note:</b> This is a legacy internal class provided for backward compatibility with Maven 2.
+ * New code should avoid using this adapter.</p>
  *
  * @author Andrew Williams
+ * @deprecated This is a legacy internal class.
  */
 @SuppressWarnings("rawtypes")
 @Deprecated

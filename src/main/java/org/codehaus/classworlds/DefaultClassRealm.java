@@ -16,13 +16,16 @@ package org.codehaus.classworlds;
  * limitations under the License.
  */
 
-/*
- * A compatibility wrapper for org.codehaus.plexus.classworlds.realm.ClassRealm
- * provided for legacy code
+/**
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.realm.ClassRealm}
+ * provided for legacy code.
+ *
+ * <p><b>Note:</b> This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.realm.ClassRealm}.</p>
  *
  * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.realm.ClassRealm}
  */
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

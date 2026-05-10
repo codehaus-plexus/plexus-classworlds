@@ -57,8 +57,15 @@ import java.util.Enumeration;
  * role from Java and in facts can provide a <code>ClassLoader</code>
  * view of itself using {@link #getClassLoader}.</p>
  *
+ * <p>This is a legacy interface from Classworlds 1.x, preserved for binary compatibility.
+ * The compiled bytecode of {@code org.eclipse.sisu:org.eclipse.sisu.plexus} references this
+ * interface directly. Removing it breaks all Maven 3+ builds.
+ * New code should use {@link org.codehaus.plexus.classworlds.realm.ClassRealm}.</p>
+ *
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author <a href="mailto:jason@zenplex.com">Jason van Zyl</a>
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.realm.ClassRealm} for new code.
+ *             This interface must remain on the classpath for Sisu compatibility.
  */
 @SuppressWarnings("rawtypes")
 @Deprecated
