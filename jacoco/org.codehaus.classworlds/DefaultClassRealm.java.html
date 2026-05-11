@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultClassRealm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.classworlds</a> &gt; <span class="el_source">DefaultClassRealm.java</span></div><h1>DefaultClassRealm.java</h1><pre class="source lang-java linenums">package org.codehaus.classworlds;
+
+/*
+ * Copyright 2001-2010 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.realm.ClassRealm}
+ * provided for legacy code.
+ *
+ * &lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.realm.ClassRealm}.&lt;/p&gt;
+ *
+ * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.realm.ClassRealm}
+ */
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+
+@SuppressWarnings(&quot;rawtypes&quot;)
+@Deprecated
+public class DefaultClassRealm implements ClassRealm {
+    private final ClassRealmAdapter adapter;
+
+    public DefaultClassRealm(ClassWorld world, String id) {
+<span class="nc" id="L41">        this(world, id, null);</span>
+<span class="nc" id="L42">    }</span>
+
+<span class="nc" id="L44">    public DefaultClassRealm(ClassWorld world, String id, ClassLoader foreignClassLoader) {</span>
+<span class="nc" id="L45">        this.adapter = ClassRealmAdapter.getInstance(new org.codehaus.plexus.classworlds.realm.ClassRealm(</span>
+<span class="nc" id="L46">                ClassWorldReverseAdapter.getInstance(world), id, foreignClassLoader));</span>
+<span class="nc" id="L47">    }</span>
+
+    public URL[] getConstituents() {
+<span class="nc" id="L50">        return adapter.getConstituents();</span>
+    }
+
+    public ClassRealm getParent() {
+<span class="nc" id="L54">        return adapter.getParentRealm();</span>
+    }
+
+    public void setParent(ClassRealm parent) {
+<span class="nc" id="L58">        adapter.setParent(parent);</span>
+<span class="nc" id="L59">    }</span>
+
+    public String getId() {
+<span class="nc" id="L62">        return adapter.getId();</span>
+    }
+
+    public ClassWorld getWorld() {
+<span class="nc" id="L66">        return adapter.getWorld();</span>
+    }
+
+    public void importFrom(String realmId, String packageName) throws NoSuchRealmException {
+<span class="nc" id="L70">        adapter.importFrom(realmId, packageName);</span>
+<span class="nc" id="L71">    }</span>
+
+    public void addConstituent(URL constituent) {
+<span class="nc" id="L74">        adapter.addConstituent(constituent);</span>
+<span class="nc" id="L75">    }</span>
+
+    /**
+     *  Adds a byte[] class definition as a constituent for locating classes.
+     *  Currently uses BytesURLStreamHandler to hold a reference of the byte[] in memory.
+     *  This ensures we have a unifed URL resource model for all constituents.
+     *  The code to cache to disk is commented out - maybe a property to choose which method?
+     *
+     *  @param constituent class name
+     *  @param b the class definition as a byte[]
+     *  @throws ClassNotFoundException when class couldn't be loaded
+     */
+    public void addConstituent(String constituent, byte[] b) throws ClassNotFoundException {
+        try {
+            File path, file;
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (constituent.lastIndexOf('.') != -1) {</span>
+<span class="nc" id="L91">                path = new File(&quot;byteclass/&quot;</span>
+                        + constituent
+<span class="nc" id="L93">                                .substring(0, constituent.lastIndexOf('.') + 1)</span>
+<span class="nc" id="L94">                                .replace('.', File.separatorChar));</span>
+
+<span class="nc" id="L96">                file = new File(path, constituent.substring(constituent.lastIndexOf('.') + 1) + &quot;.class&quot;);</span>
+            } else {
+<span class="nc" id="L98">                path = new File(&quot;byteclass/&quot;);</span>
+
+<span class="nc" id="L100">                file = new File(path, constituent + &quot;.class&quot;);</span>
+            }
+
+<span class="nc" id="L103">            addConstituent(new URL(null, file.toURI().toURL().toExternalForm(), new BytesURLStreamHandler(b)));</span>
+<span class="nc" id="L104">        } catch (java.io.IOException e) {</span>
+<span class="nc" id="L105">            throw new ClassNotFoundException(&quot;Couldn't load byte stream.&quot;, e);</span>
+<span class="nc" id="L106">        }</span>
+<span class="nc" id="L107">    }</span>
+
+    public ClassRealm locateSourceRealm(String classname) {
+<span class="nc" id="L110">        return adapter.locateSourceRealm(classname);</span>
+    }
+
+    public ClassLoader getClassLoader() {
+<span class="nc" id="L114">        return adapter.getClassLoader();</span>
+    }
+
+    public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
+<span class="nc" id="L118">        return adapter.createChildRealm(id);</span>
+    }
+
+    // ----------------------------------------------------------------------
+    // ClassLoader API
+    // ----------------------------------------------------------------------
+
+    public Class loadClass(String name) throws ClassNotFoundException {
+<span class="nc" id="L126">        return adapter.loadClass(name);</span>
+    }
+
+    public URL getResource(String name) {
+<span class="nc" id="L130">        return adapter.getResource(name);</span>
+    }
+
+    public InputStream getResourceAsStream(String name) {
+<span class="nc" id="L134">        return adapter.getResourceAsStream(name);</span>
+    }
+
+    public Enumeration findResources(String name) throws IOException {
+<span class="nc" id="L138">        return adapter.findResources(name);</span>
+    }
+
+    public void display() {
+<span class="nc" id="L142">        adapter.display();</span>
+<span class="nc" id="L143">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

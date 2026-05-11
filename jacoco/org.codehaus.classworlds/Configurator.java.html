@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Configurator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.classworlds</a> &gt; <span class="el_source">Configurator.java</span></div><h1>Configurator.java</h1><pre class="source lang-java linenums">package org.codehaus.classworlds;
+
+/*
+ * Copyright 2001-2010 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+
+/**
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.launcher.Configurator}
+ * provided for legacy code.
+ *
+ * &lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.launcher.Configurator}.&lt;/p&gt;
+ *
+ * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.launcher.Configurator}
+ */
+@Deprecated
+public class Configurator {
+    private final ConfiguratorAdapter config;
+
+    /** Construct.
+     *
+     *  @param launcher The launcher to configure.
+     */
+<span class="nc" id="L42">    public Configurator(Launcher launcher) {</span>
+<span class="nc" id="L43">        config = ConfiguratorAdapter.getInstance(</span>
+                new org.codehaus.plexus.classworlds.launcher.Configurator(launcher), launcher);
+<span class="nc" id="L45">    }</span>
+
+    /** Construct.
+     *
+     *  @param world The classWorld to configure.
+     */
+<span class="nc" id="L51">    public Configurator(ClassWorld world) {</span>
+<span class="nc" id="L52">        config = ConfiguratorAdapter.getInstance(</span>
+<span class="nc" id="L53">                new org.codehaus.plexus.classworlds.launcher.Configurator(ClassWorldReverseAdapter.getInstance(world)),</span>
+                world);
+<span class="nc" id="L55">    }</span>
+
+    /** set world.
+     *  this setter is provided so you can use the same configurator to configure several &quot;worlds&quot;
+     *
+     *  @param world The classWorld to configure.
+     */
+    public void setClassWorld(ClassWorld world) {
+<span class="nc" id="L63">        config.setClassWorld(world);</span>
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Configure from a file.
+     *
+     * @param is The config input stream
+     * @throws IOException             If an error occurs reading the config file.
+     * @throws MalformedURLException   If the config file contains invalid URLs.
+     * @throws ConfigurationException  If the config file is corrupt.
+     * @throws DuplicateRealmException If the config file defines two realms with the same id.
+     * @throws NoSuchRealmException    If the config file defines a main entry point in
+     *                                 a non-existent realm.
+     */
+    public void configure(InputStream is)
+            throws IOException, MalformedURLException, ConfigurationException, DuplicateRealmException,
+                    NoSuchRealmException {
+<span class="nc" id="L80">        config.configureAdapter(is);</span>
+<span class="nc" id="L81">    }</span>
+
+    /**
+     * Associate parent realms with their children.
+     */
+    protected void associateRealms() {
+<span class="nc" id="L87">        config.associateRealms();</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Load a glob into the specified classloader.
+     *
+     * @param line  The path configuration line.
+     * @param realm The realm to populate
+     * @throws MalformedURLException If the line does not represent
+     *                               a valid path element.
+     * @throws FileNotFoundException If the line does not represent
+     *                               a valid path element in the filesystem.
+     */
+    protected void loadGlob(String line, ClassRealm realm) throws MalformedURLException, FileNotFoundException {
+<span class="nc" id="L101">        loadGlob(line, realm, false);</span>
+<span class="nc" id="L102">    }</span>
+
+    /**
+     * Load a glob into the specified classloader.
+     *
+     * @param line  The path configuration line.
+     * @param realm The realm to populate
+     * @param optionally Whether the path is optional or required
+     * @throws MalformedURLException If the line does not represent
+     *                               a valid path element.
+     * @throws FileNotFoundException If the line does not represent
+     *                               a valid path element in the filesystem.
+     */
+    @SuppressWarnings(&quot;RedundantThrows&quot;)
+    protected void loadGlob(String line, ClassRealm realm, boolean optionally)
+            throws MalformedURLException, FileNotFoundException {
+<span class="nc" id="L118">        config.loadGlob(line, realm, optionally);</span>
+<span class="nc" id="L119">    }</span>
+
+    /**
+     * Filter a string for system properties.
+     *
+     * @param text The text to filter.
+     * @return The filtered text.
+     * @throws ConfigurationException If the property does not
+     *                                exist or if there is a syntax error.
+     */
+    @SuppressWarnings(&quot;RedundantThrows&quot;)
+    protected String filter(String text) throws ConfigurationException {
+<span class="nc" id="L131">        return config.filter(text);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClassWorld.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Plexus Classworlds</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.classworlds</a> &gt; <span class="el_source">ClassWorld.java</span></div><h1>ClassWorld.java</h1><pre class="source lang-java linenums">package org.codehaus.classworlds;
+
+/*
+ * Copyright 2001-2010 Codehaus Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.Collection;
+
+/**
+ * A compatibility wrapper for {@link org.codehaus.plexus.classworlds.ClassWorld}
+ * provided for legacy code.
+ *
+ * &lt;p&gt;&lt;b&gt;Note:&lt;/b&gt; This is a legacy class provided for backward compatibility with Maven 2.
+ * New code should use {@link org.codehaus.plexus.classworlds.ClassWorld}.&lt;/p&gt;
+ *
+ * @author Andrew Williams
+ * @deprecated Use {@link org.codehaus.plexus.classworlds.ClassWorld}
+ */
+@SuppressWarnings(&quot;rawtypes&quot;)
+@Deprecated
+public class ClassWorld {
+    private ClassWorldAdapter adapter;
+
+<span class="nc" id="L36">    public ClassWorld(String realmId, ClassLoader classLoader) {</span>
+<span class="nc" id="L37">        adapter = ClassWorldAdapter.getInstance(new org.codehaus.plexus.classworlds.ClassWorld(realmId, classLoader));</span>
+<span class="nc" id="L38">    }</span>
+
+<span class="nc" id="L40">    public ClassWorld() {</span>
+<span class="nc" id="L41">        adapter = ClassWorldAdapter.getInstance(new org.codehaus.plexus.classworlds.ClassWorld());</span>
+<span class="nc" id="L42">    }</span>
+
+<span class="nc" id="L44">    public ClassWorld(boolean ignore) {</span>
+        /* fake */
+<span class="nc" id="L46">    }</span>
+
+    public ClassRealm newRealm(String id) throws DuplicateRealmException {
+<span class="nc" id="L49">        return adapter.newRealm(id);</span>
+    }
+
+    public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
+<span class="nc" id="L53">        return adapter.newRealm(id, classLoader);</span>
+    }
+
+    public void disposeRealm(String id) throws NoSuchRealmException {
+<span class="nc" id="L57">        adapter.disposeRealm(id);</span>
+<span class="nc" id="L58">    }</span>
+
+    public ClassRealm getRealm(String id) throws NoSuchRealmException {
+<span class="nc" id="L61">        return adapter.getRealm(id);</span>
+    }
+
+    public Collection getRealms() {
+<span class="nc" id="L65">        return adapter.getRealms();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
