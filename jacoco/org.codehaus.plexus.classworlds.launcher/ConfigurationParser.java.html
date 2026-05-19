@@ -334,7 +334,7 @@ public class ConfigurationParser {
 
 <span class="fc" id="L335">        final String suffix = localName.substring(starLoc + 1);</span>
 
-<span class="pc bpc" id="L337" title="3 of 4 branches missed.">        File[] matches = dir.listFiles((dir1, name) -&gt; name.startsWith(prefix) || name.endsWith(suffix));</span>
+<span class="fc bfc" id="L337" title="All 4 branches covered.">        File[] matches = dir.listFiles((dir1, name) -&gt; name.startsWith(prefix) &amp;&amp; name.endsWith(suffix));</span>
 
 <span class="pc bpc" id="L339" title="1 of 2 branches missed.">        if (matches != null) {</span>
 <span class="fc bfc" id="L340" title="All 2 branches covered.">            for (File match : matches) {</span>
