@@ -106,7 +106,7 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
         };
         ConfigurationParser parser = new ConfigurationParser(handler, System.getProperties());
 
-        parser.loadGlob(tempDir.resolve("maven-*.jar").toString(), false);
+        parser.loadGlob(new File(tempDir.toFile(), "maven-*.jar").toString(), false);
 
         assertEquals(
                 2,
