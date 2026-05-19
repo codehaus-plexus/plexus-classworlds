@@ -334,7 +334,7 @@ public class ConfigurationParser {
 
         final String suffix = localName.substring(starLoc + 1);
 
-        File[] matches = dir.listFiles((dir1, name) -> name.startsWith(prefix) || name.endsWith(suffix));
+        File[] matches = dir.listFiles((dir1, name) -> name.startsWith(prefix) && name.endsWith(suffix));
 
         if (matches != null) {
             for (File match : matches) {

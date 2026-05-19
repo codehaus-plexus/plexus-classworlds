@@ -1,7 +1,16 @@
 package org.codehaus.plexus.classworlds.launcher;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.codehaus.plexus.classworlds.AbstractClassWorldsTestCase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,5 +88,48 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
         String result = this.configurator.filter("cheese${classworlds.test.prop}toast");
 
         assertEquals("cheesetest prop valuetoast", result);
+    }
+
+    @Test
+    void loadGlobMatchesBothPrefixAndSuffix(@TempDir Path tempDir) throws Exception {
+        Files.createFile(tempDir.resolve("maven-core.jar"));
+        Files.createFile(tempDir.resolve("maven-model.jar"));
+        Files.createFile(tempDir.resolve("sisu-plexus.jar"));
+        Files.createFile(tempDir.resolve("guice.jar"));
+
+        List<File> loaded = new ArrayList<>();
+        ConfigurationHandler handler = new NoopConfigurationHandler() {
+            @Override
+            public void addLoadFile(File file) {
+                loaded.add(file);
+            }
+        };
+        ConfigurationParser parser = new ConfigurationParser(handler, System.getProperties());
+
+        parser.loadGlob(tempDir.resolve("maven-*.jar").toString(), false);
+
+        assertEquals(
+                2,
+                loaded.size(),
+                "glob 'maven-*.jar' should match only files starting with 'maven-' AND ending with '.jar'");
+        List<String> names = loaded.stream().map(File::getName).sorted().collect(Collectors.toList());
+        assertEquals(Arrays.asList("maven-core.jar", "maven-model.jar"), names);
+    }
+
+    private abstract static class NoopConfigurationHandler implements ConfigurationHandler {
+        @Override
+        public void setAppMain(String mainClassName, String mainRealmName) {}
+
+        @Override
+        public void addRealm(String realmName) {}
+
+        @Override
+        public void addImportFrom(String realmName, String importSpec) {}
+
+        @Override
+        public void addLoadFile(File file) {}
+
+        @Override
+        public void addLoadURL(java.net.URL url) {}
     }
 }
