@@ -82,29 +82,29 @@
             <!-- mono-module doesn't require site:stage -->
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <configuration>
+            <markdown>
+              <includes>
+                <include>**/*.md</include>
+              </includes>
+              <excludes>
+                <exclude>target/**</exclude>
+                <!-- Site sources are Doxia input, not prose. Flexmark rewrites the fence that
+                     closes a YAML front matter block into a setext underline, which silently
+                     destroys the page's title and author. Can be dropped once a parent POM
+                     carrying this exclusion is released; parent 25 does not have it. -->
+                <exclude>**/src/site/markdown/**</exclude>
+              </excludes>
+              <flexmark />
+            </markdown>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <configuration>
-          <markdown>
-            <includes>
-              <include>**/*.md</include>
-            </includes>
-            <excludes>
-              <exclude>target/**</exclude>
-              <!-- Site sources are Doxia input, not prose. Flexmark rewrites the fence that
-                   closes a YAML front matter block into a setext underline, which silently
-                   destroys the page's title and author. Can be dropped once a parent POM
-                   carrying this exclusion is released; parent 25 does not have it. -->
-              <exclude>**/src/site/markdown/**</exclude>
-            </excludes>
-            <flexmark />
-          </markdown>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
