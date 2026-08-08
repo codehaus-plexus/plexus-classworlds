@@ -1,78 +1,53 @@
-<?xml version="1.0"?>
+---
+title: Plexus Classworlds
+author: bob mcwhirter
+---
 
-<document>
+# Overview
 
-  <properties>
-    <title>Plexus Classworlds</title>
-    <author email="bob@werken.com">bob mcwhirter</author>
-  </properties>
+**Plexus Classworlds** is a framework for container developers
+who require complex manipulation of Java's ClassLoaders.  Java's
+native ClassLoader mechanisms and classes can cause
+much headache and confusion for certain types of application
+developers.  Projects which involve dynamic loading of components
+or otherwise represent a 'container' can benefit from the classloading
+control provided by **Classworlds**.
 
-  <body>
+**Plexus Classworlds** provides a richer set of semantics for
+class loading than Java's normal mechanisms, while still being
+able to provide a ClassLoader interface to integrate
+seamlessly with the Java environment.
 
-  <section name="Overview">
+The **Classworlds** model does away with the hierarchy
+normally associated with ClassLoaders.  Instead,
+[`ClassWorld`](apidocs/index.html?org/codehaus/plexus/classworlds/ClassWorld.html) provides a
+pool of [`ClassRealms`](apidocs/index.html?org/codehaus/plexus/classworlds/realm/ClassRealm.html)
+which can import arbitrary packages from other ClassRealms.
+Effectively, **Classworlds** turns the old-style
+hierarchy into a directed graph.
 
-    <p>
-    <b>Plexus Classworlds</b> is a framework for container developers
-    who require complex manipulation of Java's ClassLoaders.  Java's
-    native ClassLoader mechanisms and classes can cause
-    much headache and confusion for certain types of application
-    developers.  Projects which involve dynamic loading of components
-    or otherwise represent a 'container' can benefit from the classloading
-    control provided by <b>Classworlds</b>.  
-    </p>
+In a application container environment, the container may
+have a realm capable of loading on the container/component
+contract interfaces and classes.  Another realm is created
+for each component which imports the contract classes from
+the container realm.
 
-    <p>
-    <b>Plexus Classworlds</b> provides a richer set of semantics for
-    class loading than Java's normal mechanisms, while still being
-    able to provide a ClassLoader interface to integrate
-    seamlessly with the Java environment.
-    </p>
+This model allows for fine-grained control of which
+classloader loads any particular class.  This form of
+partial isolation can reduce the myriad strange errors
+that are produced by loading classes from multiple
+loaders.
 
-    <p>
-    The <b>Classworlds</b> model does away with the hierarchy
-    normally associated with ClassLoaders.  Instead,
-    <a href="apidocs/index.html?org/codehaus/plexus/classworlds/ClassWorld.html"><code>ClassWorld</code></a> provides a
-    pool of <a href="apidocs/index.html?org/codehaus/plexus/classworlds/realm/ClassRealm.html"><code>ClassRealms</code></a>
-    which can import arbitrary packages from other ClassRealms.
-    Effectively, <b>Classworlds</b> turns the old-style
-    hierarchy into a directed graph.
-    </p>
+In addition, **Plexus Classworlds** provides a
+[launcher](launcher.html)
+to assist in the creation of classloaders and `ClassRealm`s
+from a configuration file and the launching of the application's `main`
+method from the correct class loaded through the correct classloader.
 
-    <p>
-    In a application container environment, the container may
-    have a realm capable of loading on the container/component
-    contract interfaces and classes.  Another realm is created
-    for each component which imports the contract classes from
-    the container realm.
-    </p>
-
-    <p>
-    This model allows for fine-grained control of which 
-    classloader loads any particular class.  This form of
-    partial isolation can reduce the myriad strange errors
-    that are produced by loading classes from multiple
-    loaders.
-    </p>
-
-    <p>
-    In addition, <b>Plexus Classworlds</b> provides a
-    <a href="launcher.html">launcher</a>
-    to assist in the creation of classloaders and <code>ClassRealm</code>s
-    from a configuration file and the launching of the application's <code>main</code>
-    method from the correct class loaded through the correct classloader.
-    </p>
-
-    <p>
-    And for seamless transition from <a href="https://github.com/codehaus/classworlds">older <b>Classworlds</b> up to 1.1</a>,
-    <b>Plexus Classworlds</b> provides
-    <a href="apidocs/index.html?org/codehaus/classworlds/package-summary.html">a compatibility layer</a>.
-    This package is deprecated for new code but must remain on the classpath because
-    <code>org.eclipse.sisu:org.eclipse.sisu.plexus</code> references it in its compiled bytecode.
-    See <a href="https://github.com/codehaus-plexus/plexus-classworlds/blob/master/COMPATIBILITY.md">COMPATIBILITY.md</a>
-    for details.
-    </p>
-  </section>
-
-</body>
-</document>
-
+And for seamless transition from [older **Classworlds** up to 1.1](https://github.com/codehaus/classworlds),
+**Plexus Classworlds** provides
+[a compatibility layer](apidocs/index.html?org/codehaus/classworlds/package-summary.html).
+This package is deprecated for new code but must remain on the classpath because
+`org.eclipse.sisu:org.eclipse.sisu.plexus` references it in its compiled bytecode.
+See [COMPATIBILITY.md](https://github.com/codehaus-plexus/plexus-classworlds/blob/master/COMPATIBILITY.md)
+for details.

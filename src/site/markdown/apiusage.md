@@ -1,93 +1,76 @@
-<?xml version="1.0"?>
+---
+title: Classworlds API Usage
+author: bob mcwhirter
+---
 
-<document>
+# Classworlds API Usage
 
-  <properties>
-    <title>Classworlds API Usage</title>
-    <author email="bob@werken.com">bob mcwhirter</author>
-  </properties>
+The Java API can be used to create new realms and connect
+realms together through importation of specific packages.
 
-  <body>
+The core of the **Classworlds** infrastructure is
+the
+[ClassWorld](apidocs/index.html?org/codehaus/plexus/classworlds/ClassWorld.html)
+class.  An application must create a `ClassWorld` instance.
+It is advisable to store the instance as a singleton or some other
+handy location.
 
-  <section name="Classworlds API Usage">
+```
 
-    <p>
-    The Java API can be used to create new realms and connect
-    realms together through importation of specific packages.
-    </p>
-
-    <p>
-    The core of the <b>Classworlds</b> infrastructure is
-    the 
-    <a href="apidocs/index.html?org/codehaus/plexus/classworlds/ClassWorld.html">ClassWorld</a>
-    class.  An application must create a <code>ClassWorld</code> instance.
-    It is advisable to store the instance as a singleton or some other
-    handy location.
-    </p>
-
-<source><![CDATA[
 ClassWorld world = new ClassWorld();
-]]></source>
 
-    <p>
-    Once a <code>ClassWorld</code> is created, realms within it
-    can be created.  These realms effectively only allow loading
-    of the core JVM classes initially.
-    </p>
+```
 
-<source><![CDATA[
+Once a `ClassWorld` is created, realms within it
+can be created.  These realms effectively only allow loading
+of the core JVM classes initially.
+
+```
+
 ClassWorld world = new ClassWorld();
 ClassRealm containerRealm    = world.newRealm( "container" );
 ClassRealm logComponentRealm = world.newRealm( "logComponent" );
-]]></source>
 
-    <p>
-    In order to make each <code>ClassRealm</code> useful, constituents
-    in form of URLs must be added to it where each can provide certain classes.
-    The URL must return either a JAR or a directory on the default file system.
-    </p>
+```
 
-<source><![CDATA[
+In order to make each `ClassRealm` useful, constituents
+in form of URLs must be added to it where each can provide certain classes.
+The URL must return either a JAR or a directory on the default file system.
+
+```
+
 containerRealm.addURL( containerJarUrl );
 logComponentRealm.addURL( logComponentJarUrl );
-]]></source>
 
-    <p>
-    <code>ClassRealm</code>s can optionally be filtered to further restrict which classes/resources
-    are exposed. The filter is provided as additional argument to <code>world.newRealm( "filteredcontainer", myPredicate );</code>
-    </p>
-    
-    <p>
-    Now, links between the various realms need to be created to allow
-    classes loaded from one to be available to classes loaded in another.
-    </p>
+```
 
-<source><![CDATA[
+`ClassRealm`s can optionally be filtered to further restrict which classes/resources
+are exposed. The filter is provided as additional argument to `world.newRealm( "filteredcontainer", myPredicate );`
+
+Now, links between the various realms need to be created to allow
+classes loaded from one to be available to classes loaded in another.
+
+```
+
 logComponentRealm.importFrom( "container", 
                               "com.werken.projectz.component" );
-]]></source>
 
-    <p>
-    The container implementation can then be loaded from its realm
-    and used.
-    </p>
+```
 
-<source><![CDATA[
+The container implementation can then be loaded from its realm
+and used.
+
+```
+
 Class containerClass = containerRealm.loadClass( CONTAINER_CLASSNAME );
 MyContainer container = (MyContainer) containerClass.newInstance();
 Thread.currentThread().setContextClassLoader( containerRealm.getClassLoader() );
 container.run();
-]]></source>
 
-    <p>
-    Ideally, the container itself would be responsible for creating
-    a <code>ClassRealm</code> for each component that's loaded, and
-    importing the component contract interfaces into the component's
-    <code>ClassRealm</code> and using <code>loadClass(..)</code>
-    to gain entry into the sandboxed component realm.
-    </p>
+```
 
-  </section>
-
-</body>
-</document>
+Ideally, the container itself would be responsible for creating
+a `ClassRealm` for each component that's loaded, and
+importing the component contract interfaces into the component's
+`ClassRealm` and using `loadClass(..)`
+to gain entry into the sandboxed component realm.
