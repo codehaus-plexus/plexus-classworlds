@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
@@ -88,7 +90,49 @@ public class ClassWorld implements Closeable {
         } else {
             realm = new FilteredClassRealm(filter, this, id, classLoader);
         }
-        realms.put(id, realm);
+
+        return register(realm);
+    }
+
+    /**
+     * Adds a class realm obtained from a caller supplied factory, allowing realm implementations that this class
+     * does not know about.
+     * <p>
+     * The factory is invoked before the id is known, so a realm whose id is already taken is closed again before
+     * {@link DuplicateRealmException} is thrown; a failure to close it is attached as a suppressed exception.
+     *
+     * @param factory the factory creating the realm, must not be <code>null</code> and must not return
+     *            <code>null</code>
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the id of the created realm does already exist
+     * @throws IllegalArgumentException if the created realm belongs to a different class world
+     * @since 2.13.0
+     */
+    public synchronized ClassRealm newRealm(Supplier<ClassRealm> factory) throws DuplicateRealmException {
+        Objects.requireNonNull(factory, "factory cannot be null");
+
+        ClassRealm realm = Objects.requireNonNull(factory.get(), "factory returned null realm");
+        String id = Objects.requireNonNull(realm.getId(), "realm id cannot be null");
+
+        if (realm.getWorld() != this) {
+            throw new IllegalArgumentException("realm " + id + " belongs to a different class world");
+        }
+
+        if (realms.containsKey(id)) {
+            DuplicateRealmException duplicate = new DuplicateRealmException(this, id);
+            try {
+                realm.close();
+            } catch (Exception e) {
+                duplicate.addSuppressed(e);
+            }
+            throw duplicate;
+        }
+
+        return register(realm);
+    }
+
+    private ClassRealm register(ClassRealm realm) {
+        realms.put(realm.getId(), realm);
 
         for (ClassWorldListener listener : listeners) {
             listener.realmCreated(realm);
