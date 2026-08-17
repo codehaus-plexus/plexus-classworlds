@@ -91,7 +91,7 @@ public class ClassWorld implements Closeable {
             realm = new FilteredClassRealm(filter, this, id, classLoader);
         }
 
-        return register(realm);
+        return register(id, realm);
     }
 
     /**
@@ -102,6 +102,9 @@ public class ClassWorld implements Closeable {
      * {@link DuplicateRealmException} is thrown; a failure to close it is attached as a suppressed exception. A
      * factory that hands back the realm already registered under that id is the one case where nothing is closed,
      * since closing it would leave a dead realm in this world.
+     *
+     * A realm built against another class world is rejected without being closed, since it may be live and
+     * registered over there. The factory runs while this world's monitor is held.
      *
      * @param factory the factory creating the realm, must not be <code>null</code> and must not return
      *            <code>null</code>
@@ -133,11 +136,11 @@ public class ClassWorld implements Closeable {
             throw duplicate;
         }
 
-        return register(realm);
+        return register(id, realm);
     }
 
-    private ClassRealm register(ClassRealm realm) {
-        realms.put(realm.getId(), realm);
+    private ClassRealm register(String id, ClassRealm realm) {
+        realms.put(id, realm);
 
         for (ClassWorldListener listener : listeners) {
             listener.realmCreated(realm);

@@ -220,11 +220,13 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
 
     @Test
     void testNewRealmWithSupplierFromOtherWorld() throws Exception {
-        ClassWorld otherWorld = new ClassWorld();
-        ClassRealm foreign = otherWorld.newRealm("foreign");
+        try (ClassWorld otherWorld = new ClassWorld()) {
+            ClassRealm foreign = otherWorld.newRealm("foreign");
 
-        assertThrows(IllegalArgumentException.class, () -> world.newRealm(() -> foreign));
-        assertTrue(world.getRealms().isEmpty());
+            assertThrows(IllegalArgumentException.class, () -> world.newRealm(() -> foreign));
+            assertTrue(world.getRealms().isEmpty());
+            assertNotNull(otherWorld.getClassRealm("foreign"), "the foreign realm must be left alone");
+        }
     }
 
     @Test
