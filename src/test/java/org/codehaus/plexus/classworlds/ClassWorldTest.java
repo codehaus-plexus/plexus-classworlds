@@ -206,6 +206,19 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
+    void testNewRealmWithSupplierReturningTheRegisteredRealm() throws Exception {
+        ClassRealm registered = world.newRealm("custom");
+        registered.addURL(TestUtil.getTestResourceUrl("a.jar"));
+        assertNotNull(registered.getResource("a.properties"));
+
+        assertThrows(DuplicateRealmException.class, () -> world.newRealm(() -> world.getClassRealm("custom")));
+
+        assertSame(registered, world.getRealm("custom"));
+        assertNotNull(registered.getResource("a.properties"), "the registered realm must not have been closed");
+        assertNotNull(registered.loadClass("a.A"));
+    }
+
+    @Test
     void testNewRealmWithSupplierFromOtherWorld() throws Exception {
         ClassWorld otherWorld = new ClassWorld();
         ClassRealm foreign = otherWorld.newRealm("foreign");

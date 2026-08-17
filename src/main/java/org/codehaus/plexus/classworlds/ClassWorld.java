@@ -99,7 +99,9 @@ public class ClassWorld implements Closeable {
      * does not know about.
      * <p>
      * The factory is invoked before the id is known, so a realm whose id is already taken is closed again before
-     * {@link DuplicateRealmException} is thrown; a failure to close it is attached as a suppressed exception.
+     * {@link DuplicateRealmException} is thrown; a failure to close it is attached as a suppressed exception. A
+     * factory that hands back the realm already registered under that id is the one case where nothing is closed,
+     * since closing it would leave a dead realm in this world.
      *
      * @param factory the factory creating the realm, must not be <code>null</code> and must not return
      *            <code>null</code>
@@ -118,12 +120,15 @@ public class ClassWorld implements Closeable {
             throw new IllegalArgumentException("realm " + id + " belongs to a different class world");
         }
 
-        if (realms.containsKey(id)) {
+        ClassRealm registered = realms.get(id);
+        if (registered != null) {
             DuplicateRealmException duplicate = new DuplicateRealmException(this, id);
-            try {
-                realm.close();
-            } catch (Exception e) {
-                duplicate.addSuppressed(e);
+            if (registered != realm) {
+                try {
+                    realm.close();
+                } catch (Exception e) {
+                    duplicate.addSuppressed(e);
+                }
             }
             throw duplicate;
         }
