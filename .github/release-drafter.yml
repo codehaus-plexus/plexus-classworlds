@@ -1,2 +1,7 @@
 _extends: .github:/.github/release-drafter.yml
+
+# tag-prefix is what lets the drafter parse the version out of the last tag.
+# Without it the drafter reads what it can from the tag string, and plexus-i18n
+# once drafted 18.0.1 by finding the 18 in its own name.
+tag-prefix: plexus-classworlds-
 tag-template: plexus-classworlds-$RESOLVED_VERSION
