@@ -26,7 +26,6 @@ kept compatible.
 <dependency>
   <groupId>org.codehaus.plexus</groupId>
   <artifactId>plexus-classworlds</artifactId>
-  <version>2.12.0</version>
 </dependency>
 ```
 
