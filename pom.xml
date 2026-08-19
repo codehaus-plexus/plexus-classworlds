@@ -34,8 +34,8 @@
   <inceptionYear>2002</inceptionYear>
 
   <scm>
-    <connection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</connection>
-    <developerConnection>scm:git:git@github.com:codehaus-plexus/plexus-classworlds.git</developerConnection>
+    <connection>scm:git:https://github.com/codehaus-plexus/plexus-classworlds.git</connection>
+    <developerConnection>${project.scm.connection}</developerConnection>
     <tag>master</tag>
     <url>https://github.com/codehaus-plexus/plexus-classworlds/tree/${project.scm.tag}/</url>
   </scm>
