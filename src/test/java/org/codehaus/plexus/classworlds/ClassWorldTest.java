@@ -19,6 +19,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -29,6 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -176,6 +180,75 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
         ClassRealm realm = world.newRealm("unfiltered", null, null);
         assertNotNull(realm);
         assertEquals("unfiltered", realm.getId());
+    }
+
+    @Test
+    void testCreateRealmWithFactory() throws Exception {
+        TestListener listener = new TestListener();
+        world.addListener(listener);
+
+        ClassRealm realm = world.createRealm("custom", id -> new CustomClassRealm(world, id));
+
+        assertInstanceOf(CustomClassRealm.class, realm);
+        assertSame(realm, world.getRealm("custom"));
+        assertEquals(1, listener.realmCreatedCount);
+    }
+
+    @Test
+    void testCreateRealmWithFactoryDuplicateDoesNotRunTheFactory() throws Exception {
+        ClassRealm registered = world.newRealm("custom");
+        registered.addURL(TestUtil.getTestResourceUrl("a.jar"));
+
+        AtomicBoolean invoked = new AtomicBoolean();
+        DuplicateRealmException e = assertThrows(
+                DuplicateRealmException.class,
+                () -> world.createRealm("custom", id -> {
+                    invoked.set(true);
+                    return new CustomClassRealm(world, id);
+                }));
+
+        assertEquals("custom", e.getId());
+        assertSame(world, e.getWorld());
+        assertFalse(invoked.get(), "the factory must not run for an id that is already taken");
+        assertSame(registered, world.getRealm("custom"));
+        assertNotNull(registered.getResource("a.properties"), "the registered realm must not have been closed");
+        assertNotNull(registered.loadClass("a.A"));
+    }
+
+    @Test
+    void testCreateRealmWithFactoryFromOtherWorld() throws Exception {
+        try (ClassWorld otherWorld = new ClassWorld()) {
+            ClassRealm foreign = otherWorld.newRealm("foreign");
+
+            assertThrows(IllegalArgumentException.class, () -> world.createRealm("foreign", id -> foreign));
+            assertTrue(world.getRealms().isEmpty());
+            assertNotNull(otherWorld.getClassRealm("foreign"), "the foreign realm must be left alone");
+        }
+    }
+
+    @Test
+    void testCreateRealmWithFactoryReturningForeignId() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> world.createRealm("custom", id -> new CustomClassRealm(world, "somethingElse")));
+        assertTrue(world.getRealms().isEmpty());
+    }
+
+    @Test
+    void testCreateRealmWithNullFactory() {
+        assertThrows(
+                NullPointerException.class, () -> world.createRealm("custom", (Function<String, ClassRealm>) null));
+    }
+
+    @Test
+    void testCreateRealmWithFactoryReturningNull() {
+        assertThrows(NullPointerException.class, () -> world.createRealm("custom", id -> null));
+    }
+
+    private static class CustomClassRealm extends ClassRealm {
+        CustomClassRealm(ClassWorld world, String id) {
+            super(world, id, null);
+        }
     }
 
     @Test

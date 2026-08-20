@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -88,6 +90,51 @@ public class ClassWorld implements Closeable {
         } else {
             realm = new FilteredClassRealm(filter, this, id, classLoader);
         }
+
+        return register(id, realm);
+    }
+
+    /**
+     * Adds a class realm built by a caller supplied factory, allowing realm implementations that this class does
+     * not know about.
+     * <p>
+     * The factory is handed the id and runs only once that id is known to be free, so a rejected call has no side
+     * effect and no realm has to be closed again. It runs while this world's monitor is held.
+     * <p>
+     * This is not an overload of {@link #newRealm(String, ClassLoader)} because a second two argument
+     * <code>newRealm</code> would make the existing <code>newRealm(id, null)</code> calls ambiguous.
+     *
+     * @param id The identifier for this realm, must not be <code>null</code>.
+     * @param factory the factory building the realm for that id, must not be <code>null</code> and must not
+     *            return <code>null</code>
+     * @return the created class realm
+     * @throws DuplicateRealmException in case a realm with the given id does already exist
+     * @throws IllegalArgumentException if the created realm belongs to a different class world or carries a
+     *             different id
+     * @since 2.13.0
+     */
+    public synchronized ClassRealm createRealm(String id, Function<String, ClassRealm> factory)
+            throws DuplicateRealmException {
+        Objects.requireNonNull(id, "id cannot be null");
+        Objects.requireNonNull(factory, "factory cannot be null");
+
+        if (realms.containsKey(id)) {
+            throw new DuplicateRealmException(this, id);
+        }
+
+        ClassRealm realm = Objects.requireNonNull(factory.apply(id), "factory returned null realm");
+
+        if (realm.getWorld() != this) {
+            throw new IllegalArgumentException("realm " + id + " belongs to a different class world");
+        }
+        if (!id.equals(realm.getId())) {
+            throw new IllegalArgumentException("realm for id " + id + " carries id " + realm.getId());
+        }
+
+        return register(id, realm);
+    }
+
+    private ClassRealm register(String id, ClassRealm realm) {
         realms.put(id, realm);
 
         for (ClassWorldListener listener : listeners) {
