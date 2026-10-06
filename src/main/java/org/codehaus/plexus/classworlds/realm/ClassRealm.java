@@ -45,7 +45,7 @@ import org.codehaus.plexus.classworlds.strategy.StrategyFactory;
  * @author <a href="mailto:bob@eng.werken.com">bob mcwhirter</a>
  * @author Jason van Zyl
  */
-public class ClassRealm extends URLClassLoader {
+public abstract class ClassRealm extends URLClassLoader {
 
     private final ClassWorld world;
 

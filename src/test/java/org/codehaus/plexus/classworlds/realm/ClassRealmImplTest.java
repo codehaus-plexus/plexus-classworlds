@@ -54,8 +54,8 @@ class ClassRealmImplTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void locateSourceRealmNoImports() {
-        ClassRealm realm = new ClassRealm(this.world, "foo", null);
+    void locateSourceRealmNoImports() throws DuplicateRealmException {
+        ClassRealm realm = world.newRealm("foo", null);
 
         assertSame(null, realm.getImportClassLoader("com.werken.Stuff"));
     }
