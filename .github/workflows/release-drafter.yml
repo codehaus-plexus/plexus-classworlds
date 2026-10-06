@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 jobs:
    update_release_draft:
       uses: codehaus-plexus/.github/.github/workflows/release-drafter.yml@master
