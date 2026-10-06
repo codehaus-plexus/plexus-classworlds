@@ -464,18 +464,19 @@ public class ClassRealm extends URLClassLoader {
         try {
             Package pkg = super.getPackage(name);
 
-            if (pkg == null) {
-                String className = name + ".Package";
-
+            for (String className : getClassNamesIn(name, foreignImports)) {
+                if (pkg != null) {
+                    break;
+                }
                 ClassLoader importClassLoader = getImportClassLoader(className);
                 if (importClassLoader != null) {
                     pkg = getPackage(importClassLoader, name);
                 }
+            }
 
-                ClassLoader parent = getParentClassLoader();
-                if (pkg == null && parent != null && isImportedFromParent(className)) {
-                    pkg = getPackage(parent, name);
-                }
+            ClassLoader parent = getParentClassLoader();
+            if (pkg == null && parent != null && isPackageImportedFromParent(name)) {
+                pkg = getPackage(parent, name);
             }
 
             return pkg;
@@ -498,7 +499,7 @@ public class ClassRealm extends URLClassLoader {
 
             for (ClassLoader importClassLoader : getImportClassLoaders()) {
                 for (Package pkg : getPackages(importClassLoader)) {
-                    if (getImportClassLoader(pkg.getName() + ".Package") == importClassLoader) {
+                    if (isPackageImportedFrom(pkg.getName(), importClassLoader)) {
                         packages.putIfAbsent(pkg.getName(), pkg);
                     }
                 }
@@ -507,7 +508,7 @@ public class ClassRealm extends URLClassLoader {
             ClassLoader parent = getParentClassLoader();
             if (parent != null) {
                 for (Package pkg : getPackages(parent)) {
-                    if (isImportedFromParent(pkg.getName() + ".Package")) {
+                    if (isPackageImportedFromParent(pkg.getName())) {
                         packages.putIfAbsent(pkg.getName(), pkg);
                     }
                 }
@@ -517,6 +518,45 @@ public class ClassRealm extends URLClassLoader {
         } finally {
             exitPackageLookup();
         }
+    }
+
+    /**
+     * Class names standing for every way a class in the package can be routed by the given imports: one no class can
+     * have, which only package imports match, plus each imported name that is a class directly inside the package.
+     */
+    private static Collection<String> getClassNamesIn(String packageName, Collection<Entry> imports) {
+        Collection<String> classNames = new ArrayList<>();
+        classNames.add(packageName + ".-");
+        if (imports != null) {
+            for (Entry entry : imports) {
+                String importName = entry.getPackageName();
+                int index = importName.lastIndexOf('.');
+                if (index > 0
+                        && !importName.endsWith(".*")
+                        && importName.substring(0, index).equals(packageName)) {
+                    classNames.add(importName);
+                }
+            }
+        }
+        return classNames;
+    }
+
+    private boolean isPackageImportedFrom(String packageName, ClassLoader importClassLoader) {
+        for (String className : getClassNamesIn(packageName, foreignImports)) {
+            if (getImportClassLoader(className) == importClassLoader) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPackageImportedFromParent(String packageName) {
+        for (String className : getClassNamesIn(packageName, parentImports)) {
+            if (isImportedFromParent(className)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Collection<ClassLoader> getImportClassLoaders() {

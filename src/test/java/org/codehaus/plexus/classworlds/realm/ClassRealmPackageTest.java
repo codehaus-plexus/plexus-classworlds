@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -114,14 +115,40 @@ class ClassRealmPackageTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void firstMatchingImportDecides() throws Exception {
-        ClassRealm empty = world.newRealm("empty", null);
+    void exactClassImportExposesItsPackage() throws Exception {
+        world.newRealm("empty", null);
+        ClassRealm realmB = world.newRealm("realmB", null);
+        realmB.importFrom("realmA", "a.A");
+        realmB.importFrom("empty", "a");
+
+        assertSame(realmA, realmB.loadClass("a.A").getClassLoader());
+        assertSame(packageA, realmB.getPackage("a"));
+        assertTrue(Arrays.asList(realmB.getPackages()).contains(packageA));
+    }
+
+    @Test
+    void moreSpecificImportShadowsOnlyItsClass() throws Exception {
+        realmA.loadClass("a.Aa");
+        world.newRealm("empty", null);
         ClassRealm realmB = world.newRealm("realmB", null);
         realmB.importFrom("realmA", "a");
         realmB.importFrom("empty", "a.A");
 
-        // a.A is loaded from realmA, so the package comes from realmA as well
+        // a.A is routed to the empty realm, but a.Aa still loads from realmA, so the package stays visible
+        assertThrows(ClassNotFoundException.class, () -> realmB.loadClass("a.A"));
+        assertSame(realmA, realmB.loadClass("a.Aa").getClassLoader());
         assertSame(packageA, realmB.getPackage("a"));
+    }
+
+    @Test
+    void exactClassParentImportExposesItsPackage() throws Exception {
+        ClassRealm child = world.newRealm("child", null);
+        child.setParentRealm(realmA);
+        child.importFromParent("a.A");
+
+        assertSame(realmA, child.loadClass("a.A").getClassLoader());
+        assertSame(packageA, child.getPackage("a"));
+        assertTrue(Arrays.asList(child.getPackages()).contains(packageA));
     }
 
     @Test
