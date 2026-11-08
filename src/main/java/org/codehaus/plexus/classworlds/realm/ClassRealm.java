@@ -531,9 +531,12 @@ public class ClassRealm extends URLClassLoader {
             for (Entry entry : imports) {
                 String importName = entry.getPackageName();
                 int index = importName.lastIndexOf('.');
-                if (index > 0
-                        && !importName.endsWith(".*")
-                        && importName.substring(0, index).equals(packageName)) {
+                // an import without a dot names a class in the unnamed package, or a package import
+                String importPackage = index < 0 ? "" : importName.substring(0, index);
+                if (index != 0
+                        && !importName.isEmpty()
+                        && !importName.endsWith("*")
+                        && importPackage.equals(packageName)) {
                     classNames.add(importName);
                 }
             }
