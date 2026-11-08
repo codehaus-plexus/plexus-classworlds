@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Packages are visible from a realm exactly when classes in them are: through its own class path, an import, or the
@@ -149,6 +150,22 @@ class ClassRealmPackageTest extends AbstractClassWorldsTestCase {
         assertSame(realmA, child.loadClass("a.A").getClassLoader());
         assertSame(packageA, child.getPackage("a"));
         assertTrue(Arrays.asList(child.getPackages()).contains(packageA));
+    }
+
+    @Test
+    void exactClassImportExposesUnnamedPackage() throws Exception {
+        String resource = "DefaultPackageClass.class";
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream(resource)) {
+            Files.copy(in, probeDir.resolve(resource));
+        }
+        ClassRealm realmC = newProbeRealm("realmC");
+        Package unnamed = realmC.loadClass("DefaultPackageClass").getPackage();
+        assumeTrue(unnamed != null, "this JDK defines no Package for the unnamed package");
+        ClassRealm realmB = world.newRealm("realmB", null);
+        realmB.importFrom("realmC", "DefaultPackageClass");
+
+        assertSame(unnamed, realmB.getPackage(""));
+        assertTrue(Arrays.asList(realmB.getPackages()).contains(unnamed));
     }
 
     @Test
