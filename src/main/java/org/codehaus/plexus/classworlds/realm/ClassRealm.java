@@ -18,14 +18,21 @@ package org.codehaus.plexus.classworlds.realm;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -436,6 +443,217 @@ public class ClassRealm extends URLClassLoader {
         }
 
         return null;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Packages are visible exactly where classes in them are: own class path, imports, parent
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Realms whose package lookup is running on the current thread. Imports and parents may form cycles, which class
+     * loading never walks for a missing package but {@link Package#getPackage(String)} does.
+     */
+    private static final ThreadLocal<Set<ClassRealm>> PACKAGE_LOOKUPS = new ThreadLocal<>();
+
+    @Override
+    @SuppressWarnings("deprecation")
+    protected Package getPackage(String name) {
+        if (!enterPackageLookup()) {
+            return null;
+        }
+        try {
+            Package pkg = super.getPackage(name);
+
+            for (String className : getClassNamesIn(name, foreignImports)) {
+                if (pkg != null) {
+                    break;
+                }
+                ClassLoader importClassLoader = getImportClassLoader(className);
+                if (importClassLoader != null) {
+                    pkg = getPackage(importClassLoader, name);
+                }
+            }
+
+            ClassLoader parent = getParentClassLoader();
+            if (pkg == null && parent != null && isPackageImportedFromParent(name)) {
+                pkg = getPackage(parent, name);
+            }
+
+            return pkg;
+        } finally {
+            exitPackageLookup();
+        }
+    }
+
+    @Override
+    protected Package[] getPackages() {
+        if (!enterPackageLookup()) {
+            return new Package[0];
+        }
+        try {
+            Map<String, Package> packages = new LinkedHashMap<>();
+
+            for (Package pkg : super.getPackages()) {
+                packages.putIfAbsent(pkg.getName(), pkg);
+            }
+
+            for (ClassLoader importClassLoader : getImportClassLoaders()) {
+                for (Package pkg : getPackages(importClassLoader)) {
+                    if (isPackageImportedFrom(pkg.getName(), importClassLoader)) {
+                        packages.putIfAbsent(pkg.getName(), pkg);
+                    }
+                }
+            }
+
+            ClassLoader parent = getParentClassLoader();
+            if (parent != null) {
+                for (Package pkg : getPackages(parent)) {
+                    if (isPackageImportedFromParent(pkg.getName())) {
+                        packages.putIfAbsent(pkg.getName(), pkg);
+                    }
+                }
+            }
+
+            return packages.values().toArray(new Package[0]);
+        } finally {
+            exitPackageLookup();
+        }
+    }
+
+    /**
+     * Class names standing for every way a class in the package can be routed by the given imports: one no class can
+     * have, which only package imports match, plus each imported name that is a class directly inside the package.
+     */
+    private static Collection<String> getClassNamesIn(String packageName, Collection<Entry> imports) {
+        Collection<String> classNames = new ArrayList<>();
+        classNames.add(packageName + ".-");
+        if (imports != null) {
+            for (Entry entry : imports) {
+                String importName = entry.getPackageName();
+                int index = importName.lastIndexOf('.');
+                // an import without a dot names a class in the unnamed package, or a package import
+                String importPackage = index < 0 ? "" : importName.substring(0, index);
+                if (index != 0
+                        && !importName.isEmpty()
+                        && !importName.endsWith("*")
+                        && importPackage.equals(packageName)) {
+                    classNames.add(importName);
+                }
+            }
+        }
+        return classNames;
+    }
+
+    private boolean isPackageImportedFrom(String packageName, ClassLoader importClassLoader) {
+        for (String className : getClassNamesIn(packageName, foreignImports)) {
+            if (getImportClassLoader(className) == importClassLoader) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPackageImportedFromParent(String packageName) {
+        for (String className : getClassNamesIn(packageName, parentImports)) {
+            if (isImportedFromParent(className)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Collection<ClassLoader> getImportClassLoaders() {
+        Collection<ClassLoader> classLoaders = new LinkedHashSet<>();
+        for (Entry entry : foreignImports) {
+            if (entry.getClassLoader() != null) {
+                classLoaders.add(entry.getClassLoader());
+            }
+        }
+        return classLoaders;
+    }
+
+    private boolean enterPackageLookup() {
+        Set<ClassRealm> lookups = PACKAGE_LOOKUPS.get();
+        if (lookups == null) {
+            lookups = Collections.newSetFromMap(new IdentityHashMap<>());
+            PACKAGE_LOOKUPS.set(lookups);
+        }
+        return lookups.add(this);
+    }
+
+    private void exitPackageLookup() {
+        Set<ClassRealm> lookups = PACKAGE_LOOKUPS.get();
+        lookups.remove(this);
+        if (lookups.isEmpty()) {
+            PACKAGE_LOOKUPS.remove();
+        }
+    }
+
+    // ClassLoader.getDefinedPackage(s) are public since Java 9; on Java 8 only the protected getPackage(s) exist
+    private static final Method GET_DEFINED_PACKAGE = findMethod("getDefinedPackage", String.class);
+
+    private static final Method GET_DEFINED_PACKAGES = findMethod("getDefinedPackages");
+
+    private static final Method GET_PACKAGE =
+            GET_DEFINED_PACKAGE == null ? findMethod("getPackage", String.class) : null;
+
+    private static final Method GET_PACKAGES = GET_DEFINED_PACKAGES == null ? findMethod("getPackages") : null;
+
+    private static Method findMethod(String name, Class<?>... parameterTypes) {
+        try {
+            Method method = ClassLoader.class.getDeclaredMethod(name, parameterTypes);
+            if (!Modifier.isPublic(method.getModifiers())) {
+                method.setAccessible(true);
+            }
+            return method;
+        } catch (NoSuchMethodException | RuntimeException e) {
+            return null;
+        }
+    }
+
+    private static Object invoke(Method method, ClassLoader classLoader, Object... args) {
+        if (method == null) {
+            return null;
+        }
+        try {
+            return method.invoke(classLoader, args);
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            return null;
+        }
+    }
+
+    private static Package getPackage(ClassLoader classLoader, String name) {
+        if (classLoader instanceof ClassRealm) {
+            return ((ClassRealm) classLoader).getPackage(name);
+        }
+        if (GET_DEFINED_PACKAGE == null) {
+            return (Package) invoke(GET_PACKAGE, classLoader, name);
+        }
+        for (ClassLoader loader = classLoader; loader != null; loader = loader.getParent()) {
+            Package pkg = (Package) invoke(GET_DEFINED_PACKAGE, loader, name);
+            if (pkg != null) {
+                return pkg;
+            }
+        }
+        return null;
+    }
+
+    private static Package[] getPackages(ClassLoader classLoader) {
+        if (classLoader instanceof ClassRealm) {
+            return ((ClassRealm) classLoader).getPackages();
+        }
+        if (GET_DEFINED_PACKAGES == null) {
+            Package[] packages = (Package[]) invoke(GET_PACKAGES, classLoader);
+            return packages != null ? packages : new Package[0];
+        }
+        Collection<Package> packages = new ArrayList<>();
+        for (ClassLoader loader = classLoader; loader != null; loader = loader.getParent()) {
+            Package[] defined = (Package[]) invoke(GET_DEFINED_PACKAGES, loader);
+            if (defined != null) {
+                Collections.addAll(packages, defined);
+            }
+        }
+        return packages.toArray(new Package[0]);
     }
 
     static {
