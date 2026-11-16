@@ -32,7 +32,7 @@ import java.util.Enumeration;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated
-public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.realm.ClassRealm {
+public final class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.realm.ClassRealm {
 
     public static ClassRealmReverseAdapter getInstance(ClassRealm oldRealm) {
         return new ClassRealmReverseAdapter(oldRealm);
@@ -117,7 +117,9 @@ public class ClassRealmReverseAdapter extends org.codehaus.plexus.classworlds.re
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof ClassRealm)) return false;
+        if (!(o instanceof ClassRealm)) {
+            return false;
+        }
 
         return getId().equals(((ClassRealm) o).getId());
     }

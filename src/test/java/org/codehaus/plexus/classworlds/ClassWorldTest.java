@@ -244,8 +244,8 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
     }
 
     static class TestListener implements ClassWorldListener {
-        int realmCreatedCount = 0;
-        int realmDisposedCount = 0;
+        int realmCreatedCount;
+        int realmDisposedCount;
 
         @Override
         public void realmCreated(ClassRealm realm) {

@@ -86,7 +86,8 @@ public class DefaultClassRealm implements ClassRealm {
      */
     public void addConstituent(String constituent, byte[] b) throws ClassNotFoundException {
         try {
-            File path, file;
+            File path;
+            File file;
             if (constituent.lastIndexOf('.') != -1) {
                 path = new File("byteclass/"
                         + constituent

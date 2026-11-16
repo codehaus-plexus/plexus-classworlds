@@ -55,7 +55,7 @@ public class Configurator implements ConfigurationHandler {
      */
     private ClassRealm curRealm;
 
-    private ClassLoader foreignClassLoader = null;
+    private ClassLoader foreignClassLoader;
 
     /**
      * Construct.

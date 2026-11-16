@@ -383,8 +383,8 @@ public class ConfigurationParser {
             propValue = systemProperties.getProperty(propName);
 
             /* do our best if we are not running from surefire */
-            if (propName.equals("basedir") && (propValue == null || propValue.isEmpty())) {
-                propValue = (new File("")).getAbsolutePath();
+            if ("basedir".equals(propName) && (propValue == null || propValue.isEmpty())) {
+                propValue = new File("").getAbsolutePath();
             }
 
             if (propValue == null) {
@@ -409,6 +409,6 @@ public class ConfigurationParser {
      *         otherwise <code>false</code>.
      */
     private boolean canIgnore(String line) {
-        return (line.isEmpty() || line.startsWith("#"));
+        return line.isEmpty() || line.startsWith("#");
     }
 }
