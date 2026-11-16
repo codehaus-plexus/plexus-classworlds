@@ -163,7 +163,7 @@ public class ClassRealm extends URLClassLoader {
     }
 
     public ClassRealm getParentRealm() {
-        return (parentClassLoader instanceof ClassRealm) ? (ClassRealm) parentClassLoader : null;
+        return parentClassLoader instanceof ClassRealm ? (ClassRealm) parentClassLoader : null;
     }
 
     public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
@@ -353,7 +353,7 @@ public class ClassRealm extends URLClassLoader {
     protected Object getClassLoadingLock(String name) {
         Object newLock = new Object();
         Object lock = lockMap.putIfAbsent(name, newLock);
-        return (lock == null) ? newLock : lock;
+        return lock == null ? newLock : lock;
     }
 
     public Class<?> loadClassFromParent(String name) {

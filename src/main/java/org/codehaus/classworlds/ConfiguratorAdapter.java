@@ -29,7 +29,7 @@ import java.net.MalformedURLException;
  * @deprecated This is a legacy internal class.
  */
 @Deprecated
-public class ConfiguratorAdapter extends Configurator {
+public final class ConfiguratorAdapter extends Configurator {
 
     public static ConfiguratorAdapter getInstance(
             org.codehaus.plexus.classworlds.launcher.Configurator newConfig, Launcher launcher) {

@@ -30,7 +30,7 @@ import java.util.Vector;
  */
 @SuppressWarnings("rawtypes")
 @Deprecated
-public class ClassWorldAdapter extends ClassWorld {
+public final class ClassWorldAdapter extends ClassWorld {
 
     public static ClassWorldAdapter getInstance(org.codehaus.plexus.classworlds.ClassWorld newWorld) {
         return new ClassWorldAdapter(newWorld);

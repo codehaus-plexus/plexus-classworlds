@@ -44,7 +44,7 @@ public class TestUtil {
 
         /* do our best if we are not running from surefire */
         if (basedir == null || basedir.isEmpty()) {
-            basedir = (new File("")).getAbsolutePath();
+            basedir = new File("").getAbsolutePath();
         }
 
         return basedir;

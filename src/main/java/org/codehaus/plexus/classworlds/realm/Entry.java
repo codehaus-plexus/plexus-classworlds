@@ -73,12 +73,12 @@ class Entry implements Comparable<Entry> {
                 // a binary class name, e.g. java.lang.Object
 
                 int index = name.lastIndexOf('.');
-                pkgName = (index < 0) ? "" : name.substring(0, index);
+                pkgName = index < 0 ? "" : name.substring(0, index);
             } else {
                 // a resource name, e.g. java/lang/Object.class
 
                 int index = name.lastIndexOf('/');
-                pkgName = (index < 0) ? "" : name.substring(0, index).replace('/', '.');
+                pkgName = index < 0 ? "" : name.substring(0, index).replace('/', '.');
             }
 
             return pkgName.length() == pkg.length() - 2 && pkg.regionMatches(0, pkgName, 0, pkgName.length());
@@ -155,7 +155,7 @@ class Entry implements Comparable<Entry> {
         //     com.werken.foo
         //     com.werken
 
-        return -(getPackageName().compareTo(that.getPackageName()));
+        return -getPackageName().compareTo(that.getPackageName());
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

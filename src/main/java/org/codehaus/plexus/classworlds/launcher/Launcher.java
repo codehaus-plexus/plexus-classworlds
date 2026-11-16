@@ -57,7 +57,7 @@ public class Launcher {
 
     protected ClassWorld world;
 
-    private int exitCode = 0;
+    private int exitCode;
 
     public Launcher() {
         this.systemClassLoader = Thread.currentThread().getContextClassLoader();

@@ -35,12 +35,10 @@ import java.util.Enumeration;
  */
 @SuppressWarnings({"UnnecessaryLocalVariable", "DeprecatedIsStillUsed", "rawtypes"})
 @Deprecated
-public class ClassRealmAdapter implements ClassRealm {
+public final class ClassRealmAdapter implements ClassRealm {
 
     public static ClassRealmAdapter getInstance(org.codehaus.plexus.classworlds.realm.ClassRealm newRealm) {
-        ClassRealmAdapter adapter = new ClassRealmAdapter(newRealm);
-
-        return adapter;
+        return new ClassRealmAdapter(newRealm);
     }
 
     private final org.codehaus.plexus.classworlds.realm.ClassRealm realm;
@@ -130,7 +128,9 @@ public class ClassRealmAdapter implements ClassRealm {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof ClassRealm)) return false;
+        if (!(o instanceof ClassRealm)) {
+            return false;
+        }
 
         return getId().equals(((ClassRealm) o).getId());
     }

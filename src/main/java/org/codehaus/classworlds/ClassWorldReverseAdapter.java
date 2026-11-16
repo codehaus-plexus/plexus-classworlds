@@ -31,11 +31,13 @@ import java.util.Vector;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 @Deprecated
-public class ClassWorldReverseAdapter extends org.codehaus.plexus.classworlds.ClassWorld {
+public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classworlds.ClassWorld {
     private static final HashMap instances = new HashMap();
 
     public static ClassWorldReverseAdapter getInstance(ClassWorld oldWorld) {
-        if (instances.containsKey(oldWorld)) return (ClassWorldReverseAdapter) instances.get(oldWorld);
+        if (instances.containsKey(oldWorld)) {
+            return (ClassWorldReverseAdapter) instances.get(oldWorld);
+        }
 
         ClassWorldReverseAdapter adapter = new ClassWorldReverseAdapter(oldWorld);
         instances.put(oldWorld, adapter);

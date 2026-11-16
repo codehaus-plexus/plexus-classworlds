@@ -112,8 +112,8 @@ class ClassWorldListenerTest {
     }
 
     static class TestListener implements ClassWorldListener {
-        int realmCreatedCount = 0;
-        int realmDisposedCount = 0;
+        int realmCreatedCount;
+        int realmDisposedCount;
         ClassRealm lastCreatedRealm;
         ClassRealm lastDisposedRealm;
 
