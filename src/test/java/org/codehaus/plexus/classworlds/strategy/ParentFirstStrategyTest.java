@@ -1,6 +1,5 @@
 package org.codehaus.plexus.classworlds.strategy;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -149,7 +148,7 @@ class ParentFirstStrategyTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClassWithNullName() throws ClassNotFoundException {
+    void testLoadClassWithNullName() throws Exception {
         try {
             strategy.loadClass(null);
             fail("Should throw NullPointerException");
@@ -169,7 +168,7 @@ class ParentFirstStrategyTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testGetResourcesWithNullName() throws IOException {
+    void testGetResourcesWithNullName() throws Exception {
         try {
             strategy.getResources(null);
             fail("Should throw NullPointerException");
