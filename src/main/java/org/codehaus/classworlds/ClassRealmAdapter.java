@@ -47,14 +47,17 @@ public final class ClassRealmAdapter implements ClassRealm {
         this.realm = newRealm;
     }
 
+    @Override
     public String getId() {
         return realm.getId();
     }
 
+    @Override
     public ClassWorld getWorld() {
         return ClassWorldAdapter.getInstance(realm.getWorld());
     }
 
+    @Override
     public void importFrom(String realmId, String pkgName) throws NoSuchRealmException {
         try {
             realm.importFrom(realmId, pkgName);
@@ -63,10 +66,12 @@ public final class ClassRealmAdapter implements ClassRealm {
         }
     }
 
+    @Override
     public void addConstituent(URL constituent) {
         realm.addURL(constituent);
     }
 
+    @Override
     public ClassRealm locateSourceRealm(String className) {
         ClassLoader importLoader = realm.getImportClassLoader(className);
 
@@ -77,12 +82,14 @@ public final class ClassRealmAdapter implements ClassRealm {
         }
     }
 
+    @Override
     public void setParent(ClassRealm classRealm) {
         if (classRealm != null) {
             realm.setParentRealm(ClassRealmReverseAdapter.getInstance(classRealm));
         }
     }
 
+    @Override
     public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
         try {
             return ClassRealmAdapter.getInstance(realm.createChildRealm(id));
@@ -91,10 +98,12 @@ public final class ClassRealmAdapter implements ClassRealm {
         }
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return realm;
     }
 
+    @Override
     public ClassRealm getParent() {
         return ClassRealmAdapter.getInstance(realm.getParentRealm());
     }
@@ -103,30 +112,37 @@ public final class ClassRealmAdapter implements ClassRealm {
         return ClassRealmAdapter.getInstance(realm.getParentRealm());
     }
 
+    @Override
     public URL[] getConstituents() {
         return realm.getURLs();
     }
 
+    @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         return realm.loadClass(name);
     }
 
+    @Override
     public URL getResource(String name) {
         return realm.getResource(trimLeadingSlash(name));
     }
 
+    @Override
     public Enumeration findResources(String name) throws IOException {
         return realm.findResources(trimLeadingSlash(name));
     }
 
+    @Override
     public InputStream getResourceAsStream(String name) {
         return realm.getResourceAsStream(trimLeadingSlash(name));
     }
 
+    @Override
     public void display() {
         realm.display();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof ClassRealm)) {
             return false;

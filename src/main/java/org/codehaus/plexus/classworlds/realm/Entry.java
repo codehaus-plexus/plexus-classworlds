@@ -147,6 +147,7 @@ class Entry implements Comparable<Entry> {
      *         if they are equal, or 1 if this object sorts
      *         after that object.
      */
+    @Override
     public int compareTo(Entry that) {
         // We are reverse sorting this list, so that
         // we get longer matches first:
@@ -174,6 +175,7 @@ class Entry implements Comparable<Entry> {
      * @return <code>true</code> if the two objects are
      *         semantically equivalent, otherwise <code>false</code>.
      */
+    @Override
     public boolean equals(Object thatObj) {
         Entry that = (Entry) thatObj;
 
@@ -186,10 +188,12 @@ class Entry implements Comparable<Entry> {
      * based on the packagename.
      * </p>
      */
+    @Override
     public int hashCode() {
         return getPackageName().hashCode();
     }
 
+    @Override
     public String toString() {
         return "Entry[import " + getPackageName() + " from realm " + getClassLoader() + "]";
     }

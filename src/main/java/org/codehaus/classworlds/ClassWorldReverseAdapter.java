@@ -52,6 +52,7 @@ public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classwor
         this.world = newWorld;
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm(String id)
             throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException {
         try {
@@ -61,6 +62,7 @@ public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classwor
         }
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.realm.ClassRealm newRealm(String id, ClassLoader classLoader)
             throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException {
         try {
@@ -70,6 +72,7 @@ public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classwor
         }
     }
 
+    @Override
     public void disposeRealm(String id) throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException {
         try {
             world.disposeRealm(id);
@@ -78,6 +81,7 @@ public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classwor
         }
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm(String id)
             throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException {
         try {
@@ -87,6 +91,7 @@ public final class ClassWorldReverseAdapter extends org.codehaus.plexus.classwor
         }
     }
 
+    @Override
     public Collection getRealms() {
         Collection realms = world.getRealms();
         Vector ret = new Vector();

@@ -58,6 +58,7 @@ public abstract class AbstractStrategy implements Strategy {
         }
     }
 
+    @Override
     public ClassRealm getRealm() {
         return realm;
     }

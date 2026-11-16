@@ -167,10 +167,12 @@ public class Configurator implements ConfigurationHandler {
         }
     }
 
+    @Override
     public void addImportFrom(String relamName, String importSpec) throws NoSuchRealmException {
         curRealm.importFrom(relamName, importSpec);
     }
 
+    @Override
     public void addLoadFile(File file) {
         try {
             curRealm.addURL(file.toURI().toURL());
@@ -179,10 +181,12 @@ public class Configurator implements ConfigurationHandler {
         }
     }
 
+    @Override
     public void addLoadURL(URL url) {
         curRealm.addURL(url);
     }
 
+    @Override
     public void addRealm(String realmName) throws DuplicateRealmException {
         curRealm = world.newRealm(realmName, foreignClassLoader);
 
@@ -190,6 +194,7 @@ public class Configurator implements ConfigurationHandler {
         configuredRealms.put(realmName, curRealm);
     }
 
+    @Override
     public void setAppMain(String mainClassName, String mainRealmName) {
         if (this.launcher != null) {
             this.launcher.setAppMain(mainClassName, mainRealmName);

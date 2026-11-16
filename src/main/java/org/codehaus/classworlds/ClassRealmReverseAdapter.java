@@ -45,14 +45,17 @@ public final class ClassRealmReverseAdapter extends org.codehaus.plexus.classwor
         this.realm = oldRealm;
     }
 
+    @Override
     public String getId() {
         return realm.getId();
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.ClassWorld getWorld() {
         return ClassWorldReverseAdapter.getInstance(realm.getWorld());
     }
 
+    @Override
     public void importFrom(String realmId, String pkgName)
             throws org.codehaus.plexus.classworlds.realm.NoSuchRealmException {
         try {
@@ -62,6 +65,7 @@ public final class ClassRealmReverseAdapter extends org.codehaus.plexus.classwor
         }
     }
 
+    @Override
     public void addURL(URL constituent) {
         realm.addConstituent(constituent);
     }
@@ -70,10 +74,12 @@ public final class ClassRealmReverseAdapter extends org.codehaus.plexus.classwor
         return getInstance(realm.locateSourceRealm(className));
     }
 
+    @Override
     public void setParentRealm(org.codehaus.plexus.classworlds.realm.ClassRealm classRealm) {
         realm.setParent(ClassRealmAdapter.getInstance(classRealm));
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.realm.ClassRealm createChildRealm(String id)
             throws org.codehaus.plexus.classworlds.realm.DuplicateRealmException {
         try {
@@ -87,35 +93,43 @@ public final class ClassRealmReverseAdapter extends org.codehaus.plexus.classwor
         return realm.getClassLoader();
     }
 
+    @Override
     public org.codehaus.plexus.classworlds.realm.ClassRealm getParentRealm() {
         return getInstance(realm.getParent());
     }
 
+    @Override
     public URL[] getURLs() {
         return realm.getConstituents();
     }
 
+    @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         return realm.loadClass(name);
     }
 
+    @Override
     public URL getResource(String name) {
         return realm.getResource(name);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Enumeration findResources(String name) throws IOException {
         return realm.findResources(name);
     }
 
+    @Override
     public InputStream getResourceAsStream(String name) {
         return realm.getResourceAsStream(name);
     }
 
+    @Override
     public void display() {
         realm.display();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (!(o instanceof ClassRealm)) {
             return false;

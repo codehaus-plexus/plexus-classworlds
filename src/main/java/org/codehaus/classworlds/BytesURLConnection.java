@@ -42,8 +42,10 @@ public class BytesURLConnection extends URLConnection {
         this.content = content;
     }
 
+    @Override
     public void connect() {}
 
+    @Override
     public InputStream getInputStream() {
         return new ByteArrayInputStream(content);
     }

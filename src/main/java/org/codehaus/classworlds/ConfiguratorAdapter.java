@@ -53,6 +53,7 @@ public final class ConfiguratorAdapter extends Configurator {
         this.config = config;
     }
 
+    @Override
     public void associateRealms() {
         config.associateRealms();
     }
