@@ -29,6 +29,7 @@ public class ParentFirstStrategy extends AbstractStrategy {
         super(realm);
     }
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         Class<?> clazz = realm.loadClassFromImport(name);
 
@@ -47,6 +48,7 @@ public class ParentFirstStrategy extends AbstractStrategy {
         return clazz;
     }
 
+    @Override
     public URL getResource(String name) {
         URL resource = realm.loadResourceFromImport(name);
 
@@ -61,6 +63,7 @@ public class ParentFirstStrategy extends AbstractStrategy {
         return resource;
     }
 
+    @Override
     @SuppressWarnings("RedundantThrows")
     public Enumeration<URL> getResources(String name) throws IOException {
         Enumeration<URL> imports = realm.loadResourcesFromImport(name);

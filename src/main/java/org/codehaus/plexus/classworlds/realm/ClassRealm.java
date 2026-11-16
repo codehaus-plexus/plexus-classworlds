@@ -194,6 +194,7 @@ public class ClassRealm extends URLClassLoader {
     // of any existing ClassRealm.
     // ----------------------------------------------------------------------
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         return loadClass(name, false);
     }
@@ -243,21 +244,25 @@ public class ClassRealm extends URLClassLoader {
         return super.findClass(name);
     }
 
+    @Override
     public URL getResource(String name) {
         URL resource = super.getResource(name);
         return resource != null ? resource : strategy.getResource(name);
     }
 
+    @Override
     public URL findResource(String name) {
         return super.findResource(name);
     }
 
+    @Override
     public Enumeration<URL> getResources(String name) throws IOException {
         Collection<URL> resources = new LinkedHashSet<>(Collections.list(super.getResources(name)));
         resources.addAll(Collections.list(strategy.getResources(name)));
         return Collections.enumeration(resources);
     }
 
+    @Override
     public Enumeration<URL> findResources(String name) throws IOException {
         return super.findResources(name);
     }
@@ -307,6 +312,7 @@ public class ClassRealm extends URLClassLoader {
         }
     }
 
+    @Override
     public String toString() {
         return "ClassRealm[" + getId() + ", parent: " + getParentClassLoader() + "]";
     }

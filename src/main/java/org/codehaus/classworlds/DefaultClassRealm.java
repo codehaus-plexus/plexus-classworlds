@@ -46,30 +46,37 @@ public class DefaultClassRealm implements ClassRealm {
                 ClassWorldReverseAdapter.getInstance(world), id, foreignClassLoader));
     }
 
+    @Override
     public URL[] getConstituents() {
         return adapter.getConstituents();
     }
 
+    @Override
     public ClassRealm getParent() {
         return adapter.getParentRealm();
     }
 
+    @Override
     public void setParent(ClassRealm parent) {
         adapter.setParent(parent);
     }
 
+    @Override
     public String getId() {
         return adapter.getId();
     }
 
+    @Override
     public ClassWorld getWorld() {
         return adapter.getWorld();
     }
 
+    @Override
     public void importFrom(String realmId, String packageName) throws NoSuchRealmException {
         adapter.importFrom(realmId, packageName);
     }
 
+    @Override
     public void addConstituent(URL constituent) {
         adapter.addConstituent(constituent);
     }
@@ -107,14 +114,17 @@ public class DefaultClassRealm implements ClassRealm {
         }
     }
 
+    @Override
     public ClassRealm locateSourceRealm(String classname) {
         return adapter.locateSourceRealm(classname);
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return adapter.getClassLoader();
     }
 
+    @Override
     public ClassRealm createChildRealm(String id) throws DuplicateRealmException {
         return adapter.createChildRealm(id);
     }
@@ -123,22 +133,27 @@ public class DefaultClassRealm implements ClassRealm {
     // ClassLoader API
     // ----------------------------------------------------------------------
 
+    @Override
     public Class loadClass(String name) throws ClassNotFoundException {
         return adapter.loadClass(name);
     }
 
+    @Override
     public URL getResource(String name) {
         return adapter.getResource(name);
     }
 
+    @Override
     public InputStream getResourceAsStream(String name) {
         return adapter.getResourceAsStream(name);
     }
 
+    @Override
     public Enumeration findResources(String name) throws IOException {
         return adapter.findResources(name);
     }
 
+    @Override
     public void display() {
         adapter.display();
     }

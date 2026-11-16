@@ -36,6 +36,7 @@ public class OsgiBundleStrategy extends AbstractStrategy {
         super(realm);
     }
 
+    @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         Class<?> clazz = realm.loadClassFromImport(name);
 
@@ -54,6 +55,7 @@ public class OsgiBundleStrategy extends AbstractStrategy {
         return clazz;
     }
 
+    @Override
     public URL getResource(String name) {
         URL resource = realm.loadResourceFromImport(name);
 
@@ -68,6 +70,7 @@ public class OsgiBundleStrategy extends AbstractStrategy {
         return resource;
     }
 
+    @Override
     @SuppressWarnings("RedundantThrows")
     public Enumeration<URL> getResources(String name) throws IOException {
         Enumeration<URL> imports = realm.loadResourcesFromImport(name);

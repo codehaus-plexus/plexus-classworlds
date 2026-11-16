@@ -43,6 +43,7 @@ public final class ClassWorldAdapter extends ClassWorld {
         this.world = newWorld;
     }
 
+    @Override
     public ClassRealm newRealm(String id) throws DuplicateRealmException {
         try {
             return ClassRealmAdapter.getInstance(world.newRealm(id));
@@ -51,6 +52,7 @@ public final class ClassWorldAdapter extends ClassWorld {
         }
     }
 
+    @Override
     public ClassRealm newRealm(String id, ClassLoader classLoader) throws DuplicateRealmException {
         try {
             return ClassRealmAdapter.getInstance(world.newRealm(id, classLoader));
@@ -59,6 +61,7 @@ public final class ClassWorldAdapter extends ClassWorld {
         }
     }
 
+    @Override
     public void disposeRealm(String id) throws NoSuchRealmException {
         try {
             world.disposeRealm(id);
@@ -67,6 +70,7 @@ public final class ClassWorldAdapter extends ClassWorld {
         }
     }
 
+    @Override
     public ClassRealm getRealm(String id) throws NoSuchRealmException {
         try {
             return ClassRealmAdapter.getInstance(world.getRealm(id));
@@ -75,6 +79,7 @@ public final class ClassWorldAdapter extends ClassWorld {
         }
     }
 
+    @Override
     public Collection getRealms() {
         Collection<org.codehaus.plexus.classworlds.realm.ClassRealm> realms = world.getRealms();
         Vector<ClassRealmAdapter> ret = new Vector<>();
