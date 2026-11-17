@@ -1,5 +1,6 @@
 package org.codehaus.plexus.classworlds.strategy;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
@@ -140,7 +141,7 @@ class OsgiBundleStrategyTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testLoadClassWithNullName() throws Exception {
+    void testLoadClassWithNullName() throws ClassNotFoundException {
         try {
             strategy.loadClass(null);
             fail("Should throw NullPointerException");
@@ -160,7 +161,7 @@ class OsgiBundleStrategyTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
-    void testGetResourcesWithNullName() throws Exception {
+    void testGetResourcesWithNullName() throws IOException {
         try {
             strategy.getResources(null);
             fail("Should throw NullPointerException");
