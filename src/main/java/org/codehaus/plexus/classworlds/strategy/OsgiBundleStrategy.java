@@ -42,14 +42,14 @@ public class OsgiBundleStrategy extends AbstractStrategy {
 
         if (clazz == null) {
             clazz = realm.loadClassFromSelf(name);
+        }
 
-            if (clazz == null) {
-                clazz = realm.loadClassFromParent(name);
+        if (clazz == null) {
+            clazz = realm.loadClassFromParent(name);
+        }
 
-                if (clazz == null) {
-                    throw new ClassNotFoundException(name);
-                }
-            }
+        if (clazz == null) {
+            throw new ClassNotFoundException(name);
         }
 
         return clazz;
@@ -61,10 +61,10 @@ public class OsgiBundleStrategy extends AbstractStrategy {
 
         if (resource == null) {
             resource = realm.loadResourceFromSelf(name);
+        }
 
-            if (resource == null) {
-                resource = realm.loadResourceFromParent(name);
-            }
+        if (resource == null) {
+            resource = realm.loadResourceFromParent(name);
         }
 
         return resource;
