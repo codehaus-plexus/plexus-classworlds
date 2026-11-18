@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class ConfigurationParserTest extends AbstractClassWorldsTestCase {
 
@@ -22,13 +22,9 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
 
     @Test
     void filterUnterminated() {
-        try {
-            this.configurator.filter("${cheese");
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("Unterminated"));
-        }
+        ConfigurationException e =
+                assertThrows(ConfigurationException.class, () -> this.configurator.filter("${cheese"));
+        assertTrue(e.getMessage().startsWith("Unterminated"));
     }
 
     @Test
@@ -72,13 +68,9 @@ class ConfigurationParserTest extends AbstractClassWorldsTestCase {
 
     @Test
     void filterNonExistent() {
-        try {
-            this.configurator.filter("${gollygeewillikers}");
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("No such property"));
-        }
+        ConfigurationException e =
+                assertThrows(ConfigurationException.class, () -> this.configurator.filter("${gollygeewillikers}"));
+        assertTrue(e.getMessage().startsWith("No such property"));
     }
 
     @Test

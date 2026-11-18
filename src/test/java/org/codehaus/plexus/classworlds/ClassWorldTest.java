@@ -34,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class ClassWorldTest extends AbstractClassWorldsTestCase {
     private ClassWorld world;
@@ -70,32 +69,23 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
 
     @Test
     void newRealmDuplicate() {
-        try {
+        DuplicateRealmException e = assertThrows(DuplicateRealmException.class, () -> {
             this.world.newRealm("foo");
             this.world.newRealm("foo");
+        });
 
-            fail("throw DuplicateRealmException");
-        } catch (DuplicateRealmException e) {
-            // expected and correct
+        assertSame(this.world, e.getWorld());
 
-            assertSame(this.world, e.getWorld());
-
-            assertEquals("foo", e.getId());
-        }
+        assertEquals("foo", e.getId());
     }
 
     @Test
     void getRealmNoSuch() {
-        try {
-            this.world.getRealm("foo");
-            fail("throw NoSuchRealmException");
-        } catch (NoSuchRealmException e) {
-            // expected and correct
+        NoSuchRealmException e = assertThrows(NoSuchRealmException.class, () -> this.world.getRealm("foo"));
 
-            assertSame(this.world, e.getWorld());
+        assertSame(this.world, e.getWorld());
 
-            assertEquals("foo", e.getId());
-        }
+        assertEquals("foo", e.getId());
     }
 
     @Test
@@ -130,13 +120,6 @@ class ClassWorldTest extends AbstractClassWorldsTestCase {
             assertTrue(obj.getPath().contains("/component1-1.0.jar!/META-INF/plexus/components.xml"));
             resourceCount++;
         }
-        //        assertEquals( 2, resourceCount );
-        // for some reason surefire-plugin 2.3 returned 2 items there:
-        //        for example:
-        // jar:file:/home/mkleint/.m2/repository/org/codehaus/plexus/plexus-archiver/1.0-alpha-7/plexus-archiver-1.0-alpha-7.jar!/META-INF/plexus/components.xml
-        // jar:file:/home/mkleint/src/plexus-trunk/plexus-classworlds/src/test-jars/component1-1.0.jar!/META-INF/plexus/components.xml
-        //    However only 1 is correct, which is actually returned by the 2.4 surefire-plugin
-
         assertEquals(1, resourceCount);
         Class<?> c = plexus.loadClass("org.codehaus.plexus.Component1");
         assertNotNull(c);
