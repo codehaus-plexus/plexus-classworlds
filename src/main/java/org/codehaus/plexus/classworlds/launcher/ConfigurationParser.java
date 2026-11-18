@@ -321,9 +321,8 @@ public class ConfigurationParser {
         if (!dir.exists()) {
             if (optionally) {
                 return;
-            } else {
-                throw new FileNotFoundException(dir.toString());
             }
+            throw new FileNotFoundException(dir.toString());
         }
 
         String localName = globFile.getName();
