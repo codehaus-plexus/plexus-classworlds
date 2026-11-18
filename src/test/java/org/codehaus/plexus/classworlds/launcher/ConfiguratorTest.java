@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -61,56 +62,35 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
 
     @Test
     void configureNonexistent() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("notfound.conf"));
-            fail("throw FileNotFoundException");
-        } catch (FileNotFoundException e) {
-            // expected and correct
-        }
+        assertThrows(FileNotFoundException.class, () -> this.configurator.configure(getConfigPath("notfound.conf")));
     }
 
     @Test
     void configureDuplicateMain() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("dupe-main.conf"));
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("Duplicate main"));
-        }
+        ConfigurationException e = assertThrows(
+                ConfigurationException.class, () -> this.configurator.configure(getConfigPath("dupe-main.conf")));
+        assertTrue(e.getMessage().startsWith("Duplicate main"));
     }
 
     @Test
     void configureDuplicateRealm() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("dupe-realm.conf"));
-            fail("throw DuplicateRealmException");
-        } catch (DuplicateRealmException e) {
-            // expected and correct
-            assertEquals("dupe.realm", e.getId());
-        }
+        DuplicateRealmException e = assertThrows(
+                DuplicateRealmException.class, () -> this.configurator.configure(getConfigPath("dupe-realm.conf")));
+        assertEquals("dupe.realm", e.getId());
     }
 
     @Test
     void configureEarlyImport() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("early-import.conf"));
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("Unhandled import"));
-        }
+        ConfigurationException e = assertThrows(
+                ConfigurationException.class, () -> this.configurator.configure(getConfigPath("early-import.conf")));
+        assertTrue(e.getMessage().startsWith("Unhandled import"));
     }
 
     @Test
     void configureRealmSyntax() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("realm-syntax.conf"));
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("Invalid realm"));
-        }
+        ConfigurationException e = assertThrows(
+                ConfigurationException.class, () -> this.configurator.configure(getConfigPath("realm-syntax.conf")));
+        assertTrue(e.getMessage().startsWith("Invalid realm"));
     }
 
     @Test
@@ -210,13 +190,9 @@ class ConfiguratorTest extends AbstractClassWorldsTestCase {
 
     @Test
     void configureUnhandled() throws Exception {
-        try {
-            this.configurator.configure(getConfigPath("unhandled.conf"));
-            fail("throw ConfigurationException");
-        } catch (ConfigurationException e) {
-            // expected and correct
-            assertTrue(e.getMessage().startsWith("Unhandled configuration"));
-        }
+        ConfigurationException e = assertThrows(
+                ConfigurationException.class, () -> this.configurator.configure(getConfigPath("unhandled.conf")));
+        assertTrue(e.getMessage().startsWith("Unhandled configuration"));
     }
 
     @Test

@@ -27,9 +27,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class LauncherTest extends AbstractClassWorldsTestCase {
@@ -98,24 +100,14 @@ class LauncherTest extends AbstractClassWorldsTestCase {
     void launchNoSuchMethod() throws Exception {
         launcher.configure(getConfigPath("launch-nomethod.conf"));
 
-        try {
-            launcher.launch(new String[] {});
-            fail("should have thrown NoSuchMethodException");
-        } catch (NoSuchMethodException e) {
-            // expected and correct
-        }
+        assertThrows(NoSuchMethodException.class, () -> launcher.launch(new String[] {}));
     }
 
     @Test
     void launchClassNotFound() throws Exception {
         launcher.configure(getConfigPath("launch-noclass.conf"));
 
-        try {
-            launcher.launch(new String[] {});
-            fail("throw ClassNotFoundException");
-        } catch (ClassNotFoundException e) {
-            // expected and correct
-        }
+        assertThrows(ClassNotFoundException.class, () -> launcher.launch(new String[] {}));
     }
 
     @Test
@@ -166,14 +158,7 @@ class LauncherTest extends AbstractClassWorldsTestCase {
 
     @Test
     void testConfigureInvalid() {
-        try {
-            launcher.configure(getConfigPath("non-existent.conf"));
-            fail("Should throw FileNotFoundException");
-        } catch (FileNotFoundException e) {
-            // expected
-        } catch (Exception e) {
-            fail("Should throw FileNotFoundException, got: " + e.getClass().getName());
-        }
+        assertThrows(FileNotFoundException.class, () -> launcher.configure(getConfigPath("non-existent.conf")));
     }
 
     @Test
@@ -239,12 +224,7 @@ class LauncherTest extends AbstractClassWorldsTestCase {
 
         String[] args = {"--world=test", "--realm=nonexistent"};
 
-        try {
-            launcher.launch(args);
-            succeed();
-        } catch (Exception e) {
-            fail("Should handle non-existent realm gracefully");
-        }
+        assertDoesNotThrow(() -> launcher.launch(args));
     }
 
     private FileInputStream getConfigPath(String name) throws Exception {
