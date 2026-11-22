@@ -57,6 +57,11 @@ logComponentRealm.importFrom( "container",
 
 ```
 
+Package lookups follow the same import rules as class loading. A realm reports a package through
+`Package.getPackage( name )` and its own `getPackages()` when the package is imported from another realm
+or from the parent class loader, including a package that is reached only by importing one of its
+classes by name. A package is never visible in a realm where a class in it is not.
+
 The container implementation can then be loaded from its realm
 and used.
 
