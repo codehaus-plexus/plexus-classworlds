@@ -1,7 +1,7 @@
 # Plexus Classworlds
 
 [![Maven Central](https://img.shields.io/maven-central/v/org.codehaus.plexus/plexus-classworlds.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/org.codehaus.plexus/plexus-classworlds)
-[![GitHub CI](https://github.com/codehaus-plexus/plexus-classworlds/workflows/GitHub%20CI/badge.svg)](https://github.com/codehaus-plexus/plexus-classworlds/actions)
+[![GitHub CI](https://github.com/codehaus-plexus/plexus-classworlds/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/codehaus-plexus/plexus-classworlds/actions/workflows/maven.yml?query=branch%3Amaster)
 [![Reproducible Builds](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/jvm-repo-rebuild/reproducible-central/master/content/org/codehaus/plexus/plexus-classworlds/badge.json)](https://github.com/jvm-repo-rebuild/reproducible-central/blob/master/content/org/codehaus/plexus/plexus-classworlds/README.md)
 [![License](https://img.shields.io/github/license/codehaus-plexus/plexus-classworlds.svg?label=License)](https://www.apache.org/licenses/LICENSE-2.0)
 
@@ -59,8 +59,9 @@ and what is required before any future removal can be considered.
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/codehaus-plexus/.github/blob/master/CONTRIBUTING.md). In short:
-`mvn verify` builds, and run `mvn spotless:apply` before pushing or CI will fail on formatting.
+See [CONTRIBUTING.md](https://github.com/codehaus-plexus/.github/blob/master/CONTRIBUTING.md) and
+[AGENTS.md](AGENTS.md). In short: `mvn verify` builds, and run `mvn spotless:apply` before pushing or CI
+will fail on formatting.
 
 Please report security vulnerabilities privately — see
 [SECURITY.md](https://github.com/codehaus-plexus/.github/blob/master/SECURITY.md), not a public issue.
