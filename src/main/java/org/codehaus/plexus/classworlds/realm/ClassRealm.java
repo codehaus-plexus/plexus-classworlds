@@ -590,8 +590,10 @@ public class ClassRealm extends URLClassLoader {
     /**
      * Class names standing for every way a class in the package can be routed by the given imports: one no class can
      * have, which only package imports match, plus each imported name that is a class directly inside the package.
+     * An import such as {@code a.b} names either a class or a package, so it only counts as a class when the class
+     * file is there: otherwise the package {@code a.b} would make the package {@code a} appear.
      */
-    private static Collection<String> getClassNamesIn(String packageName, Collection<Entry> imports) {
+    private Collection<String> getClassNamesIn(String packageName, Collection<Entry> imports) {
         Collection<String> classNames = new ArrayList<>();
         classNames.add(packageName + ".-");
         if (imports != null) {
@@ -604,7 +606,11 @@ public class ClassRealm extends URLClassLoader {
                         && !importName.isEmpty()
                         && !importName.endsWith("*")
                         && importPackage.equals(packageName)) {
-                    classNames.add(importName);
+                    ClassLoader source =
+                            entry.getClassLoader() != null ? entry.getClassLoader() : getParentClassLoader();
+                    if (source != null && source.getResource(importName.replace('.', '/') + ".class") != null) {
+                        classNames.add(importName);
+                    }
                 }
             }
         }
