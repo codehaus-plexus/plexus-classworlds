@@ -248,7 +248,39 @@ public class ClassRealm extends URLClassLoader {
     }
 
     protected Class<?> findClassInternal(String name) throws ClassNotFoundException {
-        return super.findClass(name);
+        if (GET_DEFINED_PACKAGE != null) {
+            // Java 9+ defines packages through the final getDefinedPackage, which imports cannot affect
+            return super.findClass(name);
+        }
+        enterDefining();
+        try {
+            return super.findClass(name);
+        } finally {
+            exitDefining();
+        }
+    }
+
+    @Override
+    protected Package definePackage(
+            String name,
+            String specTitle,
+            String specVersion,
+            String specVendor,
+            String implTitle,
+            String implVersion,
+            String implVendor,
+            URL sealBase) {
+        if (GET_DEFINED_PACKAGE != null) {
+            return super.definePackage(
+                    name, specTitle, specVersion, specVendor, implTitle, implVersion, implVendor, sealBase);
+        }
+        enterDefining();
+        try {
+            return super.definePackage(
+                    name, specTitle, specVersion, specVendor, implTitle, implVersion, implVendor, sealBase);
+        } finally {
+            exitDefining();
+        }
     }
 
     @Override
@@ -461,22 +493,51 @@ public class ClassRealm extends URLClassLoader {
      */
     private static final ThreadLocal<Set<ClassRealm>> PACKAGE_LOOKUPS = new ThreadLocal<>();
 
+    /**
+     * Depth of class and package definitions running on the current thread; only used on Java 8, where the JDK asks
+     * the overridable {@code getPackage(String)} while defining. Any realm may be asked then, since the base class
+     * loader of the realm defining the class can be a realm too, so the guard is per thread, not per realm.
+     */
+    private static final ThreadLocal<int[]> DEFINING = new ThreadLocal<>();
+
+    private static void enterDefining() {
+        int[] depth = DEFINING.get();
+        if (depth == null) {
+            depth = new int[1];
+            DEFINING.set(depth);
+        }
+        depth[0]++;
+    }
+
+    private static void exitDefining() {
+        int[] depth = DEFINING.get();
+        if (--depth[0] == 0) {
+            DEFINING.remove();
+        }
+    }
+
     @Override
     @SuppressWarnings("deprecation")
     protected Package getPackage(String name) {
+        if (DEFINING.get() != null) {
+            // the JDK is defining a class or package: answer as ClassLoader does, without imports or the parent
+            return super.getPackage(name);
+        }
         if (!enterPackageLookup()) {
             return null;
         }
         try {
             Package pkg = super.getPackage(name);
 
-            for (String className : getClassNamesIn(name, foreignImports)) {
-                if (pkg != null) {
-                    break;
-                }
-                ClassLoader importClassLoader = getImportClassLoader(className);
-                if (importClassLoader != null) {
-                    pkg = getPackage(importClassLoader, name);
+            if (pkg == null) {
+                for (String className : getClassNamesIn(name, foreignImports)) {
+                    if (pkg != null) {
+                        break;
+                    }
+                    ClassLoader importClassLoader = getImportClassLoader(className);
+                    if (importClassLoader != null) {
+                        pkg = getPackage(importClassLoader, name);
+                    }
                 }
             }
 
