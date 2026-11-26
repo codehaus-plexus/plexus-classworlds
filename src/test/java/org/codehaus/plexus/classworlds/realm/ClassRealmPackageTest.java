@@ -128,6 +128,22 @@ class ClassRealmPackageTest extends AbstractClassWorldsTestCase {
     }
 
     @Test
+    void packageImportDoesNotExposeEnclosingPackage() throws Exception {
+        // classes in org.codehaus.plexus.classworlds and in its subpackage realm, both defined by realm C itself
+        ClassRealm realmC = world.newRealm("realmC", null);
+        realmC.addURL(ClassWorld.class.getProtectionDomain().getCodeSource().getLocation());
+        realmC.loadClass("org.codehaus.plexus.classworlds.ClassWorldException");
+        realmC.loadClass("org.codehaus.plexus.classworlds.realm.Entry");
+        ClassRealm realmB = world.newRealm("realmB", null);
+        realmB.importFrom("realmC", "org.codehaus.plexus.classworlds.realm");
+
+        assertNotNull(realmB.getPackage("org.codehaus.plexus.classworlds.realm"));
+        assertNull(realmB.getPackage("org.codehaus.plexus.classworlds"));
+        assertFalse(names(realmB.getPackages()).contains("org.codehaus.plexus.classworlds"));
+        assertTrue(names(realmB.getPackages()).contains("org.codehaus.plexus.classworlds.realm"));
+    }
+
+    @Test
     void moreSpecificImportShadowsOnlyItsClass() throws Exception {
         realmA.loadClass("a.Aa");
         world.newRealm("empty", null);
